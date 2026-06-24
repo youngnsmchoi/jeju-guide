@@ -14,10 +14,12 @@ export interface Category {
 }
 
 // 블록 타입 정의
+export type ImageSize = 'small' | 'medium' | 'full'
+
 export type Block =
   | { type: 'text'; text_ko: string; text_en: string; text_zh: string; text_ja: string }
-  | { type: 'image'; url: string; caption_ko: string; caption_en: string; caption_zh: string; caption_ja: string }
-  | { type: 'image_text'; url: string; text_ko: string; text_en: string; text_zh: string; text_ja: string }
+  | { type: 'image'; url: string; size: ImageSize; caption_ko: string; caption_en: string; caption_zh: string; caption_ja: string }
+  | { type: 'image_text'; url: string; size: ImageSize; text_ko: string; text_en: string; text_zh: string; text_ja: string }
   | { type: 'youtube'; url: string }
 
 export interface Item {

@@ -2,7 +2,7 @@
 // 블록 방식 콘텐츠 에디터 컴포넌트
 
 import { useRef } from 'react'
-import type { Block, Lang } from '@/lib/types'
+import type { Block, Lang, ImageSize } from '@/lib/types'
 
 interface Props {
   blocks: Block[]
@@ -17,11 +17,24 @@ const BLOCK_TYPES = [
   { type: 'youtube', label: '▶ YouTube' },
 ] as const
 
+const SIZE_OPTIONS: { value: ImageSize; label: string }[] = [
+  { value: 'small', label: '소 (1/3)' },
+  { value: 'medium', label: '중 (1/2)' },
+  { value: 'full', label: '대 (전체)' },
+]
+
 function newBlock(type: Block['type']): Block {
   if (type === 'text') return { type, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
-  if (type === 'image') return { type, url: '', caption_ko: '', caption_en: '', caption_zh: '', caption_ja: '' }
-  if (type === 'image_text') return { type, url: '', text_ko: '', text_en: '', text_zh: '', text_ja: '' }
+  if (type === 'image') return { type, url: '', size: 'full' as const, caption_ko: '', caption_en: '', caption_zh: '', caption_ja: '' }
+  if (type === 'image_text') return { type, url: '', size: 'medium' as const, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
   return { type: 'youtube', url: '' }
+}
+
+// 이미지 크기별 에디터 미리보기 클래스
+const sizePreviewClass: Record<ImageSize, string> = {
+  small: 'w-1/3',
+  medium: 'w-1/2',
+  full: 'w-full',
 }
 
 export default function BlockEditor({ blocks, onChange, lang }: Props) {
@@ -77,20 +90,36 @@ export default function BlockEditor({ blocks, onChange, lang }: Props) {
 
           {/* 블록 내용 */}
           <div className="p-3 space-y-2">
+
             {/* 텍스트 블록 */}
             {block.type === 'text' && (
-              <textarea
-                value={(block as any)[textKey] || ''}
-                onChange={e => update(i, { [textKey]: e.target.value } as Partial<Block>)}
-                placeholder="텍스트를 입력하세요"
-                rows={4}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
-              />
+              <>
+                <textarea
+                  value={(block as any)[textKey] || ''}
+                  onChange={e => update(i, { [textKey]: e.target.value } as Partial<Block>)}
+                  placeholder="텍스트를 입력하세요&#10;굵게: **텍스트** 형식으로 입력"
+                  rows={4}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
+                />
+                <p className="text-xs text-gray-400">굵게 표시: <code className="bg-gray-100 px-1 rounded">**텍스트**</code> 형식으로 입력하세요.</p>
+              </>
             )}
 
             {/* 이미지 블록 */}
             {block.type === 'image' && (
               <>
+                {/* 크기 선택 */}
+                <div className="flex gap-2 items-center">
+                  <span className="text-xs text-gray-400">크기.</span>
+                  {SIZE_OPTIONS.map(s => (
+                    <button
+                      key={s.value}
+                      type="button"
+                      onClick={() => update(i, { size: s.value } as Partial<Block>)}
+                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${(block as any).size === s.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    >{s.label}</button>
+                  ))}
+                </div>
                 <div className="flex gap-2">
                   <input
                     value={(block as any).url || ''}
@@ -105,7 +134,10 @@ export default function BlockEditor({ blocks, onChange, lang }: Props) {
                   >업로드</button>
                 </div>
                 {(block as any).url && (
-                  <img src={(block as any).url} className="w-full max-h-48 object-cover rounded-lg" />
+                  <img
+                    src={(block as any).url}
+                    className={`${sizePreviewClass[(block as any).size as ImageSize || 'full']} max-h-48 object-cover rounded-lg`}
+                  />
                 )}
                 <input
                   value={(block as any)[captionKey] || ''}
@@ -119,6 +151,18 @@ export default function BlockEditor({ blocks, onChange, lang }: Props) {
             {/* 이미지+텍스트 블록 */}
             {block.type === 'image_text' && (
               <>
+                {/* 크기 선택 */}
+                <div className="flex gap-2 items-center">
+                  <span className="text-xs text-gray-400">이미지 크기.</span>
+                  {SIZE_OPTIONS.map(s => (
+                    <button
+                      key={s.value}
+                      type="button"
+                      onClick={() => update(i, { size: s.value } as Partial<Block>)}
+                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${(block as any).size === s.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    >{s.label}</button>
+                  ))}
+                </div>
                 <div className="flex gap-2">
                   <input
                     value={(block as any).url || ''}
@@ -135,14 +179,18 @@ export default function BlockEditor({ blocks, onChange, lang }: Props) {
                 <textarea
                   value={(block as any)[textKey] || ''}
                   onChange={e => update(i, { [textKey]: e.target.value } as Partial<Block>)}
-                  placeholder="이미지 옆 설명 텍스트"
+                  placeholder="이미지 옆 설명 텍스트&#10;굵게: **텍스트** 형식으로 입력"
                   rows={4}
                   className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
                 />
+                <p className="text-xs text-gray-400">굵게 표시: <code className="bg-gray-100 px-1 rounded">**텍스트**</code> 형식으로 입력하세요.</p>
                 {/* 미리보기 */}
                 {(block as any).url && (
                   <div className="flex gap-3 p-2 bg-gray-50 rounded-lg">
-                    <img src={(block as any).url} className="w-24 h-24 object-cover rounded-lg flex-shrink-0" />
+                    <img
+                      src={(block as any).url}
+                      className={`${sizePreviewClass[(block as any).size as ImageSize || 'medium']} max-h-32 object-cover rounded-lg flex-shrink-0`}
+                    />
                     <p className="text-xs text-gray-600 whitespace-pre-line">{(block as any)[textKey]}</p>
                   </div>
                 )}
