@@ -1,7 +1,7 @@
 'use client'
 // 블록 배열을 화면에 렌더링하는 컴포넌트
 
-import type { Block, Lang, ImageSize, ImageAlign, ImagePosition, TextValign } from '@/lib/types'
+import type { Block, Lang, ImageSize, ImageAlign, ImagePosition, TextValign, TipVariant } from '@/lib/types'
 import { getBlockText, getBlockCaption } from '@/lib/types'
 
 function getYoutubeId(url: string): string | null {
@@ -39,6 +39,13 @@ const textValignClass: Record<TextValign, string> = {
   top: 'items-start',
   middle: 'items-center',
   bottom: 'items-end',
+}
+
+// 팁 박스 스타일
+const tipStyle: Record<TipVariant, { bg: string; border: string; icon: string }> = {
+  tip:     { bg: 'bg-emerald-50', border: 'border-emerald-300', icon: '💡' },
+  warning: { bg: 'bg-amber-50',   border: 'border-amber-300',   icon: '⚠️' },
+  info:    { bg: 'bg-blue-50',    border: 'border-blue-300',    icon: 'ℹ️' },
 }
 
 // 단독 이미지 정렬
@@ -103,6 +110,20 @@ export default function BlockRenderer({ blocks, lang }: Props) {
           return (
             <div key={i} className={`flex gap-3 ${textValignClass[valign]}`}>
               {position === 'left' ? <>{img}{txt}</> : <>{txt}{img}</>}
+            </div>
+          )
+        }
+
+        if (block.type === 'tip') {
+          const variant = block.variant || 'tip'
+          const { bg, border, icon } = tipStyle[variant]
+          const text = getBlockText(block, lang)
+          return (
+            <div key={i} className={`flex gap-2 ${bg} border-l-4 ${border} rounded-r-xl px-4 py-3`}>
+              <span className="flex-shrink-0">{icon}</span>
+              <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                {renderText(text)}
+              </p>
             </div>
           )
         }

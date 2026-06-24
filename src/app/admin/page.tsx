@@ -54,9 +54,13 @@ export default function AdminPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password: pw }),
     })
-    if (res.ok) { setAuthed(true); setPwError(false) }
+    if (res.ok) { localStorage.setItem('admin_authed', '1'); setAuthed(true); setPwError(false) }
     else setPwError(true)
   }
+
+  useEffect(() => {
+    if (localStorage.getItem('admin_authed') === '1') setAuthed(true)
+  }, [])
 
   useEffect(() => {
     if (!authed) return
@@ -150,8 +154,12 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-emerald-700 text-white px-6 py-4">
+      <header className="bg-emerald-700 text-white px-6 py-4 flex items-center justify-between">
         <h1 className="text-lg font-bold">제주 가이드 관리자</h1>
+        <button
+          onClick={() => { localStorage.removeItem('admin_authed'); setAuthed(false) }}
+          className="text-sm px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-800 transition-colors"
+        >로그아웃</button>
       </header>
 
       <div className="max-w-2xl mx-auto p-4 space-y-4">

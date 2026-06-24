@@ -2,7 +2,7 @@
 // 블록 방식 콘텐츠 에디터 컴포넌트
 
 import { useRef } from 'react'
-import type { Block, Lang, ImageSize, ImageAlign, ImagePosition, TextValign } from '@/lib/types'
+import type { Block, Lang, ImageSize, ImageAlign, ImagePosition, TextValign, TipVariant } from '@/lib/types'
 
 interface Props {
   blocks: Block[]
@@ -15,7 +15,14 @@ const BLOCK_TYPES = [
   { type: 'image', label: '🖼 이미지' },
   { type: 'image_text', label: '🖼+📝 이미지+텍스트' },
   { type: 'youtube', label: '▶ YouTube' },
+  { type: 'tip', label: '💡 팁/주의' },
 ] as const
+
+const TIP_VARIANT_OPTIONS: { value: TipVariant; label: string }[] = [
+  { value: 'tip', label: '💡 팁' },
+  { value: 'warning', label: '⚠️ 주의' },
+  { value: 'info', label: 'ℹ️ 정보' },
+]
 
 const SIZE_OPTIONS: { value: ImageSize; label: string }[] = [
   { value: 'small', label: '소 (1/3)' },
@@ -44,6 +51,7 @@ function newBlock(type: Block['type']): Block {
   if (type === 'text') return { type, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
   if (type === 'image') return { type, url: '', size: 'full' as const, align: 'left' as const, caption_ko: '', caption_en: '', caption_zh: '', caption_ja: '' }
   if (type === 'image_text') return { type, url: '', size: 'medium' as const, position: 'left' as const, valign: 'top' as const, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
+  if (type === 'tip') return { type, variant: 'tip' as const, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
   return { type: 'youtube', url: '' }
 }
 
@@ -253,6 +261,30 @@ export default function BlockEditor({ blocks, onChange, lang }: Props) {
                     )}
                   </div>
                 )}
+              </>
+            )}
+
+            {/* 팁 블록 */}
+            {block.type === 'tip' && (
+              <>
+                <div className="flex gap-2 items-center">
+                  <span className="text-xs text-gray-400">종류.</span>
+                  {TIP_VARIANT_OPTIONS.map(v => (
+                    <button
+                      key={v.value}
+                      type="button"
+                      onClick={() => update(i, { variant: v.value } as Partial<Block>)}
+                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).variant || 'tip') === v.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    >{v.label}</button>
+                  ))}
+                </div>
+                <textarea
+                  value={(block as any)[textKey] || ''}
+                  onChange={e => update(i, { [textKey]: e.target.value } as Partial<Block>)}
+                  placeholder="팁 내용을 입력하세요&#10;굵게: **텍스트** 형식으로 입력"
+                  rows={3}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
+                />
               </>
             )}
 

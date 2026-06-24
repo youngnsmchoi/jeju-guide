@@ -20,11 +20,14 @@ export type ImageAlign = 'left' | 'center' | 'right'
 export type ImagePosition = 'left' | 'right'
 export type TextValign = 'top' | 'middle' | 'bottom'
 
+export type TipVariant = 'tip' | 'warning' | 'info'
+
 export type Block =
   | { type: 'text'; text_ko: string; text_en: string; text_zh: string; text_ja: string }
   | { type: 'image'; url: string; size: ImageSize; align: ImageAlign; caption_ko: string; caption_en: string; caption_zh: string; caption_ja: string }
   | { type: 'image_text'; url: string; size: ImageSize; position: ImagePosition; valign: TextValign; text_ko: string; text_en: string; text_zh: string; text_ja: string }
   | { type: 'youtube'; url: string }
+  | { type: 'tip'; variant: TipVariant; text_ko: string; text_en: string; text_zh: string; text_ja: string }
 
 export interface Item {
   id: number
