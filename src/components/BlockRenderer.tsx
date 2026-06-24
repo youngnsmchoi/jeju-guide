@@ -1,7 +1,7 @@
 'use client'
 // 블록 배열을 화면에 렌더링하는 컴포넌트
 
-import type { Block, Lang, ImageSize, ImageAlign, ImagePosition } from '@/lib/types'
+import type { Block, Lang, ImageSize, ImageAlign, ImagePosition, TextValign } from '@/lib/types'
 import { getBlockText, getBlockCaption } from '@/lib/types'
 
 function getYoutubeId(url: string): string | null {
@@ -32,6 +32,13 @@ const imageTextSizeClass: Record<ImageSize, string> = {
   small: 'w-1/4',
   medium: 'w-1/2',
   full: 'w-2/3',
+}
+
+// 텍스트 수직 정렬
+const textValignClass: Record<TextValign, string> = {
+  top: 'items-start',
+  middle: 'items-center',
+  bottom: 'items-end',
 }
 
 // 단독 이미지 정렬
@@ -79,6 +86,7 @@ export default function BlockRenderer({ blocks, lang }: Props) {
         if (block.type === 'image_text') {
           const size = block.size || 'medium'
           const position = block.position || 'left'
+          const valign = block.valign || 'top'
           const text = getBlockText(block, lang)
           const img = (
             <img
@@ -93,7 +101,7 @@ export default function BlockRenderer({ blocks, lang }: Props) {
             </p>
           )
           return (
-            <div key={i} className="flex gap-3 items-start">
+            <div key={i} className={`flex gap-3 ${textValignClass[valign]}`}>
               {position === 'left' ? <>{img}{txt}</> : <>{txt}{img}</>}
             </div>
           )

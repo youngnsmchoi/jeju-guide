@@ -18,11 +18,12 @@ export type ImageSize = 'small' | 'medium' | 'full'
 
 export type ImageAlign = 'left' | 'center' | 'right'
 export type ImagePosition = 'left' | 'right'
+export type TextValign = 'top' | 'middle' | 'bottom'
 
 export type Block =
   | { type: 'text'; text_ko: string; text_en: string; text_zh: string; text_ja: string }
   | { type: 'image'; url: string; size: ImageSize; align: ImageAlign; caption_ko: string; caption_en: string; caption_zh: string; caption_ja: string }
-  | { type: 'image_text'; url: string; size: ImageSize; position: ImagePosition; text_ko: string; text_en: string; text_zh: string; text_ja: string }
+  | { type: 'image_text'; url: string; size: ImageSize; position: ImagePosition; valign: TextValign; text_ko: string; text_en: string; text_zh: string; text_ja: string }
   | { type: 'youtube'; url: string }
 
 export interface Item {

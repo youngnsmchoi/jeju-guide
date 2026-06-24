@@ -2,7 +2,7 @@
 // 블록 방식 콘텐츠 에디터 컴포넌트
 
 import { useRef } from 'react'
-import type { Block, Lang, ImageSize, ImageAlign, ImagePosition } from '@/lib/types'
+import type { Block, Lang, ImageSize, ImageAlign, ImagePosition, TextValign } from '@/lib/types'
 
 interface Props {
   blocks: Block[]
@@ -34,10 +34,16 @@ const POSITION_OPTIONS: { value: ImagePosition; label: string }[] = [
   { value: 'right', label: '▶ 이미지 오른쪽' },
 ]
 
+const VALIGN_OPTIONS: { value: TextValign; label: string }[] = [
+  { value: 'top', label: '▲ 상단' },
+  { value: 'middle', label: '■ 중앙' },
+  { value: 'bottom', label: '▼ 하단' },
+]
+
 function newBlock(type: Block['type']): Block {
   if (type === 'text') return { type, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
   if (type === 'image') return { type, url: '', size: 'full' as const, align: 'left' as const, caption_ko: '', caption_en: '', caption_zh: '', caption_ja: '' }
-  if (type === 'image_text') return { type, url: '', size: 'medium' as const, position: 'left' as const, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
+  if (type === 'image_text') return { type, url: '', size: 'medium' as const, position: 'left' as const, valign: 'top' as const, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
   return { type: 'youtube', url: '' }
 }
 
@@ -196,6 +202,18 @@ export default function BlockEditor({ blocks, onChange, lang }: Props) {
                       onClick={() => update(i, { position: p.value } as Partial<Block>)}
                       className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).position || 'left') === p.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
                     >{p.label}</button>
+                  ))}
+                </div>
+                {/* 텍스트 수직 정렬 */}
+                <div className="flex gap-2 items-center">
+                  <span className="text-xs text-gray-400">글자 위치.</span>
+                  {VALIGN_OPTIONS.map(v => (
+                    <button
+                      key={v.value}
+                      type="button"
+                      onClick={() => update(i, { valign: v.value } as Partial<Block>)}
+                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).valign || 'top') === v.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    >{v.label}</button>
                   ))}
                 </div>
                 <div className="flex gap-2">
