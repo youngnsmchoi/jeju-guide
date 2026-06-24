@@ -101,9 +101,10 @@ export default function GuidePage({ params }: { params: Promise<{ slug: string }
 
         {/* 설명 */}
         {content && (
-          <div className="px-4 py-5">
-            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{content}</p>
-          </div>
+          <div
+            className="px-4 py-5 prose prose-sm max-w-none text-gray-700"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         )}
 
         {/* 지도 버튼 */}
