@@ -86,6 +86,19 @@ export default function AdminPage() {
   const setField = (key: keyof FormState, value: string | number | Block[]) =>
     setForm(f => f ? { ...f, [key]: value } : f)
 
+  const toSlug = (text: string) =>
+    text.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)
+
+  const setTitleEn = (value: string) => {
+    setForm(f => {
+      if (!f) return f
+      const autoSlug = toSlug(value)
+      const prevAuto = toSlug(f.title_en)
+      const shouldUpdate = !f.slug || f.slug === prevAuto
+      return { ...f, title_en: value, slug: shouldUpdate ? autoSlug : f.slug }
+    })
+  }
+
   const save = async () => {
     if (!form) return
     setSaving(true)
@@ -235,10 +248,13 @@ export default function AdminPage() {
               <label className="text-xs text-gray-400 font-medium">제목</label>
               <input
                 value={form[`title_${activeLang}`]}
-                onChange={e => setField(`title_${activeLang}`, e.target.value)}
-                placeholder={`제목 (${activeLang})`}
+                onChange={e => activeLang === 'en' ? setTitleEn(e.target.value) : setField(`title_${activeLang}`, e.target.value)}
+                placeholder={activeLang === 'en' ? '영문 제목 입력 시 슬러그 자동 생성' : `제목 (${activeLang})`}
                 className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
               />
+              {activeLang === 'en' && (
+                <p className="text-xs text-gray-400 mt-1">영문 제목을 입력하면 슬러그가 자동으로 채워집니다.</p>
+              )}
             </div>
 
             {/* 블록 에디터 */}
