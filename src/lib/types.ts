@@ -21,6 +21,7 @@ export type ImagePosition = 'left' | 'right'
 export type TextValign = 'top' | 'middle' | 'bottom'
 
 export type TipVariant = 'tip' | 'warning' | 'info'
+export type HeadingLevel = 'h2' | 'h3'
 
 export type Block =
   | { type: 'text'; text_ko: string; text_en: string; text_zh: string; text_ja: string }
@@ -28,6 +29,7 @@ export type Block =
   | { type: 'image_text'; url: string; size: ImageSize; position: ImagePosition; valign: TextValign; text_ko: string; text_en: string; text_zh: string; text_ja: string }
   | { type: 'youtube'; url: string }
   | { type: 'tip'; variant: TipVariant; text_ko: string; text_en: string; text_zh: string; text_ja: string }
+  | { type: 'heading'; level: HeadingLevel; text_ko: string; text_en: string; text_zh: string; text_ja: string }
 
 export interface Item {
   id: number

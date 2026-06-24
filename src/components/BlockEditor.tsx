@@ -2,7 +2,7 @@
 // 블록 방식 콘텐츠 에디터 컴포넌트
 
 import { useRef } from 'react'
-import type { Block, Lang, ImageSize, ImageAlign, ImagePosition, TextValign, TipVariant } from '@/lib/types'
+import type { Block, Lang, ImageSize, ImageAlign, ImagePosition, TextValign, TipVariant, HeadingLevel } from '@/lib/types'
 
 interface Props {
   blocks: Block[]
@@ -11,12 +11,18 @@ interface Props {
 }
 
 const BLOCK_TYPES = [
+  { type: 'heading', label: 'H 제목' },
   { type: 'text', label: '📝 텍스트' },
   { type: 'image', label: '🖼 이미지' },
   { type: 'image_text', label: '🖼+📝 이미지+텍스트' },
   { type: 'youtube', label: '▶ YouTube' },
   { type: 'tip', label: '💡 팁/주의' },
 ] as const
+
+const HEADING_LEVEL_OPTIONS: { value: HeadingLevel; label: string }[] = [
+  { value: 'h2', label: '대제목' },
+  { value: 'h3', label: '소제목' },
+]
 
 const TIP_VARIANT_OPTIONS: { value: TipVariant; label: string }[] = [
   { value: 'tip', label: '💡 팁' },
@@ -47,7 +53,8 @@ const VALIGN_OPTIONS: { value: TextValign; label: string }[] = [
   { value: 'bottom', label: '▼ 하단' },
 ]
 
-function newBlock(type: Block['type']): Block {
+function newBlock(type: string): Block {
+  if (type === 'heading') return { type, level: 'h2' as const, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
   if (type === 'text') return { type, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
   if (type === 'image') return { type, url: '', size: 'full' as const, align: 'left' as const, caption_ko: '', caption_en: '', caption_zh: '', caption_ja: '' }
   if (type === 'image_text') return { type, url: '', size: 'medium' as const, position: 'left' as const, valign: 'top' as const, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
@@ -115,6 +122,29 @@ export default function BlockEditor({ blocks, onChange, lang }: Props) {
 
           {/* 블록 내용 */}
           <div className="p-3 space-y-2">
+
+            {/* 제목 블록 */}
+            {block.type === 'heading' && (
+              <>
+                <div className="flex gap-2 items-center">
+                  <span className="text-xs text-gray-400">크기.</span>
+                  {HEADING_LEVEL_OPTIONS.map(l => (
+                    <button
+                      key={l.value}
+                      type="button"
+                      onClick={() => update(i, { level: l.value } as Partial<Block>)}
+                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).level || 'h2') === l.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    >{l.label}</button>
+                  ))}
+                </div>
+                <input
+                  value={(block as any)[textKey] || ''}
+                  onChange={e => update(i, { [textKey]: e.target.value } as Partial<Block>)}
+                  placeholder="제목을 입력하세요"
+                  className={`w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 ${(block as any).level === 'h3' ? 'text-base font-semibold' : 'text-lg font-bold'}`}
+                />
+              </>
+            )}
 
             {/* 텍스트 블록 */}
             {block.type === 'text' && (

@@ -64,6 +64,22 @@ export default function BlockRenderer({ blocks, lang }: Props) {
   return (
     <div className="space-y-4">
       {blocks.map((block, i) => {
+        if (block.type === 'heading') {
+          const text = getBlockText(block, lang)
+          if (block.level === 'h3') {
+            return (
+              <h3 key={i} className="text-base font-semibold text-gray-800 pt-2">
+                {text}
+              </h3>
+            )
+          }
+          return (
+            <div key={i} className="pt-4 pb-1 border-t border-gray-200">
+              <h2 className="text-lg font-bold text-gray-900">{text}</h2>
+            </div>
+          )
+        }
+
         if (block.type === 'text') {
           const text = getBlockText(block, lang)
           return (
