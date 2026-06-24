@@ -33,7 +33,8 @@ export default function HomePage() {
       .from('jeju_categories')
       .select('*')
       .order('order_num')
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        console.log('categories:', data, error)
         if (data) setCategories(data)
         setLoading(false)
       })
