@@ -1,0 +1,105 @@
+'use client'
+// 카테고리 하위 항목 리스트 페이지
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
+import { useLang } from '@/context/LangContext'
+import { getTitle } from '@/lib/types'
+import type { Category, Item, Lang } from '@/lib/types'
+
+const LANG_LABELS: { code: Lang; label: string }[] = [
+  { code: 'ko', label: '한국어' },
+  { code: 'en', label: 'English' },
+  { code: 'zh', label: '中文' },
+  { code: 'ja', label: '日本語' },
+]
+
+const BACK_LABEL: Record<Lang, string> = {
+  ko: '홈',
+  en: 'Home',
+  zh: '首页',
+  ja: 'ホーム',
+}
+
+export default function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { lang, setLang } = useLang()
+  const router = useRouter()
+  const [category, setCategory] = useState<Category | null>(null)
+  const [items, setItems] = useState<Item[]>([])
+  const [loading, setLoading] = useState(true)
+  const [slug, setSlug] = useState<string>('')
+
+  useEffect(() => {
+    params.then((p) => setSlug(p.slug))
+  }, [params])
+
+  useEffect(() => {
+    if (!slug) return
+    supabase.from('jeju_categories').select('*').eq('slug', slug).single().then(async ({ data: cat }) => {
+      if (!cat) { setLoading(false); return }
+      setCategory(cat)
+      const { data: its } = await supabase
+        .from('jeju_items').select('*').eq('category_id', cat.id).order('order_num')
+      setItems(its ?? [])
+      setLoading(false)
+    })
+  }, [slug])
+
+  if (loading) return <div className="text-center text-gray-400 py-20">불러오는 중...</div>
+  if (!category) return <div className="text-center text-gray-400 py-20">카테고리를 찾을 수 없습니다.</div>
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* 헤더 */}
+      <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
+        <div className="max-w-lg mx-auto flex items-center justify-between">
+          <button
+            onClick={() => router.push('/')}
+            className="flex items-center gap-1 text-sm text-gray-500 hover:text-emerald-600"
+          >
+            ← {BACK_LABEL[lang]}
+          </button>
+          <div className="flex gap-2">
+            {LANG_LABELS.map((l) => (
+              <button
+                key={l.code}
+                onClick={() => setLang(l.code)}
+                className={`text-xs px-2 py-0.5 rounded-full font-medium transition-colors
+                  ${lang === l.code ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      {/* 카테고리 타이틀 */}
+      <div className="bg-emerald-700 text-white text-center py-6 px-4">
+        <div className="text-2xl mb-1">{category.icon}</div>
+        <h1 className="text-lg font-bold">{getTitle(category, lang)}</h1>
+      </div>
+
+      {/* 항목 리스트 */}
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-4">
+        {items.length === 0 ? (
+          <p className="text-center text-gray-400 py-20">항목이 없습니다.</p>
+        ) : (
+          <div className="space-y-2">
+            {items.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => router.push(`/guide/${item.slug}`)}
+                className="w-full bg-white rounded-xl border border-gray-100 px-5 py-4 text-left flex items-center justify-between hover:border-emerald-200 hover:shadow-sm transition-all"
+              >
+                <span className="text-sm font-medium text-gray-800">{getTitle(item, lang)}</span>
+                <span className="text-gray-300 text-lg">›</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </main>
+    </div>
+  )
+}

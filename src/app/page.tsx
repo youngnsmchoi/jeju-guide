@@ -1,65 +1,95 @@
-import Image from "next/image";
+'use client'
+// 홈 화면 — 4개 카테고리 카드 + 언어 선택
 
-export default function Home() {
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
+import { useLang } from '@/context/LangContext'
+import { getTitle } from '@/lib/types'
+import type { Category, Lang } from '@/lib/types'
+
+const LANG_LABELS: { code: Lang; label: string }[] = [
+  { code: 'ko', label: '한국어' },
+  { code: 'en', label: 'English' },
+  { code: 'zh', label: '中文' },
+  { code: 'ja', label: '日本語' },
+]
+
+const HERO_TEXT: Record<Lang, { title: string; sub: string }> = {
+  ko: { title: '서귀포 스마트 생존 가이드', sub: '현지 생활의 모든 것을 2번의 클릭으로' },
+  en: { title: 'Seogwipo Smart Survival Guide', sub: 'Everything you need in 2 clicks' },
+  zh: { title: '西归浦智能生存指南', sub: '两次点击解决所有问题' },
+  ja: { title: '西帰浦スマート生存ガイド', sub: '2クリックで現地生活のすべてを解決' },
+}
+
+export default function HomePage() {
+  const { lang, setLang } = useLang()
+  const router = useRouter()
+  const [categories, setCategories] = useState<Category[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    supabase
+      .from('jeju_categories')
+      .select('*')
+      .order('order_num')
+      .then(({ data }) => {
+        if (data) setCategories(data)
+        setLoading(false)
+      })
+  }, [])
+
+  const hero = HERO_TEXT[lang]
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen flex flex-col">
+      {/* 언어 선택 헤더 */}
+      <header className="bg-white border-b border-gray-200 px-4 py-3">
+        <div className="max-w-lg mx-auto flex justify-end gap-2">
+          {LANG_LABELS.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => setLang(l.code)}
+              className={`text-xs px-3 py-1 rounded-full font-medium transition-colors
+                ${lang === l.code
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              {l.label}
+            </button>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      </header>
+
+      {/* 히어로 */}
+      <div className="bg-emerald-700 text-white text-center py-10 px-4">
+        <div className="text-3xl mb-1">🌊</div>
+        <h1 className="text-xl font-bold mb-1">{hero.title}</h1>
+        <p className="text-emerald-200 text-sm">{hero.sub}</p>
+      </div>
+
+      {/* 카테고리 카드 */}
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6">
+        {loading ? (
+          <div className="text-center text-gray-400 py-20">불러오는 중...</div>
+        ) : (
+          <div className="grid grid-cols-2 gap-4">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => router.push(`/category/${cat.slug}`)}
+                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col items-center gap-3 hover:shadow-md hover:border-emerald-200 transition-all active:scale-95"
+              >
+                <span className="text-4xl">{cat.icon}</span>
+                <span className="text-sm font-semibold text-gray-800 text-center leading-tight">
+                  {getTitle(cat, lang)}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </main>
     </div>
-  );
+  )
 }
