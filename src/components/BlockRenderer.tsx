@@ -27,11 +27,11 @@ const imageSizeClass: Record<ImageSize, string> = {
   full: 'w-full',
 }
 
-// 이미지+텍스트 블록에서 이미지 크기별 고정 높이
+// 이미지+텍스트 블록에서 이미지 크기별 클래스
 const imageTextSizeClass: Record<ImageSize, string> = {
-  small: 'w-20 h-20',
-  medium: 'w-32 h-32',
-  full: 'w-40 h-40',
+  small: 'w-1/4',
+  medium: 'w-1/2',
+  full: 'w-2/3',
 }
 
 interface Props {
@@ -76,7 +76,7 @@ export default function BlockRenderer({ blocks, lang }: Props) {
               <img
                 src={block.url}
                 alt=""
-                className={`${imageTextSizeClass[size]} object-cover rounded-xl flex-shrink-0`}
+                className={`${imageTextSizeClass[size]} object-cover rounded-xl flex-shrink-0 max-h-48`}
               />
               <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
                 {renderText(text)}
