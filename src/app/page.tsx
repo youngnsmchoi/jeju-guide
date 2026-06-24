@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
 import { useLang } from '@/context/LangContext'
 import { getTitle } from '@/lib/types'
 import type { Category, Lang } from '@/lib/types'
@@ -29,13 +28,10 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase
-      .from('jeju_categories')
-      .select('*')
-      .order('order_num')
-      .then(({ data, error }) => {
-        console.log('categories:', data, error)
-        if (data) setCategories(data)
+    fetch('/api/categories')
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) setCategories(data)
         setLoading(false)
       })
   }, [])

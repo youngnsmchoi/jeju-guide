@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
 import { useLang } from '@/context/LangContext'
 import { getTitle } from '@/lib/types'
 import type { Category, Item, Lang } from '@/lib/types'
@@ -28,23 +27,20 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
   const [category, setCategory] = useState<Category | null>(null)
   const [items, setItems] = useState<Item[]>([])
   const [loading, setLoading] = useState(true)
-  const [slug, setSlug] = useState<string>('')
 
   useEffect(() => {
-    params.then((p) => setSlug(p.slug))
-  }, [params])
-
-  useEffect(() => {
-    if (!slug) return
-    supabase.from('jeju_categories').select('*').eq('slug', slug).single().then(async ({ data: cat }) => {
-      if (!cat) { setLoading(false); return }
+    params.then(async ({ slug }) => {
+      const catRes = await fetch('/api/categories').then((r) => r.json())
+      const cats: Category[] = Array.isArray(catRes) ? catRes : []
+      const cat = cats.find((c) => c.slug === slug) ?? null
       setCategory(cat)
-      const { data: its } = await supabase
-        .from('jeju_items').select('*').eq('category_id', cat.id).order('order_num')
-      setItems(its ?? [])
+      if (cat) {
+        const its = await fetch(`/api/items?category_id=${cat.id}`).then((r) => r.json())
+        setItems(Array.isArray(its) ? its : [])
+      }
       setLoading(false)
     })
-  }, [slug])
+  }, [params])
 
   if (loading) return <div className="text-center text-gray-400 py-20">불러오는 중...</div>
   if (!category) return <div className="text-center text-gray-400 py-20">카테고리를 찾을 수 없습니다.</div>

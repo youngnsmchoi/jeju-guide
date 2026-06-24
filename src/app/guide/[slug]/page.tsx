@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
 import { useLang } from '@/context/LangContext'
 import { getTitle, getContent } from '@/lib/types'
 import type { Item, Category, Lang } from '@/lib/types'
@@ -33,23 +32,15 @@ export default function GuidePage({ params }: { params: Promise<{ slug: string }
   const [item, setItem] = useState<Item | null>(null)
   const [category, setCategory] = useState<Category | null>(null)
   const [loading, setLoading] = useState(true)
-  const [slug, setSlug] = useState<string>('')
 
   useEffect(() => {
-    params.then((p) => setSlug(p.slug))
-  }, [params])
-
-  useEffect(() => {
-    if (!slug) return
-    supabase.from('jeju_items').select('*').eq('slug', slug).single().then(async ({ data }) => {
-      if (!data) { setLoading(false); return }
-      setItem(data)
-      const { data: cat } = await supabase
-        .from('jeju_categories').select('*').eq('id', data.category_id).single()
-      setCategory(cat)
+    params.then(async ({ slug }) => {
+      const res = await fetch(`/api/guide?slug=${slug}`).then((r) => r.json())
+      if (res.item) setItem(res.item)
+      if (res.category) setCategory(res.category)
       setLoading(false)
     })
-  }, [slug])
+  }, [params])
 
   if (loading) return <div className="text-center text-gray-400 py-20">불러오는 중...</div>
   if (!item) return <div className="text-center text-gray-400 py-20">항목을 찾을 수 없습니다.</div>
