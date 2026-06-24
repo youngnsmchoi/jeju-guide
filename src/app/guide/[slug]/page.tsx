@@ -112,7 +112,7 @@ export default function GuidePage({ params }: { params: Promise<{ slug: string }
             <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">지도에서 찾기</p>
             <div className="flex gap-2">
               <a
-                href={`https://map.kakao.com/?q=${encodeURIComponent(item.map_keyword)}`}
+                href={`https://map.kakao.com/link/search/${encodeURIComponent(item.map_keyword)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 bg-yellow-400 text-gray-900 text-sm font-semibold py-3 rounded-xl text-center hover:bg-yellow-500 transition-colors"
@@ -128,7 +128,7 @@ export default function GuidePage({ params }: { params: Promise<{ slug: string }
                 {mapLabels.naver}
               </a>
               <a
-                href={`https://www.google.com/maps/search/${encodeURIComponent(item.map_keyword)}`}
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.map_keyword)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 bg-blue-500 text-white text-sm font-semibold py-3 rounded-xl text-center hover:bg-blue-600 transition-colors"
