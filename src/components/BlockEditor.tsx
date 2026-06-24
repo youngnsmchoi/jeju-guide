@@ -12,6 +12,7 @@ interface Props {
 
 const BLOCK_TYPES = [
   { type: 'heading', label: 'H 제목' },
+  { type: 'divider', label: '— 구분선' },
   { type: 'text', label: '📝 텍스트' },
   { type: 'image', label: '🖼 이미지' },
   { type: 'image_text', label: '🖼+📝 이미지+텍스트' },
@@ -55,6 +56,7 @@ const VALIGN_OPTIONS: { value: TextValign; label: string }[] = [
 
 function newBlock(type: string): Block {
   if (type === 'heading') return { type, level: 'h2' as const, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
+  if (type === 'divider') return { type }
   if (type === 'text') return { type, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
   if (type === 'image') return { type, url: '', size: 'full' as const, align: 'left' as const, caption_ko: '', caption_en: '', caption_zh: '', caption_ja: '' }
   if (type === 'image_text') return { type, url: '', size: 'medium' as const, position: 'left' as const, valign: 'top' as const, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
@@ -144,6 +146,11 @@ export default function BlockEditor({ blocks, onChange, lang }: Props) {
                   className={`w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 ${(block as any).level === 'h3' ? 'text-base font-semibold' : 'text-lg font-bold'}`}
                 />
               </>
+            )}
+
+            {/* 구분선 블록 */}
+            {block.type === 'divider' && (
+              <hr className="border-gray-300" />
             )}
 
             {/* 텍스트 블록 */}

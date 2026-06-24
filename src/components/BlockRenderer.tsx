@@ -74,10 +74,12 @@ export default function BlockRenderer({ blocks, lang }: Props) {
             )
           }
           return (
-            <div key={i} className="pt-4 pb-1 border-t border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900">{text}</h2>
-            </div>
+            <h2 key={i} className="text-lg font-bold text-gray-900 pt-2">{text}</h2>
           )
+        }
+
+        if (block.type === 'divider') {
+          return <hr key={i} className="border-gray-200" />
         }
 
         if (block.type === 'text') {

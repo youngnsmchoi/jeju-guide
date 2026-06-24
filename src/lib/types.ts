@@ -30,6 +30,7 @@ export type Block =
   | { type: 'youtube'; url: string }
   | { type: 'tip'; variant: TipVariant; text_ko: string; text_en: string; text_zh: string; text_ja: string }
   | { type: 'heading'; level: HeadingLevel; text_ko: string; text_en: string; text_zh: string; text_ja: string }
+  | { type: 'divider' }
 
 export interface Item {
   id: number
