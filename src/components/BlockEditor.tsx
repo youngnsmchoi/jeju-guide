@@ -2,7 +2,7 @@
 // 블록 방식 콘텐츠 에디터 컴포넌트
 
 import { useRef } from 'react'
-import type { Block, Lang, ImageSize } from '@/lib/types'
+import type { Block, Lang, ImageSize, ImageAlign, ImagePosition } from '@/lib/types'
 
 interface Props {
   blocks: Block[]
@@ -23,10 +23,21 @@ const SIZE_OPTIONS: { value: ImageSize; label: string }[] = [
   { value: 'full', label: '대 (전체)' },
 ]
 
+const ALIGN_OPTIONS: { value: ImageAlign; label: string }[] = [
+  { value: 'left', label: '◀ 좌측' },
+  { value: 'center', label: '■ 중앙' },
+  { value: 'right', label: '▶ 우측' },
+]
+
+const POSITION_OPTIONS: { value: ImagePosition; label: string }[] = [
+  { value: 'left', label: '◀ 이미지 왼쪽' },
+  { value: 'right', label: '▶ 이미지 오른쪽' },
+]
+
 function newBlock(type: Block['type']): Block {
   if (type === 'text') return { type, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
-  if (type === 'image') return { type, url: '', size: 'full' as const, caption_ko: '', caption_en: '', caption_zh: '', caption_ja: '' }
-  if (type === 'image_text') return { type, url: '', size: 'medium' as const, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
+  if (type === 'image') return { type, url: '', size: 'full' as const, align: 'left' as const, caption_ko: '', caption_en: '', caption_zh: '', caption_ja: '' }
+  if (type === 'image_text') return { type, url: '', size: 'medium' as const, position: 'left' as const, text_ko: '', text_en: '', text_zh: '', text_ja: '' }
   return { type: 'youtube', url: '' }
 }
 
@@ -120,6 +131,18 @@ export default function BlockEditor({ blocks, onChange, lang }: Props) {
                     >{s.label}</button>
                   ))}
                 </div>
+                {/* 정렬 선택 */}
+                <div className="flex gap-2 items-center">
+                  <span className="text-xs text-gray-400">정렬.</span>
+                  {ALIGN_OPTIONS.map(a => (
+                    <button
+                      key={a.value}
+                      type="button"
+                      onClick={() => update(i, { align: a.value } as Partial<Block>)}
+                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).align || 'left') === a.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    >{a.label}</button>
+                  ))}
+                </div>
                 <div className="flex gap-2">
                   <input
                     value={(block as any).url || ''}
@@ -163,6 +186,18 @@ export default function BlockEditor({ blocks, onChange, lang }: Props) {
                     >{s.label}</button>
                   ))}
                 </div>
+                {/* 이미지 위치 선택 */}
+                <div className="flex gap-2 items-center">
+                  <span className="text-xs text-gray-400">이미지 위치.</span>
+                  {POSITION_OPTIONS.map(p => (
+                    <button
+                      key={p.value}
+                      type="button"
+                      onClick={() => update(i, { position: p.value } as Partial<Block>)}
+                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).position || 'left') === p.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    >{p.label}</button>
+                  ))}
+                </div>
                 <div className="flex gap-2">
                   <input
                     value={(block as any).url || ''}
@@ -187,11 +222,17 @@ export default function BlockEditor({ blocks, onChange, lang }: Props) {
                 {/* 미리보기 */}
                 {(block as any).url && (
                   <div className="flex gap-3 p-2 bg-gray-50 rounded-lg">
-                    <img
-                      src={(block as any).url}
-                      className={`${sizePreviewClass[(block as any).size as ImageSize || 'medium']} max-h-32 object-cover rounded-lg flex-shrink-0`}
-                    />
-                    <p className="text-xs text-gray-600 whitespace-pre-line">{(block as any)[textKey]}</p>
+                    {((block as any).position || 'left') === 'left' ? (
+                      <>
+                        <img src={(block as any).url} className={`${sizePreviewClass[(block as any).size as ImageSize || 'medium']} max-h-32 object-cover rounded-lg flex-shrink-0`} />
+                        <p className="text-xs text-gray-600 whitespace-pre-line">{(block as any)[textKey]}</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-xs text-gray-600 whitespace-pre-line flex-1">{(block as any)[textKey]}</p>
+                        <img src={(block as any).url} className={`${sizePreviewClass[(block as any).size as ImageSize || 'medium']} max-h-32 object-cover rounded-lg flex-shrink-0`} />
+                      </>
+                    )}
                   </div>
                 )}
               </>

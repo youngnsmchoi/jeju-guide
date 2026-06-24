@@ -1,7 +1,7 @@
 'use client'
 // 블록 배열을 화면에 렌더링하는 컴포넌트
 
-import type { Block, Lang, ImageSize } from '@/lib/types'
+import type { Block, Lang, ImageSize, ImageAlign, ImagePosition } from '@/lib/types'
 import { getBlockText, getBlockCaption } from '@/lib/types'
 
 function getYoutubeId(url: string): string | null {
@@ -34,6 +34,13 @@ const imageTextSizeClass: Record<ImageSize, string> = {
   full: 'w-2/3',
 }
 
+// 단독 이미지 정렬
+const imageAlignClass: Record<ImageAlign, string> = {
+  left: 'mr-auto',
+  center: 'mx-auto',
+  right: 'ml-auto',
+}
+
 interface Props {
   blocks: Block[]
   lang: Lang
@@ -54,12 +61,13 @@ export default function BlockRenderer({ blocks, lang }: Props) {
 
         if (block.type === 'image') {
           const size = block.size || 'full'
+          const align = block.align || 'left'
           return (
             <div key={i} className="space-y-1">
               <img
                 src={block.url}
                 alt=""
-                className={`${imageSizeClass[size]} rounded-xl object-cover`}
+                className={`${imageSizeClass[size]} ${imageAlignClass[align]} block rounded-xl object-cover`}
               />
               {getBlockCaption(block, lang) && (
                 <p className="text-xs text-gray-400 text-center">{getBlockCaption(block, lang)}</p>
@@ -70,17 +78,23 @@ export default function BlockRenderer({ blocks, lang }: Props) {
 
         if (block.type === 'image_text') {
           const size = block.size || 'medium'
+          const position = block.position || 'left'
           const text = getBlockText(block, lang)
+          const img = (
+            <img
+              src={block.url}
+              alt=""
+              className={`${imageTextSizeClass[size]} object-cover rounded-xl flex-shrink-0 max-h-48`}
+            />
+          )
+          const txt = (
+            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+              {renderText(text)}
+            </p>
+          )
           return (
             <div key={i} className="flex gap-3 items-start">
-              <img
-                src={block.url}
-                alt=""
-                className={`${imageTextSizeClass[size]} object-cover rounded-xl flex-shrink-0 max-h-48`}
-              />
-              <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
-                {renderText(text)}
-              </p>
+              {position === 'left' ? <>{img}{txt}</> : <>{txt}{img}</>}
             </div>
           )
         }
