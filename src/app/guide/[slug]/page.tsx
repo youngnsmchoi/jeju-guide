@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import { getTitle, getContent } from '@/lib/types'
 import type { Item, Category, Lang } from '@/lib/types'
+import BlockRenderer from '@/components/BlockRenderer'
 
 const LANG_LABELS: { code: Lang; label: string }[] = [
   { code: 'ko', label: '한국어' },
@@ -99,12 +100,18 @@ export default function GuidePage({ params }: { params: Promise<{ slug: string }
           </div>
         )}
 
-        {/* 설명 */}
-        {content && (
-          <div
-            className="px-4 py-5 prose prose-sm max-w-none text-gray-700"
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
+        {/* 블록 콘텐츠 (새 방식) */}
+        {item.blocks && item.blocks.length > 0 && (
+          <div className="px-4 py-5">
+            <BlockRenderer blocks={item.blocks} lang={lang} />
+          </div>
+        )}
+
+        {/* 기존 텍스트 콘텐츠 (이전 데이터 호환) */}
+        {(!item.blocks || item.blocks.length === 0) && content && (
+          <div className="px-4 py-5">
+            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{content}</p>
+          </div>
         )}
 
         {/* 지도 버튼 */}

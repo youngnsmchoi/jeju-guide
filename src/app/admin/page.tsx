@@ -1,20 +1,18 @@
 'use client'
-// 관리자 페이지 — 로그인, 항목 목록, 추가/수정/삭제
+// 관리자 페이지 — 로그인, 항목 목록, 블록 에디터
 
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import type { Category, Item } from '@/lib/types'
+import type { Category, Item, Block, Lang } from '@/lib/types'
 
-const RichEditor = dynamic(() => import('@/components/RichEditor'), { ssr: false })
+const BlockEditor = dynamic(() => import('@/components/BlockEditor'), { ssr: false })
 
 const LANGS = [
-  { code: 'ko', label: '한국어' },
-  { code: 'en', label: 'English' },
-  { code: 'zh', label: '中文' },
-  { code: 'ja', label: '日本語' },
-] as const
-
-type LangCode = 'ko' | 'en' | 'zh' | 'ja'
+  { code: 'ko' as Lang, label: '한국어' },
+  { code: 'en' as Lang, label: 'English' },
+  { code: 'zh' as Lang, label: '中文' },
+  { code: 'ja' as Lang, label: '日本語' },
+]
 
 interface FormState {
   id?: number
@@ -26,6 +24,7 @@ interface FormState {
   image_url: string
   video_url: string
   map_keyword: string
+  blocks: Block[]
 }
 
 const emptyForm = (categoryId: number): FormState => ({
@@ -35,6 +34,7 @@ const emptyForm = (categoryId: number): FormState => ({
   title_ko: '', title_en: '', title_zh: '', title_ja: '',
   content_ko: '', content_en: '', content_zh: '', content_ja: '',
   image_url: '', video_url: '', map_keyword: '',
+  blocks: [],
 })
 
 export default function AdminPage() {
@@ -45,7 +45,7 @@ export default function AdminPage() {
   const [items, setItems] = useState<Item[]>([])
   const [selectedCat, setSelectedCat] = useState<Category | null>(null)
   const [form, setForm] = useState<FormState | null>(null)
-  const [activeLang, setActiveLang] = useState<LangCode>('ko')
+  const [activeLang, setActiveLang] = useState<Lang>('ko')
   const [saving, setSaving] = useState(false)
 
   const login = async () => {
@@ -73,9 +73,17 @@ export default function AdminPage() {
   }
 
   const startNew = () => setForm(emptyForm(selectedCat!.id))
-  const startEdit = (item: Item) => setForm({ ...item } as FormState)
+  const startEdit = (item: Item) => setForm({
+    ...item,
+    title_en: item.title_en || '', title_zh: item.title_zh || '', title_ja: item.title_ja || '',
+    content_ko: item.content_ko || '', content_en: item.content_en || '',
+    content_zh: item.content_zh || '', content_ja: item.content_ja || '',
+    image_url: item.image_url || '', video_url: item.video_url || '',
+    map_keyword: item.map_keyword || '',
+    blocks: item.blocks || [],
+  } as FormState)
 
-  const setField = (key: keyof FormState, value: string | number) =>
+  const setField = (key: keyof FormState, value: string | number | Block[]) =>
     setForm(f => f ? { ...f, [key]: value } : f)
 
   const save = async () => {
@@ -133,7 +141,7 @@ export default function AdminPage() {
         <h1 className="text-lg font-bold">제주 가이드 관리자</h1>
       </header>
 
-      <div className="max-w-4xl mx-auto p-4 space-y-4">
+      <div className="max-w-2xl mx-auto p-4 space-y-4">
         {/* 카테고리 선택 */}
         <div className="bg-white rounded-2xl p-4 shadow-sm">
           <p className="text-xs text-gray-400 font-medium mb-3">카테고리 선택</p>
@@ -210,45 +218,44 @@ export default function AdminPage() {
             </div>
 
             {/* 언어 탭 */}
-            <div>
-              <div className="flex gap-2 mb-3">
-                {LANGS.map(l => (
-                  <button
-                    key={l.code}
-                    type="button"
-                    onClick={() => setActiveLang(l.code)}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors
-                      ${activeLang === l.code ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                  >{l.label}</button>
-                ))}
-              </div>
+            <div className="flex gap-2">
+              {LANGS.map(l => (
+                <button
+                  key={l.code}
+                  type="button"
+                  onClick={() => setActiveLang(l.code)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors
+                    ${activeLang === l.code ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                >{l.label}</button>
+              ))}
+            </div>
 
-              <div className="space-y-3">
-                <div>
-                  <label className="text-xs text-gray-400 font-medium">제목</label>
-                  <input
-                    value={form[`title_${activeLang}`]}
-                    onChange={e => setField(`title_${activeLang}`, e.target.value)}
-                    placeholder={`제목 (${activeLang})`}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-gray-400 font-medium">내용</label>
-                  <div className="mt-1">
-                    <RichEditor
-                      value={form[`content_${activeLang}`]}
-                      onChange={html => setField(`content_${activeLang}`, html)}
-                    />
-                  </div>
-                </div>
-              </div>
+            {/* 제목 */}
+            <div>
+              <label className="text-xs text-gray-400 font-medium">제목</label>
+              <input
+                value={form[`title_${activeLang}`]}
+                onChange={e => setField(`title_${activeLang}`, e.target.value)}
+                placeholder={`제목 (${activeLang})`}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+
+            {/* 블록 에디터 */}
+            <div>
+              <label className="text-xs text-gray-400 font-medium mb-2 block">콘텐츠 블록</label>
+              <BlockEditor
+                blocks={form.blocks}
+                onChange={blocks => setField('blocks', blocks)}
+                lang={activeLang}
+              />
             </div>
 
             {/* 지도/이미지/동영상 */}
-            <div className="space-y-3">
+            <div className="space-y-3 pt-2 border-t border-gray-100">
+              <p className="text-xs text-gray-400 font-medium">추가 설정</p>
               <div>
-                <label className="text-xs text-gray-400 font-medium">지도 검색 키워드</label>
+                <label className="text-xs text-gray-400">지도 검색 키워드</label>
                 <input
                   value={form.map_keyword}
                   onChange={e => setField('map_keyword', e.target.value)}
@@ -257,20 +264,11 @@ export default function AdminPage() {
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-400 font-medium">대표 이미지 URL (선택)</label>
+                <label className="text-xs text-gray-400">대표 이미지 URL (목록에 표시, 선택)</label>
                 <input
                   value={form.image_url}
                   onChange={e => setField('image_url', e.target.value)}
                   placeholder="https://..."
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
-                />
-              </div>
-              <div>
-                <label className="text-xs text-gray-400 font-medium">YouTube URL (선택)</label>
-                <input
-                  value={form.video_url}
-                  onChange={e => setField('video_url', e.target.value)}
-                  placeholder="https://youtube.com/watch?v=..."
                   className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
                 />
               </div>
