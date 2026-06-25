@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Bus, Store, Leaf, Lightbulb, type LucideIcon } from 'lucide-react'
 import { useLang } from '@/context/LangContext'
 import { getTitle } from '@/lib/types'
 import type { Category, Lang } from '@/lib/types'
@@ -14,11 +15,18 @@ const LANG_LABELS: { code: Lang; label: string }[] = [
   { code: 'ja', label: '日本語' },
 ]
 
-const HERO_TEXT: Record<Lang, { title: string; sub: string }> = {
-  ko: { title: '서귀포 스마트 생존 가이드', sub: '현지 생활의 모든 것을 2번의 클릭으로' },
-  en: { title: 'Seogwipo Smart Survival Guide', sub: 'Everything you need in 2 clicks' },
-  zh: { title: '西归浦智能生存指南', sub: '两次点击解决所有问题' },
-  ja: { title: '西帰浦スマート生存ガイド', sub: '2クリックで現地生活のすべてを解決' },
+const HERO_TEXT: Record<Lang, { title: string }> = {
+  ko: { title: '제주도 여행 가이드' },
+  en: { title: 'Jeju Travel Guide' },
+  zh: { title: '济州岛旅行指南' },
+  ja: { title: '済州島旅行ガイド' },
+}
+
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  transport: Bus,
+  living: Store,
+  local: Leaf,
+  essential: Lightbulb,
 }
 
 export default function HomePage() {
@@ -61,9 +69,7 @@ export default function HomePage() {
 
       {/* 히어로 */}
       <div className="bg-emerald-700 text-white text-center py-10 px-4">
-        <div className="text-3xl mb-1">🌊</div>
-        <h1 className="text-xl font-bold mb-1">{hero.title}</h1>
-        <p className="text-emerald-200 text-sm">{hero.sub}</p>
+        <h1 className="text-xl font-bold">{hero.title}</h1>
       </div>
 
       {/* 카테고리 카드 */}
@@ -72,18 +78,21 @@ export default function HomePage() {
           <div className="text-center text-gray-400 py-20">불러오는 중...</div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => router.push(`/category/${cat.slug}`)}
-                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col items-center gap-3 hover:shadow-md hover:border-emerald-200 transition-all active:scale-95"
-              >
-                <span className="text-4xl">{cat.icon}</span>
-                <span className="text-sm font-semibold text-gray-800 text-center leading-tight">
-                  {getTitle(cat, lang)}
-                </span>
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const Icon = CATEGORY_ICONS[cat.slug]
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => router.push(`/category/${cat.slug}`)}
+                  className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col items-center gap-3 hover:shadow-md hover:border-emerald-200 transition-all active:scale-95"
+                >
+                  {Icon && <Icon className="w-8 h-8 text-emerald-700" strokeWidth={1.5} />}
+                  <span className="text-sm font-semibold text-gray-800 text-center leading-tight">
+                    {getTitle(cat, lang)}
+                  </span>
+                </button>
+              )
+            })}
           </div>
         )}
       </main>

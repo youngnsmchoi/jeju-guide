@@ -3,9 +3,17 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Bus, Store, Leaf, Lightbulb, type LucideIcon } from 'lucide-react'
 import { useLang } from '@/context/LangContext'
 import { getTitle } from '@/lib/types'
 import type { Category, Item, Lang } from '@/lib/types'
+
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  transport: Bus,
+  living: Store,
+  local: Leaf,
+  essential: Lightbulb,
+}
 
 const LANG_LABELS: { code: Lang; label: string }[] = [
   { code: 'ko', label: '한국어' },
@@ -73,7 +81,10 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
       {/* 카테고리 타이틀 */}
       <div className="bg-emerald-700 text-white text-center py-6 px-4">
-        <div className="text-2xl mb-1">{category.icon}</div>
+        {(() => {
+          const Icon = CATEGORY_ICONS[category.slug]
+          return Icon && <Icon className="w-7 h-7 mx-auto mb-1" strokeWidth={1.5} />
+        })()}
         <h1 className="text-lg font-bold">{getTitle(category, lang)}</h1>
       </div>
 
