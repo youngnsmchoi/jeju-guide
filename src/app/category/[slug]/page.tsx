@@ -87,10 +87,14 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
               <button
                 key={item.id}
                 onClick={() => router.push(`/guide/${item.slug}`)}
-                className="w-full bg-white rounded-xl border border-gray-100 px-5 py-4 text-left flex items-center justify-between hover:border-emerald-200 hover:shadow-sm transition-all"
+                className="w-full bg-white rounded-xl border border-gray-100 px-5 py-4 text-left flex items-center gap-4 hover:border-emerald-200 hover:shadow-sm transition-all"
               >
-                <span className="text-sm font-medium text-gray-800">{getTitle(item, lang)}</span>
-                <span className="text-gray-300 text-lg">›</span>
+                <span className="flex-1 text-sm font-medium text-gray-800">{getTitle(item, lang)}</span>
+                <div className="w-20 h-16 shrink-0 rounded-lg bg-white overflow-hidden">
+                  {item.image_url && (
+                    <img src={item.image_url} alt="" className="w-full h-full object-cover" />
+                  )}
+                </div>
               </button>
             ))}
           </div>
