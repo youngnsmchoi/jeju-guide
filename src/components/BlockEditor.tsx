@@ -2,6 +2,22 @@
 // 블록 방식 콘텐츠 에디터 컴포넌트
 
 import { useRef } from 'react'
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+  arrayMove,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import type { Block, Lang, ImageSize, ImageAlign, ImagePosition, TextValign, TipVariant, HeadingLevel } from '@/lib/types'
 
 interface Props {
@@ -64,34 +80,271 @@ function newBlock(type: string): Block {
   return { type: 'youtube', url: '' }
 }
 
-// 이미지 크기별 에디터 미리보기 클래스
 const sizePreviewClass: Record<ImageSize, string> = {
   small: 'w-1/3',
   medium: 'w-1/2',
   full: 'w-full',
 }
 
+interface SortableBlockProps {
+  id: string
+  block: Block
+  index: number
+  lang: Lang
+  onUpdate: (index: number, patch: Partial<Block>) => void
+  onRemove: (index: number) => void
+  onUpload: (index: number) => void
+}
+
+function SortableBlock({ id, block, index, lang, onUpdate, onRemove, onUpload }: SortableBlockProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  }
+
+  const textKey = `text_${lang}` as const
+  const captionKey = `caption_${lang}` as const
+
+  return (
+    <div ref={setNodeRef} style={style} className="border border-gray-200 rounded-xl overflow-hidden bg-white">
+      {/* 블록 헤더 */}
+      <div className="flex items-center justify-between bg-gray-50 px-3 py-2 border-b border-gray-200">
+        <div className="flex items-center gap-2">
+          {/* 드래그 핸들 */}
+          <button
+            type="button"
+            {...attributes}
+            {...listeners}
+            className="text-gray-300 hover:text-gray-500 cursor-grab active:cursor-grabbing touch-none px-1"
+            title="드래그하여 순서 변경"
+          >
+            ⠿
+          </button>
+          <span className="text-xs font-medium text-gray-500">
+            {BLOCK_TYPES.find(t => t.type === block.type)?.label}
+          </span>
+        </div>
+        <button type="button" onClick={() => onRemove(index)} className="text-xs px-2 py-1 rounded hover:bg-red-100 text-red-400">✕</button>
+      </div>
+
+      {/* 블록 내용 */}
+      <div className="p-3 space-y-2">
+
+        {/* 제목 블록 */}
+        {block.type === 'heading' && (
+          <>
+            <div className="flex gap-2 items-center">
+              <span className="text-xs text-gray-400">크기.</span>
+              {HEADING_LEVEL_OPTIONS.map(l => (
+                <button
+                  key={l.value}
+                  type="button"
+                  onClick={() => onUpdate(index, { level: l.value } as Partial<Block>)}
+                  className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).level || 'h2') === l.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                >{l.label}</button>
+              ))}
+            </div>
+            <input
+              value={(block as any)[textKey] || ''}
+              onChange={e => onUpdate(index, { [textKey]: e.target.value } as Partial<Block>)}
+              placeholder="제목을 입력하세요"
+              className={`w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 ${(block as any).level === 'h3' ? 'text-base font-semibold' : 'text-lg font-bold'}`}
+            />
+          </>
+        )}
+
+        {/* 구분선 블록 */}
+        {block.type === 'divider' && (
+          <hr className="border-gray-300" />
+        )}
+
+        {/* 텍스트 블록 */}
+        {block.type === 'text' && (
+          <>
+            <textarea
+              value={(block as any)[textKey] || ''}
+              onChange={e => onUpdate(index, { [textKey]: e.target.value } as Partial<Block>)}
+              placeholder="텍스트를 입력하세요&#10;굵게: **텍스트** 형식으로 입력"
+              rows={4}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
+            />
+            <p className="text-xs text-gray-400">굵게 표시: <code className="bg-gray-100 px-1 rounded">**텍스트**</code> 형식으로 입력하세요.</p>
+          </>
+        )}
+
+        {/* 이미지 블록 */}
+        {block.type === 'image' && (
+          <>
+            <div className="flex gap-2 items-center">
+              <span className="text-xs text-gray-400">크기.</span>
+              {SIZE_OPTIONS.map(s => (
+                <button key={s.value} type="button"
+                  onClick={() => onUpdate(index, { size: s.value } as Partial<Block>)}
+                  className={`text-xs px-3 py-1 rounded-lg transition-colors ${(block as any).size === s.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                >{s.label}</button>
+              ))}
+            </div>
+            <div className="flex gap-2 items-center">
+              <span className="text-xs text-gray-400">정렬.</span>
+              {ALIGN_OPTIONS.map(a => (
+                <button key={a.value} type="button"
+                  onClick={() => onUpdate(index, { align: a.value } as Partial<Block>)}
+                  className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).align || 'left') === a.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                >{a.label}</button>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <input
+                value={(block as any).url || ''}
+                onChange={e => onUpdate(index, { url: e.target.value } as Partial<Block>)}
+                placeholder="이미지 URL"
+                className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500"
+              />
+              <button type="button" onClick={() => onUpload(index)} className="px-3 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200">업로드</button>
+            </div>
+            {(block as any).url && (
+              <img src={(block as any).url} className={`${sizePreviewClass[(block as any).size as ImageSize || 'full']} max-h-48 object-cover rounded-lg`} />
+            )}
+            <input
+              value={(block as any)[captionKey] || ''}
+              onChange={e => onUpdate(index, { [captionKey]: e.target.value } as Partial<Block>)}
+              placeholder="사진 설명 (선택)"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500"
+            />
+          </>
+        )}
+
+        {/* 이미지+텍스트 블록 */}
+        {block.type === 'image_text' && (
+          <>
+            <div className="flex gap-2 items-center">
+              <span className="text-xs text-gray-400">이미지 크기.</span>
+              {SIZE_OPTIONS.map(s => (
+                <button key={s.value} type="button"
+                  onClick={() => onUpdate(index, { size: s.value } as Partial<Block>)}
+                  className={`text-xs px-3 py-1 rounded-lg transition-colors ${(block as any).size === s.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                >{s.label}</button>
+              ))}
+            </div>
+            <div className="flex gap-2 items-center">
+              <span className="text-xs text-gray-400">이미지 위치.</span>
+              {POSITION_OPTIONS.map(p => (
+                <button key={p.value} type="button"
+                  onClick={() => onUpdate(index, { position: p.value } as Partial<Block>)}
+                  className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).position || 'left') === p.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                >{p.label}</button>
+              ))}
+            </div>
+            <div className="flex gap-2 items-center">
+              <span className="text-xs text-gray-400">글자 위치.</span>
+              {VALIGN_OPTIONS.map(v => (
+                <button key={v.value} type="button"
+                  onClick={() => onUpdate(index, { valign: v.value } as Partial<Block>)}
+                  className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).valign || 'top') === v.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                >{v.label}</button>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <input
+                value={(block as any).url || ''}
+                onChange={e => onUpdate(index, { url: e.target.value } as Partial<Block>)}
+                placeholder="이미지 URL"
+                className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500"
+              />
+              <button type="button" onClick={() => onUpload(index)} className="px-3 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200">업로드</button>
+            </div>
+            <textarea
+              value={(block as any)[textKey] || ''}
+              onChange={e => onUpdate(index, { [textKey]: e.target.value } as Partial<Block>)}
+              placeholder="이미지 옆 설명 텍스트&#10;굵게: **텍스트** 형식으로 입력"
+              rows={4}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
+            />
+            <p className="text-xs text-gray-400">굵게 표시: <code className="bg-gray-100 px-1 rounded">**텍스트**</code> 형식으로 입력하세요.</p>
+            {(block as any).url && (
+              <div className="flex gap-3 p-2 bg-gray-50 rounded-lg">
+                {((block as any).position || 'left') === 'left' ? (
+                  <>
+                    <img src={(block as any).url} className={`${sizePreviewClass[(block as any).size as ImageSize || 'medium']} max-h-32 object-cover rounded-lg flex-shrink-0`} />
+                    <p className="text-xs text-gray-600 whitespace-pre-line">{(block as any)[textKey]}</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-xs text-gray-600 whitespace-pre-line flex-1">{(block as any)[textKey]}</p>
+                    <img src={(block as any).url} className={`${sizePreviewClass[(block as any).size as ImageSize || 'medium']} max-h-32 object-cover rounded-lg flex-shrink-0`} />
+                  </>
+                )}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* 팁 블록 */}
+        {block.type === 'tip' && (
+          <>
+            <div className="flex gap-2 items-center">
+              <span className="text-xs text-gray-400">종류.</span>
+              {TIP_VARIANT_OPTIONS.map(v => (
+                <button key={v.value} type="button"
+                  onClick={() => onUpdate(index, { variant: v.value } as Partial<Block>)}
+                  className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).variant || 'tip') === v.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                >{v.label}</button>
+              ))}
+            </div>
+            <textarea
+              value={(block as any)[textKey] || ''}
+              onChange={e => onUpdate(index, { [textKey]: e.target.value } as Partial<Block>)}
+              placeholder="팁 내용을 입력하세요&#10;굵게: **텍스트** 형식으로 입력"
+              rows={3}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
+            />
+          </>
+        )}
+
+        {/* YouTube 블록 */}
+        {block.type === 'youtube' && (
+          <input
+            value={(block as any).url || ''}
+            onChange={e => onUpdate(index, { url: e.target.value } as Partial<Block>)}
+            placeholder="YouTube URL (https://youtube.com/watch?v=...)"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500"
+          />
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function BlockEditor({ blocks, onChange, lang }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const uploadTargetIndex = useRef<number>(-1)
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
+  )
+
+  const ids = blocks.map((_, i) => String(i))
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+    const oldIndex = Number(active.id)
+    const newIndex = Number(over.id)
+    onChange(arrayMove(blocks, oldIndex, newIndex))
+  }
 
   const update = (index: number, patch: Partial<Block>) =>
     onChange(blocks.map((b, i) => i === index ? { ...b, ...patch } as Block : b))
 
   const remove = (index: number) => onChange(blocks.filter((_, i) => i !== index))
 
-  const moveUp = (index: number) => {
-    if (index === 0) return
-    const next = [...blocks]
-    ;[next[index - 1], next[index]] = [next[index], next[index - 1]]
-    onChange(next)
-  }
-
-  const moveDown = (index: number) => {
-    if (index === blocks.length - 1) return
-    const next = [...blocks]
-    ;[next[index], next[index + 1]] = [next[index + 1], next[index]]
-    onChange(next)
+  const triggerUpload = (index: number) => {
+    uploadTargetIndex.current = index
+    fileInputRef.current?.click()
   }
 
   const uploadImage = async (file: File, index: number) => {
@@ -103,240 +356,24 @@ export default function BlockEditor({ blocks, onChange, lang }: Props) {
     update(index, { url } as Partial<Block>)
   }
 
-  const textKey = `text_${lang}` as const
-  const captionKey = `caption_${lang}` as const
-
   return (
     <div className="space-y-3">
-      {blocks.map((block, i) => (
-        <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
-          {/* 블록 헤더 */}
-          <div className="flex items-center justify-between bg-gray-50 px-3 py-2 border-b border-gray-200">
-            <span className="text-xs font-medium text-gray-500">
-              {BLOCK_TYPES.find(t => t.type === block.type)?.label}
-            </span>
-            <div className="flex gap-1">
-              <button type="button" onClick={() => moveUp(i)} className="text-xs px-2 py-1 rounded hover:bg-gray-200">↑</button>
-              <button type="button" onClick={() => moveDown(i)} className="text-xs px-2 py-1 rounded hover:bg-gray-200">↓</button>
-              <button type="button" onClick={() => remove(i)} className="text-xs px-2 py-1 rounded hover:bg-red-100 text-red-400">✕</button>
-            </div>
-          </div>
-
-          {/* 블록 내용 */}
-          <div className="p-3 space-y-2">
-
-            {/* 제목 블록 */}
-            {block.type === 'heading' && (
-              <>
-                <div className="flex gap-2 items-center">
-                  <span className="text-xs text-gray-400">크기.</span>
-                  {HEADING_LEVEL_OPTIONS.map(l => (
-                    <button
-                      key={l.value}
-                      type="button"
-                      onClick={() => update(i, { level: l.value } as Partial<Block>)}
-                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).level || 'h2') === l.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                    >{l.label}</button>
-                  ))}
-                </div>
-                <input
-                  value={(block as any)[textKey] || ''}
-                  onChange={e => update(i, { [textKey]: e.target.value } as Partial<Block>)}
-                  placeholder="제목을 입력하세요"
-                  className={`w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 ${(block as any).level === 'h3' ? 'text-base font-semibold' : 'text-lg font-bold'}`}
-                />
-              </>
-            )}
-
-            {/* 구분선 블록 */}
-            {block.type === 'divider' && (
-              <hr className="border-gray-300" />
-            )}
-
-            {/* 텍스트 블록 */}
-            {block.type === 'text' && (
-              <>
-                <textarea
-                  value={(block as any)[textKey] || ''}
-                  onChange={e => update(i, { [textKey]: e.target.value } as Partial<Block>)}
-                  placeholder="텍스트를 입력하세요&#10;굵게: **텍스트** 형식으로 입력"
-                  rows={4}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
-                />
-                <p className="text-xs text-gray-400">굵게 표시: <code className="bg-gray-100 px-1 rounded">**텍스트**</code> 형식으로 입력하세요.</p>
-              </>
-            )}
-
-            {/* 이미지 블록 */}
-            {block.type === 'image' && (
-              <>
-                {/* 크기 선택 */}
-                <div className="flex gap-2 items-center">
-                  <span className="text-xs text-gray-400">크기.</span>
-                  {SIZE_OPTIONS.map(s => (
-                    <button
-                      key={s.value}
-                      type="button"
-                      onClick={() => update(i, { size: s.value } as Partial<Block>)}
-                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${(block as any).size === s.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                    >{s.label}</button>
-                  ))}
-                </div>
-                {/* 정렬 선택 */}
-                <div className="flex gap-2 items-center">
-                  <span className="text-xs text-gray-400">정렬.</span>
-                  {ALIGN_OPTIONS.map(a => (
-                    <button
-                      key={a.value}
-                      type="button"
-                      onClick={() => update(i, { align: a.value } as Partial<Block>)}
-                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).align || 'left') === a.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                    >{a.label}</button>
-                  ))}
-                </div>
-                <div className="flex gap-2">
-                  <input
-                    value={(block as any).url || ''}
-                    onChange={e => update(i, { url: e.target.value } as Partial<Block>)}
-                    placeholder="이미지 URL"
-                    className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => { uploadTargetIndex.current = i; fileInputRef.current?.click() }}
-                    className="px-3 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200"
-                  >업로드</button>
-                </div>
-                {(block as any).url && (
-                  <img
-                    src={(block as any).url}
-                    className={`${sizePreviewClass[(block as any).size as ImageSize || 'full']} max-h-48 object-cover rounded-lg`}
-                  />
-                )}
-                <input
-                  value={(block as any)[captionKey] || ''}
-                  onChange={e => update(i, { [captionKey]: e.target.value } as Partial<Block>)}
-                  placeholder="사진 설명 (선택)"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500"
-                />
-              </>
-            )}
-
-            {/* 이미지+텍스트 블록 */}
-            {block.type === 'image_text' && (
-              <>
-                {/* 크기 선택 */}
-                <div className="flex gap-2 items-center">
-                  <span className="text-xs text-gray-400">이미지 크기.</span>
-                  {SIZE_OPTIONS.map(s => (
-                    <button
-                      key={s.value}
-                      type="button"
-                      onClick={() => update(i, { size: s.value } as Partial<Block>)}
-                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${(block as any).size === s.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                    >{s.label}</button>
-                  ))}
-                </div>
-                {/* 이미지 위치 선택 */}
-                <div className="flex gap-2 items-center">
-                  <span className="text-xs text-gray-400">이미지 위치.</span>
-                  {POSITION_OPTIONS.map(p => (
-                    <button
-                      key={p.value}
-                      type="button"
-                      onClick={() => update(i, { position: p.value } as Partial<Block>)}
-                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).position || 'left') === p.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                    >{p.label}</button>
-                  ))}
-                </div>
-                {/* 텍스트 수직 정렬 */}
-                <div className="flex gap-2 items-center">
-                  <span className="text-xs text-gray-400">글자 위치.</span>
-                  {VALIGN_OPTIONS.map(v => (
-                    <button
-                      key={v.value}
-                      type="button"
-                      onClick={() => update(i, { valign: v.value } as Partial<Block>)}
-                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).valign || 'top') === v.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                    >{v.label}</button>
-                  ))}
-                </div>
-                <div className="flex gap-2">
-                  <input
-                    value={(block as any).url || ''}
-                    onChange={e => update(i, { url: e.target.value } as Partial<Block>)}
-                    placeholder="이미지 URL"
-                    className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => { uploadTargetIndex.current = i; fileInputRef.current?.click() }}
-                    className="px-3 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200"
-                  >업로드</button>
-                </div>
-                <textarea
-                  value={(block as any)[textKey] || ''}
-                  onChange={e => update(i, { [textKey]: e.target.value } as Partial<Block>)}
-                  placeholder="이미지 옆 설명 텍스트&#10;굵게: **텍스트** 형식으로 입력"
-                  rows={4}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
-                />
-                <p className="text-xs text-gray-400">굵게 표시: <code className="bg-gray-100 px-1 rounded">**텍스트**</code> 형식으로 입력하세요.</p>
-                {/* 미리보기 */}
-                {(block as any).url && (
-                  <div className="flex gap-3 p-2 bg-gray-50 rounded-lg">
-                    {((block as any).position || 'left') === 'left' ? (
-                      <>
-                        <img src={(block as any).url} className={`${sizePreviewClass[(block as any).size as ImageSize || 'medium']} max-h-32 object-cover rounded-lg flex-shrink-0`} />
-                        <p className="text-xs text-gray-600 whitespace-pre-line">{(block as any)[textKey]}</p>
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-xs text-gray-600 whitespace-pre-line flex-1">{(block as any)[textKey]}</p>
-                        <img src={(block as any).url} className={`${sizePreviewClass[(block as any).size as ImageSize || 'medium']} max-h-32 object-cover rounded-lg flex-shrink-0`} />
-                      </>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
-
-            {/* 팁 블록 */}
-            {block.type === 'tip' && (
-              <>
-                <div className="flex gap-2 items-center">
-                  <span className="text-xs text-gray-400">종류.</span>
-                  {TIP_VARIANT_OPTIONS.map(v => (
-                    <button
-                      key={v.value}
-                      type="button"
-                      onClick={() => update(i, { variant: v.value } as Partial<Block>)}
-                      className={`text-xs px-3 py-1 rounded-lg transition-colors ${((block as any).variant || 'tip') === v.value ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                    >{v.label}</button>
-                  ))}
-                </div>
-                <textarea
-                  value={(block as any)[textKey] || ''}
-                  onChange={e => update(i, { [textKey]: e.target.value } as Partial<Block>)}
-                  placeholder="팁 내용을 입력하세요&#10;굵게: **텍스트** 형식으로 입력"
-                  rows={3}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
-                />
-              </>
-            )}
-
-            {/* YouTube 블록 */}
-            {block.type === 'youtube' && (
-              <input
-                value={(block as any).url || ''}
-                onChange={e => update(i, { url: e.target.value } as Partial<Block>)}
-                placeholder="YouTube URL (https://youtube.com/watch?v=...)"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500"
-              />
-            )}
-          </div>
-        </div>
-      ))}
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+          {blocks.map((block, i) => (
+            <SortableBlock
+              key={i}
+              id={String(i)}
+              block={block}
+              index={i}
+              lang={lang}
+              onUpdate={update}
+              onRemove={remove}
+              onUpload={triggerUpload}
+            />
+          ))}
+        </SortableContext>
+      </DndContext>
 
       {/* 블록 추가 버튼 */}
       <div className="flex flex-wrap gap-2">
