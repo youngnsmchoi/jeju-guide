@@ -1,7 +1,7 @@
 'use client'
 // 관리자 페이지 — 로그인, 항목 목록, 블록 에디터
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import type { Category, Item, Block, Lang } from '@/lib/types'
 
@@ -47,6 +47,19 @@ export default function AdminPage() {
   const [form, setForm] = useState<FormState | null>(null)
   const [activeLang, setActiveLang] = useState<Lang>('ko')
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const imageFileRef = useRef<HTMLInputElement>(null)
+
+  const uploadImage = async (file: File) => {
+    setUploading(true)
+    const formData = new FormData()
+    formData.append('file', file)
+    const res = await fetch('/api/admin/upload', { method: 'POST', body: formData })
+    const { url, error } = await res.json()
+    setUploading(false)
+    if (error) { alert('업로드 실패: ' + error); return }
+    setField('image_url', url)
+  }
 
   const login = async () => {
     const res = await fetch('/api/admin/login', {
@@ -289,11 +302,33 @@ export default function AdminPage() {
               </div>
               <div>
                 <label className="text-xs text-gray-400">대표 이미지 URL (목록에 표시, 선택)</label>
+                <div className="flex gap-2 mt-1">
+                  <input
+                    value={form.image_url}
+                    onChange={e => setField('image_url', e.target.value)}
+                    placeholder="https://..."
+                    className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => imageFileRef.current?.click()}
+                    disabled={uploading}
+                    className="px-3 py-2 bg-gray-100 rounded-xl text-sm hover:bg-gray-200 disabled:opacity-50"
+                  >{uploading ? '업로드 중...' : '업로드'}</button>
+                </div>
+                {form.image_url && (
+                  <img src={form.image_url} alt="" className="mt-2 h-24 rounded-lg object-cover" />
+                )}
                 <input
-                  value={form.image_url}
-                  onChange={e => setField('image_url', e.target.value)}
-                  placeholder="https://..."
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
+                  ref={imageFileRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={e => {
+                    const file = e.target.files?.[0]
+                    if (file) uploadImage(file)
+                    e.target.value = ''
+                  }}
                 />
               </div>
             </div>
