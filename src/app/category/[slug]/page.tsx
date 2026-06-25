@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Bus, Store, Leaf, Lightbulb, type LucideIcon } from 'lucide-react'
+import { Bus, Store, Compass, Cross, type LucideIcon } from 'lucide-react'
 import { useLang } from '@/context/LangContext'
 import { getTitle } from '@/lib/types'
 import type { Category, Item, Lang } from '@/lib/types'
@@ -11,8 +11,8 @@ import type { Category, Item, Lang } from '@/lib/types'
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   transport: Bus,
   living: Store,
-  local: Leaf,
-  essential: Lightbulb,
+  local: Compass,
+  essential: Cross,
 }
 
 const LANG_LABELS: { code: Lang; label: string }[] = [
