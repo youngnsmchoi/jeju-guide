@@ -127,7 +127,11 @@ function SortableBlock({ id, block, index, lang, onUpdate, onRemove, onUpload }:
             {BLOCK_TYPES.find(t => t.type === block.type)?.label}
           </span>
         </div>
-        <button type="button" onClick={() => onRemove(index)} className="text-xs px-2 py-1 rounded hover:bg-red-100 text-red-400">✕</button>
+        <button
+          type="button"
+          onClick={() => confirm('이 블록을 삭제하시겠습니까? 입력한 내용이 사라집니다.') && onRemove(index)}
+          className="text-xs px-2 py-1 rounded hover:bg-red-100 text-red-400"
+        >✕</button>
       </div>
 
       {/* 블록 내용 */}
