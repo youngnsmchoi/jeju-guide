@@ -84,13 +84,13 @@ export default function BlockRenderer({ blocks, lang }: Props) {
           const text = getBlockText(block, lang)
           if (block.level === 'h3') {
             return (
-              <h3 key={i} className="text-base font-semibold text-gray-800 pt-2">
-                {text}
+              <h3 key={i} className="text-base font-semibold text-gray-800 pt-2 whitespace-pre-line">
+                {renderText(text)}
               </h3>
             )
           }
           return (
-            <h2 key={i} className="text-lg font-bold text-gray-900 pt-2">{text}</h2>
+            <h2 key={i} className="text-lg font-bold text-gray-900 pt-2 whitespace-pre-line">{renderText(text)}</h2>
           )
         }
 

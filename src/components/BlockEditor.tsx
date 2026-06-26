@@ -151,12 +151,14 @@ function SortableBlock({ id, block, index, lang, onUpdate, onRemove, onUpload }:
                 >{l.label}</button>
               ))}
             </div>
-            <input
+            <textarea
               value={(block as any)[textKey] || ''}
               onChange={e => onUpdate(index, { [textKey]: e.target.value } as Partial<Block>)}
               placeholder="제목을 입력하세요"
-              className={`w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 ${(block as any).level === 'h3' ? 'text-base font-semibold' : 'text-lg font-bold'}`}
+              rows={2}
+              className={`w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 resize-none ${(block as any).level === 'h3' ? 'text-base font-semibold' : 'text-lg font-bold'}`}
             />
+            <p className="text-xs text-gray-400">굵게 <code className="bg-gray-100 px-1 rounded">**텍스트**</code> · 취소선 <code className="bg-gray-100 px-1 rounded">~~텍스트~~</code> · 빨강 <code className="bg-gray-100 px-1 rounded">!!텍스트!!</code> · 초록 <code className="bg-gray-100 px-1 rounded">++텍스트++</code> · 회색 <code className="bg-gray-100 px-1 rounded">--텍스트--</code> · 파랑 <code className="bg-gray-100 px-1 rounded">##텍스트##</code></p>
           </>
         )}
 
