@@ -171,11 +171,11 @@ function SortableBlock({ id, block, index, lang, onUpdate, onRemove, onUpload }:
             <textarea
               value={(block as any)[textKey] || ''}
               onChange={e => onUpdate(index, { [textKey]: e.target.value } as Partial<Block>)}
-              placeholder="텍스트를 입력하세요&#10;굵게: **텍스트** 형식으로 입력"
+              placeholder="텍스트를 입력하세요&#10;굵게: **텍스트**, 취소선: ~~텍스트~~ 형식으로 입력"
               rows={4}
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
             />
-            <p className="text-xs text-gray-400">굵게 표시: <code className="bg-gray-100 px-1 rounded">**텍스트**</code> 형식으로 입력하세요.</p>
+            <p className="text-xs text-gray-400">굵게: <code className="bg-gray-100 px-1 rounded">**텍스트**</code>, 취소선: <code className="bg-gray-100 px-1 rounded">~~텍스트~~</code> 형식으로 입력하세요.</p>
           </>
         )}
 
@@ -263,11 +263,11 @@ function SortableBlock({ id, block, index, lang, onUpdate, onRemove, onUpload }:
             <textarea
               value={(block as any)[textKey] || ''}
               onChange={e => onUpdate(index, { [textKey]: e.target.value } as Partial<Block>)}
-              placeholder="이미지 옆 설명 텍스트&#10;굵게: **텍스트** 형식으로 입력"
+              placeholder="이미지 옆 설명 텍스트&#10;굵게: **텍스트**, 취소선: ~~텍스트~~ 형식으로 입력"
               rows={4}
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
             />
-            <p className="text-xs text-gray-400">굵게 표시: <code className="bg-gray-100 px-1 rounded">**텍스트**</code> 형식으로 입력하세요.</p>
+            <p className="text-xs text-gray-400">굵게: <code className="bg-gray-100 px-1 rounded">**텍스트**</code>, 취소선: <code className="bg-gray-100 px-1 rounded">~~텍스트~~</code> 형식으로 입력하세요.</p>
             {(block as any).url && (
               <div className="flex gap-3 p-2 bg-gray-50 rounded-lg">
                 {((block as any).position || 'left') === 'left' ? (
@@ -301,7 +301,7 @@ function SortableBlock({ id, block, index, lang, onUpdate, onRemove, onUpload }:
             <textarea
               value={(block as any)[textKey] || ''}
               onChange={e => onUpdate(index, { [textKey]: e.target.value } as Partial<Block>)}
-              placeholder="팁 내용을 입력하세요&#10;굵게: **텍스트** 형식으로 입력"
+              placeholder="팁 내용을 입력하세요&#10;굵게: **텍스트**, 취소선: ~~텍스트~~ 형식으로 입력"
               rows={3}
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none"
             />
