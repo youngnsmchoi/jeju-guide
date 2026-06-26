@@ -9,29 +9,30 @@ function getYoutubeId(url: string): string | null {
   return m ? m[1] : null
 }
 
-// **굵게**, ~~취소선~~, !!빨강!!, ++초록++, --회색--, ##파랑## 변환
-function renderText(text: string) {
+// **굵게**, ~~취소선~~, !!빨강!!, ++초록++, --회색--, ##파랑## 변환 (중첩 조합 가능: 예 !!**텍스트**!!)
+function renderText(text: string, keyPrefix = ''): React.ReactNode[] {
   const parts = text.split(/(\*\*[^*]+\*\*|~~[^~]+~~|!![^!]+!!|\+\+[^+]+\+\+|--[^-]+--|##[^#]+##)/)
   return parts.map((part, i) => {
+    const key = `${keyPrefix}${i}`
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i}>{part.slice(2, -2)}</strong>
+      return <strong key={key}>{renderText(part.slice(2, -2), `${key}-`)}</strong>
     }
     if (part.startsWith('~~') && part.endsWith('~~')) {
-      return <span key={i} className="line-through text-gray-400">{part.slice(2, -2)}</span>
+      return <span key={key} className="line-through text-gray-400">{renderText(part.slice(2, -2), `${key}-`)}</span>
     }
     if (part.startsWith('!!') && part.endsWith('!!')) {
-      return <span key={i} className="text-red-600">{part.slice(2, -2)}</span>
+      return <span key={key} className="text-red-600">{renderText(part.slice(2, -2), `${key}-`)}</span>
     }
     if (part.startsWith('++') && part.endsWith('++')) {
-      return <span key={i} className="text-emerald-600">{part.slice(2, -2)}</span>
+      return <span key={key} className="text-emerald-600">{renderText(part.slice(2, -2), `${key}-`)}</span>
     }
     if (part.startsWith('--') && part.endsWith('--')) {
-      return <span key={i} className="text-gray-400">{part.slice(2, -2)}</span>
+      return <span key={key} className="text-gray-400">{renderText(part.slice(2, -2), `${key}-`)}</span>
     }
     if (part.startsWith('##') && part.endsWith('##')) {
-      return <span key={i} className="text-blue-600">{part.slice(2, -2)}</span>
+      return <span key={key} className="text-blue-600">{renderText(part.slice(2, -2), `${key}-`)}</span>
     }
-    return <span key={i}>{part}</span>
+    return <span key={key}>{part}</span>
   })
 }
 
