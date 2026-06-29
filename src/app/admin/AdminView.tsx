@@ -4,6 +4,7 @@
 import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import type { Category, Item, Block, Lang } from '@/lib/types'
+import RamenAdmin from './RamenAdmin'
 
 const BlockEditor = dynamic(() => import('@/components/BlockEditor'), { ssr: false })
 
@@ -43,6 +44,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
   const [pwError, setPwError] = useState(false)
   const [items, setItems] = useState<Item[]>([])
   const [selectedCat, setSelectedCat] = useState<Category | null>(null)
+  const [showRamen, setShowRamen] = useState(false)
   const [form, setForm] = useState<FormState | null>(null)
   const [activeLang, setActiveLang] = useState<Lang>('ko')
   const [saving, setSaving] = useState(false)
@@ -75,6 +77,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
   }, [])
 
   const loadItems = async (cat: Category) => {
+    setShowRamen(false)
     setSelectedCat(cat)
     setForm(null)
     const data = await fetch(`/api/items?category_id=${cat.id}`).then(r => r.json())
@@ -177,13 +180,23 @@ export default function AdminView({ categories }: { categories: Category[] }) {
                 key={cat.id}
                 onClick={() => loadItems(cat)}
                 className={`flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-medium transition-colors
-                  ${selectedCat?.id === cat.id ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  ${selectedCat?.id === cat.id && !showRamen ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
               >
                 {cat.icon} {cat.title_ko}
               </button>
             ))}
+            <button
+              onClick={() => { setShowRamen(true); setSelectedCat(null); setForm(null) }}
+              className={`flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-medium transition-colors
+                ${showRamen ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            >
+              🍜 라면 관리
+            </button>
           </div>
         </div>
+
+        {/* 라면 관리 */}
+        {showRamen && <RamenAdmin />}
 
         {/* 항목 목록 */}
         {selectedCat && !form && (
