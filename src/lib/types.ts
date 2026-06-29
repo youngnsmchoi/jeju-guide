@@ -51,6 +51,37 @@ export interface Item {
   blocks: Block[] | null
 }
 
+export interface RamenItem {
+  id: number
+  order_num: number
+  name_ko: string
+  name_en: string | null
+  name_zh: string | null
+  name_ja: string | null
+  image_url: string | null
+  flavor_desc_ko: string | null
+  flavor_desc_en: string | null
+  flavor_desc_zh: string | null
+  flavor_desc_ja: string | null
+  comparison_ko: string | null
+  comparison_en: string | null
+  comparison_zh: string | null
+  comparison_ja: string | null
+  popularity_ko: string | null
+  popularity_en: string | null
+  popularity_zh: string | null
+  popularity_ja: string | null
+  texture_ko: string | null
+  texture_en: string | null
+  texture_zh: string | null
+  texture_ja: string | null
+  prep_time: number | null
+}
+
+export function getRamenField(item: RamenItem, field: 'name' | 'flavor_desc' | 'comparison' | 'popularity' | 'texture', lang: Lang): string {
+  return item[`${field}_${lang}`] || item[`${field}_ko`] || ''
+}
+
 export function getTitle(item: Category | Item, lang: Lang): string {
   return item[`title_${lang}`] || item.title_ko
 }

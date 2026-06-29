@@ -4,8 +4,9 @@
 import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import { getTitle, getContent } from '@/lib/types'
-import type { Item, Category, Lang } from '@/lib/types'
+import type { Item, Category, Lang, RamenItem } from '@/lib/types'
 import BlockRenderer from '@/components/BlockRenderer'
+import RamenList from '@/components/RamenList'
 
 const LANG_LABELS: { code: Lang; label: string }[] = [
   { code: 'ko', label: '한국어' },
@@ -26,7 +27,7 @@ function getYoutubeId(url: string): string | null {
   return m ? m[1] : null
 }
 
-export default function GuideView({ item, category }: { item: Item; category: Category | null }) {
+export default function GuideView({ item, category, ramenItems }: { item: Item; category: Category | null; ramenItems: RamenItem[] | null }) {
   const { lang, setLang } = useLang()
   const router = useRouter()
 
@@ -66,36 +67,43 @@ export default function GuideView({ item, category }: { item: Item; category: Ca
           <h1 className="text-xl font-bold text-gray-900">{getTitle(item, lang)}</h1>
         </div>
 
-        {/* 영상 */}
-        {youtubeId && (
-          <div className="aspect-video w-full">
-            <iframe
-              className="w-full h-full"
-              src={`https://www.youtube.com/embed/${youtubeId}`}
-              allowFullScreen
-            />
-          </div>
-        )}
+        {/* 라면 가이드: 레코드 카드 목록 */}
+        {ramenItems ? (
+          <RamenList items={ramenItems} lang={lang} />
+        ) : (
+          <>
+            {/* 영상 */}
+            {youtubeId && (
+              <div className="aspect-video w-full">
+                <iframe
+                  className="w-full h-full"
+                  src={`https://www.youtube.com/embed/${youtubeId}`}
+                  allowFullScreen
+                />
+              </div>
+            )}
 
-        {/* 이미지 (영상 없을 때) */}
-        {!youtubeId && item.image_url && (
-          <div className="w-full aspect-video overflow-hidden">
-            <img src={item.image_url} alt={getTitle(item, lang)} className="w-full h-full object-cover" />
-          </div>
-        )}
+            {/* 이미지 (영상 없을 때) */}
+            {!youtubeId && item.image_url && (
+              <div className="w-full aspect-video overflow-hidden">
+                <img src={item.image_url} alt={getTitle(item, lang)} className="w-full h-full object-cover" />
+              </div>
+            )}
 
-        {/* 블록 콘텐츠 (새 방식) */}
-        {item.blocks && item.blocks.length > 0 && (
-          <div className="px-4 py-5">
-            <BlockRenderer blocks={item.blocks} lang={lang} />
-          </div>
-        )}
+            {/* 블록 콘텐츠 (새 방식) */}
+            {item.blocks && item.blocks.length > 0 && (
+              <div className="px-4 py-5">
+                <BlockRenderer blocks={item.blocks} lang={lang} />
+              </div>
+            )}
 
-        {/* 기존 텍스트 콘텐츠 (이전 데이터 호환) */}
-        {(!item.blocks || item.blocks.length === 0) && content && (
-          <div className="px-4 py-5">
-            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{content}</p>
-          </div>
+            {/* 기존 텍스트 콘텐츠 (이전 데이터 호환) */}
+            {(!item.blocks || item.blocks.length === 0) && content && (
+              <div className="px-4 py-5">
+                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{content}</p>
+              </div>
+            )}
+          </>
         )}
 
         {/* 지도 버튼 */}
