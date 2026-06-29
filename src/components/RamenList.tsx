@@ -11,7 +11,8 @@ const PREP_TIME_LABEL: Record<Lang, (min: number) => string> = {
   ja: (min) => `推奨調理時間: ${min}分`,
 }
 
-const FIELD_LABEL: Record<'comparison' | 'popularity' | 'texture', Record<Lang, string>> = {
+const FIELD_LABEL: Record<'flavor_desc' | 'comparison' | 'popularity' | 'texture', Record<Lang, string>> = {
+  flavor_desc: { ko: '맛', en: 'Flavor', zh: '味道', ja: '味' },
   comparison: { ko: '비슷한 맛', en: 'Tastes like', zh: '相似口味', ja: '似た味' },
   popularity: { ko: '인기 국가', en: 'Popular in', zh: '受欢迎地区', ja: '人気の地域' },
   texture: { ko: '식감 특징', en: 'Texture', zh: '口感', ja: '食感' },
@@ -46,7 +47,10 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
             </div>
 
             {getRamenField(item, 'flavor_desc', lang) && (
-              <p className="text-sm text-gray-700 leading-relaxed">{getRamenField(item, 'flavor_desc', lang)}</p>
+              <div>
+                <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{FIELD_LABEL.flavor_desc[lang]}</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{getRamenField(item, 'flavor_desc', lang)}</p>
+              </div>
             )}
 
             {getRamenField(item, 'comparison', lang) && (
