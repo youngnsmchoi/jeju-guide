@@ -1,8 +1,16 @@
 'use client'
 // 라면 레코드를 세로 스크롤 카드 목록으로 렌더링
 
+import { useState } from 'react'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
+
+const SORT_LABEL: Record<Lang, { default: string; spicy: string }> = {
+  ko: { default: '추천순', spicy: '맵기순' },
+  en: { default: 'Recommended', spicy: 'Spiciest' },
+  zh: { default: '推荐顺序', spicy: '辣度排序' },
+  ja: { default: 'おすすめ順', spicy: '辛さ順' },
+}
 
 const PREP_TIME_LABEL: Record<Lang, (min: number) => string> = {
   ko: (min) => `권장 조리 시간: ${min}분`,
@@ -27,13 +35,31 @@ function SpicyLevel({ level }: { level: number }) {
 }
 
 export default function RamenList({ items, lang }: { items: RamenItem[]; lang: Lang }) {
+  const [sortBySpicy, setSortBySpicy] = useState(false)
+
   if (items.length === 0) {
     return <p className="text-center text-gray-400 py-20">등록된 라면이 없습니다.</p>
   }
 
+  const sortedItems = sortBySpicy
+    ? [...items].sort((a, b) => (b.spicy_level ?? 0) - (a.spicy_level ?? 0))
+    : items
+
   return (
     <div className="px-4 py-5 space-y-5">
-      {items.map((item) => (
+      <div className="flex justify-end gap-2">
+        <button
+          onClick={() => setSortBySpicy(false)}
+          className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors
+            ${!sortBySpicy ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-500'}`}
+        >{SORT_LABEL[lang].default}</button>
+        <button
+          onClick={() => setSortBySpicy(true)}
+          className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors
+            ${sortBySpicy ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-500'}`}
+        >🌶️ {SORT_LABEL[lang].spicy}</button>
+      </div>
+      {sortedItems.map((item) => (
         <div key={item.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           {item.image_url && (
             <div className="w-full aspect-video overflow-hidden bg-gray-50">
