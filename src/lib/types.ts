@@ -76,6 +76,7 @@ export interface RamenItem {
   texture_zh: string | null
   texture_ja: string | null
   prep_time: number | null
+  spicy_level: number | null
 }
 
 export function getRamenField(item: RamenItem, field: 'name' | 'flavor_desc' | 'comparison' | 'popularity' | 'texture', lang: Lang): string {

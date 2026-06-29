@@ -31,6 +31,7 @@ const emptyForm = (orderNum: number): FormState => ({
   popularity_ko: '', popularity_en: '', popularity_zh: '', popularity_ja: '',
   texture_ko: '', texture_en: '', texture_zh: '', texture_ja: '',
   prep_time: null,
+  spicy_level: null,
 })
 
 export default function RamenAdmin() {
@@ -144,6 +145,17 @@ export default function RamenAdmin() {
                 type="number"
                 value={form.prep_time ?? ''}
                 onChange={e => setField('prep_time', e.target.value === '' ? null : Number(e.target.value))}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-gray-400 font-medium">맵기 단계 (0~5)</label>
+              <input
+                type="number"
+                min={0}
+                max={5}
+                value={form.spicy_level ?? ''}
+                onChange={e => setField('spicy_level', e.target.value === '' ? null : Number(e.target.value))}
                 className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
               />
             </div>

@@ -17,6 +17,14 @@ const FIELD_LABEL: Record<'comparison' | 'popularity' | 'texture', Record<Lang, 
   texture: { ko: '식감 특징', en: 'Texture', zh: '口感', ja: '食感' },
 }
 
+function SpicyLevel({ level }: { level: number }) {
+  return (
+    <span className="text-sm tracking-tight" aria-label={`spicy level ${level}`}>
+      {'🌶️'.repeat(level)}
+    </span>
+  )
+}
+
 export default function RamenList({ items, lang }: { items: RamenItem[]; lang: Lang }) {
   if (items.length === 0) {
     return <p className="text-center text-gray-400 py-20">등록된 라면이 없습니다.</p>
@@ -32,7 +40,10 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
             </div>
           )}
           <div className="p-4 space-y-3">
-            <h2 className="text-base font-bold text-gray-900">{getRamenField(item, 'name', lang)}</h2>
+            <div className="flex items-center justify-between gap-2 -mx-4 -mt-4 px-4 py-3 mb-1 bg-orange-50/70 border-b border-orange-100">
+              <h2 className="text-base font-bold text-gray-900">{getRamenField(item, 'name', lang)}</h2>
+              {!!item.spicy_level && <SpicyLevel level={item.spicy_level} />}
+            </div>
 
             {getRamenField(item, 'flavor_desc', lang) && (
               <p className="text-sm text-gray-700 leading-relaxed">{getRamenField(item, 'flavor_desc', lang)}</p>
