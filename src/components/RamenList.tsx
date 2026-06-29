@@ -2,7 +2,7 @@
 // 라면 레코드를 세로 스크롤 카드 목록으로 렌더링
 
 import { useState } from 'react'
-import { CookingPot, Flame, Globe, Soup, Clock } from 'lucide-react'
+import { CookingPot, Globe, Soup, Clock } from 'lucide-react'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
 
@@ -29,10 +29,8 @@ const FIELD_LABEL: Record<'flavor_desc' | 'comparison' | 'popularity' | 'texture
 
 function SpicyLevel({ level }: { level: number }) {
   return (
-    <span className="flex items-center gap-0.5" aria-label={`spicy level ${level}`}>
-      {Array.from({ length: level }).map((_, i) => (
-        <Flame key={i} size={16} className="fill-red-500 text-red-500" />
-      ))}
+    <span className="text-sm tracking-tight" aria-label={`spicy level ${level}`}>
+      {'🌶️'.repeat(level)}
     </span>
   )
 }
@@ -87,7 +85,7 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
 
             {getRamenField(item, 'comparison', lang) && (
               <div className="flex items-start gap-2.5">
-                <Flame size={18} className="text-gray-400 shrink-0 mt-0.5" />
+                <span className="w-[18px] text-center shrink-0" aria-hidden>🌶️</span>
                 <p className="text-sm text-gray-700 leading-relaxed">
                   <span className="text-xs text-gray-400 font-medium mr-1">{FIELD_LABEL.comparison[lang]}</span>
                   {getRamenField(item, 'comparison', lang)}
