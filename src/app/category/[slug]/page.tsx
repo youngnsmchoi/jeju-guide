@@ -38,14 +38,14 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
   useEffect(() => {
     params.then(async ({ slug }) => {
-      const catRes = await fetch('/api/categories').then((r) => r.json())
+      const [catRes, itsRes] = await Promise.all([
+        fetch('/api/categories').then((r) => r.json()),
+        fetch(`/api/items?category_slug=${slug}`).then((r) => r.json()),
+      ])
       const cats: Category[] = Array.isArray(catRes) ? catRes : []
       const cat = cats.find((c) => c.slug === slug) ?? null
       setCategory(cat)
-      if (cat) {
-        const its = await fetch(`/api/items?category_id=${cat.id}`).then((r) => r.json())
-        setItems(Array.isArray(its) ? its : [])
-      }
+      setItems(Array.isArray(itsRes) ? itsRes : [])
       setLoading(false)
     })
   }, [params])

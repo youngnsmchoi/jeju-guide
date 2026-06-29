@@ -10,14 +10,17 @@ const supabase = createClient(
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const categoryId = searchParams.get('category_id')
+  const categorySlug = searchParams.get('category_slug')
 
-  if (!categoryId) return NextResponse.json({ error: 'category_id required' }, { status: 400 })
+  if (!categoryId && !categorySlug) {
+    return NextResponse.json({ error: 'category_id or category_slug required' }, { status: 400 })
+  }
 
-  const { data, error } = await supabase
-    .from('jeju_items')
-    .select('*')
-    .eq('category_id', categoryId)
-    .order('order_num')
+  const query = categorySlug
+    ? supabase.from('jeju_items').select('*, jeju_categories!inner(slug)').eq('jeju_categories.slug', categorySlug)
+    : supabase.from('jeju_items').select('*').eq('category_id', categoryId!)
+
+  const { data, error } = await query.order('order_num')
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json(data)
