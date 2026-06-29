@@ -2,6 +2,7 @@
 // 라면 레코드를 세로 스크롤 카드 목록으로 렌더링
 
 import { useState } from 'react'
+import { CookingPot, Flame, Globe, Soup, Clock } from 'lucide-react'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
 
@@ -28,8 +29,10 @@ const FIELD_LABEL: Record<'flavor_desc' | 'comparison' | 'popularity' | 'texture
 
 function SpicyLevel({ level }: { level: number }) {
   return (
-    <span className="text-sm tracking-tight" aria-label={`spicy level ${level}`}>
-      {'🌶️'.repeat(level)}
+    <span className="flex items-center gap-0.5" aria-label={`spicy level ${level}`}>
+      {Array.from({ length: level }).map((_, i) => (
+        <Flame key={i} size={16} className="fill-red-500 text-red-500" />
+      ))}
     </span>
   )
 }
@@ -66,42 +69,57 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
               <img src={item.image_url} alt="" className="w-full h-full object-cover" />
             </div>
           )}
-          <div className="p-4 space-y-3">
-            <div className="flex items-center justify-between gap-2 -mx-4 -mt-4 px-4 py-3 mb-1 bg-orange-50/70 border-b border-orange-100">
+          <div className="p-4 space-y-4">
+            <div className="flex items-center justify-between gap-2">
               <h2 className="text-base font-bold text-gray-900">{getRamenField(item, 'name', lang)}</h2>
               {!!item.spicy_level && <SpicyLevel level={item.spicy_level} />}
             </div>
 
             {getRamenField(item, 'flavor_desc', lang) && (
-              <div>
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{FIELD_LABEL.flavor_desc[lang]}</p>
-                <p className="text-sm text-gray-700 leading-relaxed">{getRamenField(item, 'flavor_desc', lang)}</p>
+              <div className="flex items-start gap-2.5">
+                <CookingPot size={18} className="text-gray-400 shrink-0 mt-0.5" />
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  <span className="text-xs text-gray-400 font-medium mr-1">{FIELD_LABEL.flavor_desc[lang]}</span>
+                  {getRamenField(item, 'flavor_desc', lang)}
+                </p>
               </div>
             )}
 
             {getRamenField(item, 'comparison', lang) && (
-              <div>
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{FIELD_LABEL.comparison[lang]}</p>
-                <p className="text-sm text-gray-700 leading-relaxed">{getRamenField(item, 'comparison', lang)}</p>
+              <div className="flex items-start gap-2.5">
+                <Flame size={18} className="text-gray-400 shrink-0 mt-0.5" />
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  <span className="text-xs text-gray-400 font-medium mr-1">{FIELD_LABEL.comparison[lang]}</span>
+                  {getRamenField(item, 'comparison', lang)}
+                </p>
               </div>
             )}
 
             {getRamenField(item, 'popularity', lang) && (
-              <div>
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{FIELD_LABEL.popularity[lang]}</p>
-                <p className="text-sm text-gray-700 leading-relaxed">{getRamenField(item, 'popularity', lang)}</p>
+              <div className="flex items-start gap-2.5">
+                <Globe size={18} className="text-gray-400 shrink-0 mt-0.5" />
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  <span className="text-xs text-gray-400 font-medium mr-1">{FIELD_LABEL.popularity[lang]}</span>
+                  {getRamenField(item, 'popularity', lang)}
+                </p>
               </div>
             )}
 
             {getRamenField(item, 'texture', lang) && (
-              <div>
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{FIELD_LABEL.texture[lang]}</p>
-                <p className="text-sm text-gray-700 leading-relaxed">{getRamenField(item, 'texture', lang)}</p>
+              <div className="flex items-start gap-2.5">
+                <Soup size={18} className="text-gray-400 shrink-0 mt-0.5" />
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  <span className="text-xs text-gray-400 font-medium mr-1">{FIELD_LABEL.texture[lang]}</span>
+                  {getRamenField(item, 'texture', lang)}
+                </p>
               </div>
             )}
 
             {item.prep_time != null && (
-              <p className="text-sm text-emerald-700 font-medium">⏱ {PREP_TIME_LABEL[lang](item.prep_time)}</p>
+              <p className="flex items-center gap-1.5 text-sm text-emerald-700 font-medium">
+                <Clock size={16} />
+                {PREP_TIME_LABEL[lang](item.prep_time)}
+              </p>
             )}
           </div>
         </div>
