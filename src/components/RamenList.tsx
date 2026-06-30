@@ -77,7 +77,7 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
         >🌶️ {SORT_LABEL[lang].spicy}</button>
       </div>
       {sortedItems.map((item) => (
-        <div key={item.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div key={item.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
           {item.image_url && (
             <div className="relative w-full h-48 overflow-hidden bg-gray-50">
               <img src={item.image_url} alt="" className="w-full h-full object-contain" />
@@ -89,57 +89,59 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
               )}
             </div>
           )}
-          <div className="p-4 space-y-3">
-            <div className="flex items-center justify-between gap-2">
+          <div className="p-4 space-y-0">
+            <div className="flex items-center justify-between gap-2 pb-3">
               <h2 className="text-base font-bold text-gray-900">{getRamenField(item, 'name', lang)}</h2>
               {!!item.spicy_level && <SpicyLevel level={item.spicy_level} />}
             </div>
             {item.manufacturer_url && (
-              <a
-                href={item.manufacturer_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full text-sm text-gray-600 border border-gray-200 rounded-xl px-4 py-2.5 hover:bg-gray-50 transition-colors"
-              >{OFFICIAL_PAGE_LABEL[lang]} →</a>
+              <div className="pb-3">
+                <a
+                  href={item.manufacturer_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full text-sm text-gray-600 border border-gray-200 rounded-xl px-4 py-2.5 hover:bg-gray-50 transition-colors"
+                >{OFFICIAL_PAGE_LABEL[lang]} →</a>
+              </div>
             )}
 
             {getRamenField(item, 'flavor_desc', lang) && (
-              <div>
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{FIELD_LABEL.flavor_desc[lang]}</p>
-                <p className="text-sm text-gray-700 leading-relaxed">{getRamenField(item, 'flavor_desc', lang)}</p>
+              <div className="pt-3 border-t border-gray-100">
+                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">{FIELD_LABEL.flavor_desc[lang]}</p>
+                <p className="text-sm text-gray-700 leading-relaxed mt-0.5">{getRamenField(item, 'flavor_desc', lang)}</p>
               </div>
             )}
 
             {getRamenField(item, 'comparison', lang) && (
-              <div>
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{FIELD_LABEL.comparison[lang]}</p>
-                <p className="text-sm text-gray-700 leading-relaxed">{getRamenField(item, 'comparison', lang)}</p>
+              <div className="pt-3 border-t border-gray-100">
+                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">{FIELD_LABEL.comparison[lang]}</p>
+                <p className="text-sm text-gray-700 leading-relaxed mt-0.5">{getRamenField(item, 'comparison', lang)}</p>
               </div>
             )}
 
             {getRamenField(item, 'popularity', lang) && (
-              <div>
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{FIELD_LABEL.popularity[lang]}</p>
-                <p className="text-sm text-gray-700 leading-relaxed">{getRamenField(item, 'popularity', lang)}</p>
+              <div className="pt-3 border-t border-gray-100">
+                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">{FIELD_LABEL.popularity[lang]}</p>
+                <p className="text-sm text-gray-700 leading-relaxed mt-0.5">{getRamenField(item, 'popularity', lang)}</p>
               </div>
             )}
 
             {getRamenField(item, 'texture', lang) && (
-              <div>
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{FIELD_LABEL.texture[lang]}</p>
-                <p className="text-sm text-gray-700 leading-relaxed">{getRamenField(item, 'texture', lang)}</p>
+              <div className="pt-3 border-t border-gray-100">
+                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">{FIELD_LABEL.texture[lang]}</p>
+                <p className="text-sm text-gray-700 leading-relaxed mt-0.5">{getRamenField(item, 'texture', lang)}</p>
               </div>
             )}
 
             {item.price_krw != null && (
-              <div className="flex items-center gap-2 pt-1">
+              <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
                 <span className="text-sm font-semibold text-gray-800">₩{item.price_krw.toLocaleString()}</span>
                 <span className="text-xs text-gray-400">(≈ ${(item.price_krw / USD_RATE).toFixed(2)} · {RATE_DATE})</span>
               </div>
             )}
 
             {item.prep_time != null && (
-              <p className="flex items-center gap-1.5 text-sm text-emerald-700 font-medium">
+              <p className="flex items-center gap-1.5 text-sm text-emerald-700 font-medium pt-3 border-t border-gray-100">
                 <Clock size={16} />
                 {PREP_TIME_LABEL[lang](item.prep_time)}
                 {item.heat_source && (
