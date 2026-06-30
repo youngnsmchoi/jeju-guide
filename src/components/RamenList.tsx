@@ -27,10 +27,10 @@ const HEAT_SOURCE_LABEL: Record<string, Record<Lang, string>> = {
 }
 
 const OFFICIAL_PAGE_LABEL: Record<Lang, string> = {
-  ko: '공식 제품 페이지 (성분 확인)',
-  en: 'Official product page (ingredients & allergens)',
-  zh: '官方产品页面（成分与过敏原）',
-  ja: '公式製品ページ（成分・アレルギー情報）',
+  ko: '제품 상세 · 성분 · 알레르기 확인',
+  en: 'Product details · ingredients · allergens',
+  zh: '产品详情 · 成分 · 过敏原',
+  ja: '製品詳細 · 成分 · アレルギー情報',
 }
 
 const USD_RATE = 1380
@@ -94,6 +94,14 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
               <h2 className="text-base font-bold text-gray-900">{getRamenField(item, 'name', lang)}</h2>
               {!!item.spicy_level && <SpicyLevel level={item.spicy_level} />}
             </div>
+            {item.manufacturer_url && (
+              <a
+                href={item.manufacturer_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-500 underline"
+              >{OFFICIAL_PAGE_LABEL[lang]}</a>
+            )}
 
             {getRamenField(item, 'flavor_desc', lang) && (
               <div>
@@ -140,14 +148,6 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
               </p>
             )}
 
-            {item.manufacturer_url && (
-              <a
-                href={item.manufacturer_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-500 hover:underline"
-              >🔗 {OFFICIAL_PAGE_LABEL[lang]}</a>
-            )}
           </div>
         </div>
       ))}
