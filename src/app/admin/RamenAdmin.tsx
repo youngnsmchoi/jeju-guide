@@ -32,6 +32,11 @@ const emptyForm = (orderNum: number): FormState => ({
   texture_ko: '', texture_en: '', texture_zh: '', texture_ja: '',
   prep_time: null,
   spicy_level: null,
+  noodle_type: null,
+  soup_type: null,
+  heat_source: null,
+  manufacturer_url: '',
+  price_krw: null,
 })
 
 export default function RamenAdmin() {
@@ -159,6 +164,61 @@ export default function RamenAdmin() {
                 className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
               />
             </div>
+            <div>
+              <label className="text-xs text-gray-400 font-medium">정가 (원)</label>
+              <input
+                type="number"
+                value={form.price_krw ?? ''}
+                onChange={e => setField('price_krw', e.target.value === '' ? null : Number(e.target.value))}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-gray-400 font-medium">라면 종류</label>
+              <select
+                value={form.noodle_type ?? ''}
+                onChange={e => setField('noodle_type', e.target.value || null)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
+              >
+                <option value="">선택</option>
+                <option value="cup">컵라면 (Cup)</option>
+                <option value="bag">봉지라면 (Bag)</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-xs text-gray-400 font-medium">국물 유무</label>
+              <select
+                value={form.soup_type ?? ''}
+                onChange={e => setField('soup_type', e.target.value || null)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
+              >
+                <option value="">선택</option>
+                <option value="soup">국물 있음 (Soup)</option>
+                <option value="dry">국물 없음 (No Soup)</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-xs text-gray-400 font-medium">조리 방법</label>
+              <select
+                value={form.heat_source ?? ''}
+                onChange={e => setField('heat_source', e.target.value || null)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
+              >
+                <option value="">선택</option>
+                <option value="hot_water">뜨거운 물만 (Hot water only)</option>
+                <option value="microwave">전자레인지 (Microwave)</option>
+                <option value="stovetop">냄비 필요 (Stovetop)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="text-xs text-gray-400 font-medium">제조사 공식 페이지 URL</label>
+            <input
+              value={form.manufacturer_url ?? ''}
+              onChange={e => setField('manufacturer_url', e.target.value)}
+              placeholder="https://..."
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
+            />
           </div>
 
           {/* 언어 탭 */}

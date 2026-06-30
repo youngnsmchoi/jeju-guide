@@ -77,6 +77,11 @@ export interface RamenItem {
   texture_ja: string | null
   prep_time: number | null
   spicy_level: number | null
+  noodle_type: 'cup' | 'bag' | null
+  soup_type: 'soup' | 'dry' | null
+  heat_source: 'hot_water' | 'microwave' | 'stovetop' | null
+  manufacturer_url: string | null
+  price_krw: number | null
 }
 
 export function getRamenField(item: RamenItem, field: 'name' | 'flavor_desc' | 'comparison' | 'popularity' | 'texture', lang: Lang): string {

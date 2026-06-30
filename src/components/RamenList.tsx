@@ -20,6 +20,22 @@ const PREP_TIME_LABEL: Record<Lang, (min: number) => string> = {
   ja: (min) => `推奨調理時間: ${min}分`,
 }
 
+const HEAT_SOURCE_LABEL: Record<string, Record<Lang, string>> = {
+  hot_water: { ko: '뜨거운 물만', en: 'Hot water only', zh: '仅需热水', ja: 'お湯のみ' },
+  microwave: { ko: '전자레인지', en: 'Microwave', zh: '微波炉', ja: '電子レンジ' },
+  stovetop: { ko: '냄비 필요', en: 'Stovetop required', zh: '需要锅', ja: '鍋が必要' },
+}
+
+const OFFICIAL_PAGE_LABEL: Record<Lang, string> = {
+  ko: '공식 제품 페이지 (성분 확인)',
+  en: 'Official product page (ingredients & allergens)',
+  zh: '官方产品页面（成分与过敏原）',
+  ja: '公式製品ページ（成分・アレルギー情報）',
+}
+
+const USD_RATE = 1380
+const RATE_DATE = 'Jun 2026'
+
 const FIELD_LABEL: Record<'flavor_desc' | 'comparison' | 'popularity' | 'texture', Record<Lang, string>> = {
   flavor_desc: { ko: '맛', en: 'Flavor', zh: '味道', ja: '味' },
   comparison: { ko: '비슷한 맛', en: 'Tastes like', zh: '相似口味', ja: '似た味' },
@@ -101,11 +117,30 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
               </div>
             )}
 
+            {item.price_krw != null && (
+              <div className="flex items-center gap-2 pt-1">
+                <span className="text-sm font-semibold text-gray-800">₩{item.price_krw.toLocaleString()}</span>
+                <span className="text-xs text-gray-400">(≈ ${(item.price_krw / USD_RATE).toFixed(2)} · {RATE_DATE})</span>
+              </div>
+            )}
+
             {item.prep_time != null && (
               <p className="flex items-center gap-1.5 text-sm text-emerald-700 font-medium">
                 <Clock size={16} />
                 {PREP_TIME_LABEL[lang](item.prep_time)}
+                {item.heat_source && (
+                  <span className="text-gray-400 font-normal">· {HEAT_SOURCE_LABEL[item.heat_source][lang]}</span>
+                )}
               </p>
+            )}
+
+            {item.manufacturer_url && (
+              <a
+                href={item.manufacturer_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-500 hover:underline"
+              >🔗 {OFFICIAL_PAGE_LABEL[lang]}</a>
             )}
           </div>
         </div>
