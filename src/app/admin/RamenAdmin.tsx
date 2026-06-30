@@ -101,12 +101,16 @@ export default function RamenAdmin() {
       {/* 라면 목록 */}
       {!form && (
         <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-xs text-gray-400 font-medium">라면 목록</p>
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-sm font-semibold text-gray-700">라면 목록</p>
             <button
               onClick={startNew}
               className="bg-emerald-600 text-white text-sm px-4 py-2 rounded-xl hover:bg-emerald-700 transition-colors"
             >+ 새 라면</button>
+          </div>
+          <div className="flex gap-3 mb-3">
+            <span className="text-xs text-gray-400"><span className="inline-block bg-blue-100 text-blue-700 rounded px-1.5 py-0.5 mr-1">컵라면</span>Cup</span>
+            <span className="text-xs text-gray-400"><span className="inline-block bg-orange-100 text-orange-700 rounded px-1.5 py-0.5 mr-1">봉지라면</span>Bag</span>
           </div>
           {items.length === 0 ? (
             <p className="text-center text-gray-400 py-8 text-sm">등록된 라면이 없습니다.</p>
@@ -114,7 +118,10 @@ export default function RamenAdmin() {
             <div className="space-y-2">
               {items.map(item => (
                 <div key={item.id} className="flex items-center justify-between border border-gray-100 rounded-xl px-4 py-3">
-                  <span className="text-sm text-gray-800">{getRamenField(item, 'name', 'ko')}</span>
+                  <span className={`text-sm font-medium rounded-md px-2 py-0.5
+                    ${item.noodle_type === 'cup' ? 'bg-blue-50 text-blue-800' : item.noodle_type === 'bag' ? 'bg-orange-50 text-orange-800' : 'text-gray-800'}`}>
+                    {getRamenField(item, 'name', 'ko')}
+                  </span>
                   <div className="flex gap-2">
                     <button onClick={() => startEdit(item)} className="text-xs text-emerald-600 hover:underline">수정</button>
                     <button onClick={() => deleteItem(item.id)} className="text-xs text-red-400 hover:underline">삭제</button>
