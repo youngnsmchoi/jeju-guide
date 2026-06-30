@@ -99,8 +99,8 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
                 href={item.manufacturer_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-blue-500 underline"
-              >{OFFICIAL_PAGE_LABEL[lang]}</a>
+                className="block w-full text-sm text-gray-600 border border-gray-200 rounded-xl px-4 py-2.5 hover:bg-gray-50 transition-colors"
+              >{OFFICIAL_PAGE_LABEL[lang]} →</a>
             )}
 
             {getRamenField(item, 'flavor_desc', lang) && (
