@@ -79,8 +79,14 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
       {sortedItems.map((item) => (
         <div key={item.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           {item.image_url && (
-            <div className="w-full aspect-video overflow-hidden bg-gray-50">
+            <div className="relative w-full aspect-video overflow-hidden bg-gray-50">
               <img src={item.image_url} alt="" className="w-full h-full object-cover" />
+              {item.noodle_type && (
+                <span className={`absolute top-2 left-2 text-xs font-semibold px-2 py-0.5 rounded-md
+                  ${item.noodle_type === 'cup' ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
+                  {item.noodle_type === 'cup' ? 'Cup' : 'Bag'}
+                </span>
+              )}
             </div>
           )}
           <div className="p-4 space-y-3">
