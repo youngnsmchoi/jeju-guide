@@ -105,7 +105,7 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
                 href={item.manufacturer_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full text-sm text-gray-600 border border-gray-200 rounded-xl px-4 py-2.5 hover:bg-gray-50 transition-colors"
+                className="block w-full text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5 hover:bg-emerald-100 transition-colors"
               >{OFFICIAL_PAGE_LABEL[lang]} →</a>
             )}
 
