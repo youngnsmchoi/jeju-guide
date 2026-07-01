@@ -90,6 +90,12 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
             </div>
           )}
           <div className="p-4 space-y-3">
+            {item.noodle_type && !item.image_url && (
+              <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded-md
+                ${item.noodle_type === 'cup' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}`}>
+                {item.noodle_type === 'cup' ? 'Cup' : 'Bag'}
+              </span>
+            )}
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-base font-bold text-gray-900">{getRamenField(item, 'name', lang)}</h2>
               {!!item.spicy_level && <SpicyLevel level={item.spicy_level} />}
