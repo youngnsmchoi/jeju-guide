@@ -82,6 +82,9 @@ export interface RamenItem {
   heat_source: 'hot_water' | 'microwave' | 'stovetop' | null
   manufacturer_url: string | null
   price_krw: number | null
+  vibe_tag: 'hangover' | 'comfort' | 'challenge' | 'mild' | null
+  spice_level_std: number | null
+  ingredient_match: string | null
 }
 
 export function getRamenField(item: RamenItem, field: 'name' | 'flavor_desc' | 'comparison' | 'popularity' | 'texture', lang: Lang): string {

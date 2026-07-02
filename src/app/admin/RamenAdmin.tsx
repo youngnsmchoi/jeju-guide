@@ -37,6 +37,9 @@ const emptyForm = (orderNum: number): FormState => ({
   heat_source: null,
   manufacturer_url: '',
   price_krw: null,
+  vibe_tag: null,
+  spice_level_std: null,
+  ingredient_match: null,
 })
 
 export default function RamenAdmin() {
@@ -226,6 +229,60 @@ export default function RamenAdmin() {
               placeholder="https://..."
               className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
             />
+          </div>
+
+          {/* Vibe 큐레이션 필드 */}
+          <div className="pt-2 border-t border-gray-100 space-y-3">
+            <p className="text-xs font-semibold text-gray-500">Vibe 큐레이션 설정</p>
+            <div>
+              <label className="text-xs text-gray-400 font-medium">Vibe 태그 (기분/상황)</label>
+              <select
+                value={form.vibe_tag ?? ''}
+                onChange={e => setField('vibe_tag', e.target.value || null)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
+              >
+                <option value="">선택</option>
+                <option value="hangover">🍜 해장 (Hangover Cure) — 얼큰한 국물</option>
+                <option value="comfort">😌 위로 (Comfort) — 부드럽고 편안한 맛</option>
+                <option value="challenge">🔥 도전 (Challenge) — 매운맛 도전</option>
+                <option value="mild">🌿 순한맛 (Mild) — 매운 거 못 먹을 때</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-xs text-gray-400 font-medium">신라면 기준 맵기 (1~5, 신라면=3)</label>
+              <input
+                type="number"
+                min={1}
+                max={5}
+                value={form.spice_level_std ?? ''}
+                onChange={e => setField('spice_level_std', e.target.value === '' ? null : Number(e.target.value))}
+                placeholder="1=순함 / 3=신라면 / 5=매우 매움"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-gray-400 font-medium">꿀조합 재료 (여러 개 선택 가능)</label>
+              <div className="flex gap-4 mt-2">
+                {(['cheese', 'egg', 'gimbap'] as const).map(ing => {
+                  const label = ing === 'cheese' ? '🧀 치즈' : ing === 'egg' ? '🥚 계란' : '🍙 삼각김밥'
+                  const current = form.ingredient_match?.split(',').filter(Boolean) ?? []
+                  const checked = current.includes(ing)
+                  return (
+                    <label key={ing} className="flex items-center gap-1.5 text-sm cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => {
+                          const next = checked ? current.filter(i => i !== ing) : [...current, ing]
+                          setField('ingredient_match', next.length ? next.join(',') : null)
+                        }}
+                      />
+                      {label}
+                    </label>
+                  )
+                })}
+              </div>
+            </div>
           </div>
 
           {/* 언어 탭 */}
