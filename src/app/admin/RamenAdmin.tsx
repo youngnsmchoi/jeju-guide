@@ -231,6 +231,30 @@ export default function RamenAdmin() {
             />
           </div>
 
+          {/* 언어 탭 */}
+          <div className="flex gap-2">
+            {LANGS.map(l => (
+              <button
+                key={l.code}
+                type="button"
+                onClick={() => setActiveLang(l.code)}
+                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors
+                  ${activeLang === l.code ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+              >{l.label}</button>
+            ))}
+          </div>
+
+          {TEXT_FIELDS.map(({ key, label }) => (
+            <div key={key}>
+              <label className="text-xs text-gray-400 font-medium">{label} ({activeLang})</label>
+              <input
+                value={form[`${key}_${activeLang}`] ?? ''}
+                onChange={e => setField(`${key}_${activeLang}`, e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+          ))}
+
           {/* Vibe 큐레이션 필드 */}
           <div className="pt-2 border-t border-gray-100 space-y-3">
             <p className="text-xs font-semibold text-gray-500">Vibe 큐레이션 설정</p>
@@ -284,30 +308,6 @@ export default function RamenAdmin() {
               </div>
             </div>
           </div>
-
-          {/* 언어 탭 */}
-          <div className="flex gap-2">
-            {LANGS.map(l => (
-              <button
-                key={l.code}
-                type="button"
-                onClick={() => setActiveLang(l.code)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors
-                  ${activeLang === l.code ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-              >{l.label}</button>
-            ))}
-          </div>
-
-          {TEXT_FIELDS.map(({ key, label }) => (
-            <div key={key}>
-              <label className="text-xs text-gray-400 font-medium">{label} ({activeLang})</label>
-              <input
-                value={form[`${key}_${activeLang}`] ?? ''}
-                onChange={e => setField(`${key}_${activeLang}`, e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-          ))}
 
           {/* 이미지 */}
           <div className="space-y-3 pt-2 border-t border-gray-100">
