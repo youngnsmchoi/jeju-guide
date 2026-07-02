@@ -3,6 +3,7 @@
 
 import { useState } from 'react'
 import { Clock } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
 
@@ -51,8 +52,16 @@ function SpicyLevel({ level }: { level: number }) {
   )
 }
 
+const VIBE_LABEL: Record<Lang, string> = {
+  ko: '🎯 Vibe로 추천받기',
+  en: '🎯 Find my ramen by Vibe',
+  zh: '🎯 用Vibe推荐',
+  ja: '🎯 Vibeでおすすめ',
+}
+
 export default function RamenList({ items, lang }: { items: RamenItem[]; lang: Lang }) {
   const [sortBySpicy, setSortBySpicy] = useState(false)
+  const router = useRouter()
 
   if (items.length === 0) {
     return <p className="text-center text-gray-400 py-20">등록된 라면이 없습니다.</p>
@@ -64,6 +73,10 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
 
   return (
     <div className="px-4 py-5 space-y-5">
+      <button
+        onClick={() => router.push('/vibe')}
+        className="w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors"
+      >{VIBE_LABEL[lang]}</button>
       <div className="flex justify-end gap-2">
         <button
           onClick={() => setSortBySpicy(false)}
