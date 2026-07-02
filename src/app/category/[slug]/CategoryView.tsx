@@ -28,7 +28,7 @@ const BACK_LABEL: Record<Lang, string> = {
   ja: 'ホーム',
 }
 
-export default function CategoryView({ category, items }: { category: Category; items: Item[] }) {
+export default function CategoryView({ category, items, isHome }: { category: Category; items: Item[]; isHome?: boolean }) {
   const { lang, setLang } = useLang()
   const router = useRouter()
 
@@ -37,12 +37,15 @@ export default function CategoryView({ category, items }: { category: Category; 
       {/* 헤더 */}
       <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button
-            onClick={() => router.push('/')}
-            className="flex items-center gap-1 text-sm text-gray-500 hover:text-emerald-600"
-          >
-            ← {BACK_LABEL[lang]}
-          </button>
+          {!isHome && (
+            <button
+              onClick={() => router.push('/')}
+              className="flex items-center gap-1 text-sm text-gray-500 hover:text-emerald-600"
+            >
+              ← {BACK_LABEL[lang]}
+            </button>
+          )}
+          {isHome && <div />}
           <div className="flex gap-2">
             {LANG_LABELS.map((l) => (
               <button

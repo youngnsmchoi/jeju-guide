@@ -18,5 +18,5 @@ export default async function HomePage() {
     return <div className="text-center text-gray-400 py-20">카테고리를 찾을 수 없습니다.</div>
   }
 
-  return <CategoryView category={category as Category} items={(items ?? []) as Item[]} />
+  return <CategoryView category={category as Category} items={(items ?? []) as Item[]} isHome />
 }
