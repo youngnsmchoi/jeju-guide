@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import type { Category, Item, Block, Lang } from '@/lib/types'
 import RamenAdmin from './RamenAdmin'
+import RamenLogAdmin from './RamenLogAdmin'
 
 const BlockEditor = dynamic(() => import('@/components/BlockEditor'), { ssr: false })
 
@@ -45,6 +46,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
   const [items, setItems] = useState<Item[]>([])
   const [selectedCat, setSelectedCat] = useState<Category | null>(null)
   const [showRamen, setShowRamen] = useState(false)
+  const [showLog, setShowLog] = useState(false)
   const [form, setForm] = useState<FormState | null>(null)
   const [activeLang, setActiveLang] = useState<Lang>('ko')
   const [saving, setSaving] = useState(false)
@@ -78,6 +80,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
 
   const loadItems = async (cat: Category) => {
     setShowRamen(false)
+    setShowLog(false)
     setSelectedCat(cat)
     setForm(null)
     const data = await fetch(`/api/items?category_id=${cat.id}`).then(r => r.json())
@@ -186,17 +189,27 @@ export default function AdminView({ categories }: { categories: Category[] }) {
               </button>
             ))}
             <button
-              onClick={() => { setShowRamen(true); setSelectedCat(null); setForm(null) }}
+              onClick={() => { setShowRamen(true); setShowLog(false); setSelectedCat(null); setForm(null) }}
               className={`flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-medium transition-colors
                 ${showRamen ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
             >
               🍜 라면 관리
+            </button>
+            <button
+              onClick={() => { setShowLog(true); setShowRamen(false); setSelectedCat(null); setForm(null) }}
+              className={`flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-medium transition-colors
+                ${showLog ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            >
+              📋 Ramen Log
             </button>
           </div>
         </div>
 
         {/* 라면 관리 */}
         {showRamen && <RamenAdmin />}
+
+        {/* Ramen Log */}
+        {showLog && <RamenLogAdmin />}
 
         {/* 항목 목록 */}
         {selectedCat && !form && (
