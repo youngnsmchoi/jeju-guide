@@ -188,6 +188,17 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
                 ))}
               </div>
             )}
+            <div className="mt-4 bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-3 text-sm text-emerald-700">
+              {lang === 'ko' && '이 라면 드셨나요? 먹어본 후 한 줄 남겨주세요 →'}
+              {lang === 'en' && 'Tried this ramen? Leave a quick note after eating →'}
+              {lang === 'zh' && '吃过这款拉面了吗？吃完后留下简短评价 →'}
+              {lang === 'ja' && 'このラーメン食べましたか？食べた後に一言残してください →'}
+              <button
+                onClick={() => router.push(`/ramen-log${results[0] ? `?ramen_id=${results[0].id}` : ''}`)}
+                className="block w-full mt-2 text-center font-semibold underline">
+                My Ramen Log
+              </button>
+            </div>
             <div className="space-y-2 pt-2">
               <button onClick={reset}
                 className="w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors">
