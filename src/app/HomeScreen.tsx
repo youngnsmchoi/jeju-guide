@@ -46,6 +46,17 @@ const SECTIONS: Section[] = [
     href: '/guide/payment',
   },
   {
+    emoji: '🌏',
+    title: { ko: '나라별 인기 라면', en: 'Popular by Country', zh: '各国人气拉面', ja: '国別人気ラーメン' },
+    desc: {
+      ko: '일본·중국·미국… 내 나라 사람들의 픽',
+      en: 'Japan, China, USA… what your country loves',
+      zh: '日本·中国·美国…你的国家的选择',
+      ja: '日本·中国·アメリカ…自国の人気ランキング',
+    },
+    href: '/guide/country-picks',
+  },
+  {
     emoji: '🎯',
     title: { ko: 'Vibe 큐레이션', en: 'Vibe Curation', zh: 'Vibe 推荐', ja: 'Vibe おすすめ' },
     desc: {
