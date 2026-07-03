@@ -76,7 +76,7 @@ const SECTIONS: Section[] = [
       zh: '杯面 · 袋面 · 干拌',
       ja: 'カップ · 袋 · まぜそば',
     },
-    href: null,
+    href: '/guide/cooking',
   },
   {
     emoji: '🥗',
@@ -120,7 +120,7 @@ const SECTIONS: Section[] = [
       zh: '买一送一 · 会员优惠',
       ja: '1+1 · 2+1 · 会員割引',
     },
-    href: null,
+    href: '/guide/convenience-store-1plus1',
   },
   {
     emoji: '📝',
