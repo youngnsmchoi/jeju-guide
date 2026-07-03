@@ -109,7 +109,7 @@ const SECTIONS: Section[] = [
       zh: '外国人推荐排名',
       ja: '外国人おすすめランキング',
     },
-    href: null,
+    href: '/guide/best5',
   },
   {
     emoji: '🏷️',
