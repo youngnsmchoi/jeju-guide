@@ -4,11 +4,18 @@ import type { Item } from '@/lib/types'
 import CookingView from './CookingView'
 
 export default async function CookingPage() {
-  const { data: cupItem } = await supabase
+  const { data: items } = await supabase
     .from('jeju_items')
     .select('*')
-    .eq('slug', 'convenience-store-cup-noodle')
-    .single()
+    .in('slug', ['convenience-store-cup-noodle', 'convenience-store-bag-noodle', 'convenience-store-dry-noodle'])
 
-  return <CookingView cupItem={cupItem as Item | null} />
+  const find = (slug: string) => (items ?? []).find((i: Item) => i.slug === slug) ?? null
+
+  return (
+    <CookingView
+      cupItem={find('convenience-store-cup-noodle')}
+      bagItem={find('convenience-store-bag-noodle')}
+      dryItem={find('convenience-store-dry-noodle')}
+    />
+  )
 }

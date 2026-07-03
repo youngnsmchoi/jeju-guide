@@ -23,7 +23,37 @@ const LABEL: Record<Lang, {
 
 const TABS: Tab[] = ['cup', 'bag', 'dry']
 
-export default function CookingView({ cupItem }: { cupItem: Item | null }) {
+function TabContent({ item, lang, emptyEmoji, comingSoon }: {
+  item: Item | null; lang: Lang; emptyEmoji: string; comingSoon: string
+}) {
+  if (!item || (!getContent(item, lang) && !item.image_url && !(Array.isArray(item.blocks) && item.blocks.length > 0))) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <span className="text-4xl mb-3">{emptyEmoji}</span>
+        <p className="text-gray-400 text-sm">{comingSoon}</p>
+      </div>
+    )
+  }
+  return (
+    <div className="space-y-4">
+      {item.image_url && (
+        <img src={item.image_url} alt="" className="w-full rounded-2xl object-cover max-h-48" />
+      )}
+      {getContent(item, lang) && (
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+          {getContent(item, lang)}
+        </div>
+      )}
+      {Array.isArray(item.blocks) && item.blocks.length > 0 && (
+        <BlockRenderer blocks={item.blocks} lang={lang} />
+      )}
+    </div>
+  )
+}
+
+export default function CookingView({ cupItem, bagItem, dryItem }: {
+  cupItem: Item | null; bagItem: Item | null; dryItem: Item | null
+}) {
   const { lang } = useLang()
   const router = useRouter()
   const L = LABEL[lang]
@@ -39,8 +69,6 @@ export default function CookingView({ cupItem }: { cupItem: Item | null }) {
           <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
           <div className="w-12" />
         </div>
-
-        {/* 탭 */}
         <div className="max-w-lg mx-auto flex gap-2 mt-2">
           {TABS.map(t => (
             <button key={t} onClick={() => setTab(t)}
@@ -53,28 +81,9 @@ export default function CookingView({ cupItem }: { cupItem: Item | null }) {
       </header>
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5">
-        {/* 컵라면 탭 */}
-        {tab === 'cup' && cupItem && (
-          <div className="space-y-4">
-            {cupItem.image_url && (
-              <img src={cupItem.image_url} alt="" className="w-full rounded-2xl object-cover max-h-48" />
-            )}
-            <div className="bg-white rounded-2xl border border-gray-100 p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-line">
-              {getContent(cupItem, lang)}
-            </div>
-            {Array.isArray(cupItem.blocks) && cupItem.blocks.length > 0 && (
-              <BlockRenderer blocks={cupItem.blocks} lang={lang} />
-            )}
-          </div>
-        )}
-
-        {/* 봉지라면 / 비벼먹기 — 준비 중 */}
-        {(tab === 'bag' || tab === 'dry') && (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
-            <span className="text-4xl mb-3">{tab === 'bag' ? '🍜' : '🥢'}</span>
-            <p className="text-gray-400 text-sm">{L.comingSoon}</p>
-          </div>
-        )}
+        {tab === 'cup' && <TabContent item={cupItem} lang={lang} emptyEmoji="☕" comingSoon={L.comingSoon} />}
+        {tab === 'bag' && <TabContent item={bagItem} lang={lang} emptyEmoji="🍜" comingSoon={L.comingSoon} />}
+        {tab === 'dry' && <TabContent item={dryItem} lang={lang} emptyEmoji="🥢" comingSoon={L.comingSoon} />}
       </main>
     </div>
   )
