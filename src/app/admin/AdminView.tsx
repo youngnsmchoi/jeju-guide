@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic'
 import type { Category, Item, Block, Lang } from '@/lib/types'
 import RamenAdmin from './RamenAdmin'
 import RamenLogAdmin from './RamenLogAdmin'
+import Best5Admin from './Best5Admin'
+import ToppingsAdmin from './ToppingsAdmin'
 
 const BlockEditor = dynamic(() => import('@/components/BlockEditor'), { ssr: false })
 
@@ -47,6 +49,8 @@ export default function AdminView({ categories }: { categories: Category[] }) {
   const [selectedCat, setSelectedCat] = useState<Category | null>(null)
   const [showRamen, setShowRamen] = useState(false)
   const [showLog, setShowLog] = useState(false)
+  const [showBest5, setShowBest5] = useState(false)
+  const [showToppings, setShowToppings] = useState(false)
   const [form, setForm] = useState<FormState | null>(null)
   const [activeLang, setActiveLang] = useState<Lang>('ko')
   const [saving, setSaving] = useState(false)
@@ -81,6 +85,8 @@ export default function AdminView({ categories }: { categories: Category[] }) {
   const loadItems = async (cat: Category) => {
     setShowRamen(false)
     setShowLog(false)
+    setShowBest5(false)
+    setShowToppings(false)
     setSelectedCat(cat)
     setForm(null)
     const data = await fetch(`/api/items?category_id=${cat.id}`).then(r => r.json())
@@ -189,18 +195,32 @@ export default function AdminView({ categories }: { categories: Category[] }) {
               </button>
             ))}
             <button
-              onClick={() => { setShowRamen(true); setShowLog(false); setSelectedCat(null); setForm(null) }}
+              onClick={() => { setShowRamen(true); setShowLog(false); setShowBest5(false); setShowToppings(false); setSelectedCat(null); setForm(null) }}
               className={`flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-medium transition-colors
                 ${showRamen ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
             >
               🍜 라면 관리
             </button>
             <button
-              onClick={() => { setShowLog(true); setShowRamen(false); setSelectedCat(null); setForm(null) }}
+              onClick={() => { setShowLog(true); setShowRamen(false); setShowBest5(false); setShowToppings(false); setSelectedCat(null); setForm(null) }}
               className={`flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-medium transition-colors
                 ${showLog ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
             >
               📋 Ramen Log
+            </button>
+            <button
+              onClick={() => { setShowBest5(true); setShowLog(false); setShowRamen(false); setShowToppings(false); setSelectedCat(null); setForm(null) }}
+              className={`flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-medium transition-colors
+                ${showBest5 ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            >
+              🏆 Best 5
+            </button>
+            <button
+              onClick={() => { setShowToppings(true); setShowLog(false); setShowRamen(false); setShowBest5(false); setSelectedCat(null); setForm(null) }}
+              className={`flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-medium transition-colors
+                ${showToppings ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            >
+              🍳 꿀조합
             </button>
           </div>
         </div>
@@ -210,6 +230,12 @@ export default function AdminView({ categories }: { categories: Category[] }) {
 
         {/* Ramen Log */}
         {showLog && <RamenLogAdmin />}
+
+        {/* Best 5 관리 */}
+        {showBest5 && <Best5Admin />}
+
+        {/* 꿀조합 관리 */}
+        {showToppings && <ToppingsAdmin />}
 
         {/* 항목 목록 */}
         {selectedCat && !form && (
