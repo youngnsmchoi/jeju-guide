@@ -1,7 +1,7 @@
 'use client'
-// Vibe 큐레이션 — 3문항(기분/맵기/재료) → 라면 추천 3개
+// Vibe 큐레이션 — 3문항 점진적 펼침 → 라면 추천
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { RamenItem, Lang } from '@/lib/types'
@@ -52,13 +52,13 @@ const INGREDIENT_OPTIONS: { key: Ingredient; emoji: string; label: Record<Lang, 
 ]
 
 const LABEL: Record<Lang, {
-  title: string; back: string; step: string; next: string; result: string;
-  q1: string; q2: string; q3: string; q3skip: string; recommend: string; noResult: string; retry: string; viewAll: string
+  title: string; back: string; q1: string; q2: string; q3: string;
+  q3skip: string; recommend: string; noResult: string; retry: string; viewAll: string
 }> = {
-  ko: { title: 'K-Ramen Vibe', back: '← 뒤로', step: '단계', next: '다음', result: '결과', q1: '지금 기분이 어때요?', q2: '매운맛은 얼마나 괜찮아요?', q3: '같이 먹고 싶은 것이 있나요?', q3skip: '그냥 라면만', recommend: '추천 라면', noResult: '조건에 맞는 라면이 없어요. 다시 선택해 보세요.', retry: '다시 하기', viewAll: '전체 목록 보기' },
-  en: { title: 'K-Ramen Vibe', back: '← Back', step: 'Step', next: 'Next', result: 'Result', q1: "What's your vibe right now?", q2: 'How spicy can you handle?', q3: 'Want to add anything?', q3skip: 'Just ramen', recommend: 'Recommended', noResult: 'No match found. Try again!', retry: 'Try again', viewAll: 'View all' },
-  zh: { title: 'K-Ramen Vibe', back: '← 返回', step: '步骤', next: '下一步', result: '结果', q1: '你现在的心情？', q2: '能接受多辣？', q3: '想搭配什么？', q3skip: '只要泡面', recommend: '推荐拉面', noResult: '没有符合的拉面，请重试。', retry: '重新选择', viewAll: '查看全部' },
-  ja: { title: 'K-Ramen Vibe', back: '← 戻る', step: 'ステップ', next: '次へ', result: '結果', q1: '今の気分は？', q2: '辛さはどのくらいOK？', q3: '一緒に食べたいものは？', q3skip: 'ラーメンだけ', recommend: 'おすすめラーメン', noResult: '条件に合うラーメンがありません。', retry: 'もう一度', viewAll: '全部見る' },
+  ko: { title: 'K-Ramen Vibe', back: '← 뒤로', q1: '지금 기분이 어때요?', q2: '매운맛은 얼마나 괜찮아요?', q3: '같이 먹고 싶은 것이 있나요?', q3skip: '그냥 라면만', recommend: '추천 라면', noResult: '조건에 맞는 라면이 없어요. 다시 선택해 보세요.', retry: '다시 하기', viewAll: '전체 목록 보기' },
+  en: { title: 'K-Ramen Vibe', back: '← Back', q1: "What's your vibe right now?", q2: 'How spicy can you handle?', q3: 'Want to add anything?', q3skip: 'Just ramen', recommend: 'Recommended', noResult: 'No match found. Try again!', retry: 'Try again', viewAll: 'View all' },
+  zh: { title: 'K-Ramen Vibe', back: '← 返回', q1: '你现在的心情？', q2: '能接受多辣？', q3: '想搭配什么？', q3skip: '只要泡面', recommend: '推荐拉面', noResult: '没有符合的拉面，请重试。', retry: '重新选择', viewAll: '查看全部' },
+  ja: { title: 'K-Ramen Vibe', back: '← 戻る', q1: '今の気分は？', q2: '辛さはどのくらいOK？', q3: '一緒に食べたいものは？', q3skip: 'ラーメンだけ', recommend: 'おすすめラーメン', noResult: '条件に合うラーメンがありません。', retry: 'もう一度', viewAll: '全部見る' },
 }
 
 function recommend(items: RamenItem[], vibe: VibeTag, spice: number, ingredients: Ingredient[]): RamenItem[] {
@@ -76,65 +76,107 @@ function recommend(items: RamenItem[], vibe: VibeTag, spice: number, ingredients
   return scored.sort((a, b) => b.score - a.score).slice(0, 3).map(s => s.item)
 }
 
+function SectionHeader({ num, label, chosen }: { num: number; label: string; chosen?: string }) {
+  return (
+    <div className="flex items-center gap-2 mb-3">
+      <span className="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center shrink-0">{num}</span>
+      <span className="text-sm font-bold text-gray-800">{label}</span>
+      {chosen && <span className="ml-auto text-xs text-emerald-600 font-medium">{chosen}</span>}
+    </div>
+  )
+}
+
 export default function VibeView({ items }: { items: RamenItem[] }) {
   const { lang } = useLang()
   const router = useRouter()
   const L = LABEL[lang]
 
-  const [step, setStep] = useState<1 | 2 | 3 | 'result'>(1)
-  const [vibe, setVibe] = useState<VibeTag | null>(null)
-  const [spice, setSpice] = useState<number | null>(null)
-  const [ingredients, setIngredients] = useState<Ingredient[]>([])
+  const step2Ref = useRef<HTMLDivElement>(null)
+  const step3Ref = useRef<HTMLDivElement>(null)
+  const resultRef = useRef<HTMLDivElement>(null)
+
+  const [selectedVibe, setSelectedVibe] = useState<VibeTag | null>(null)
+  const [selectedSpice, setSelectedSpice] = useState<number | null>(null)
+  const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([])
+  const [showResult, setShowResult] = useState(false)
+
+  const pickVibe = (tag: VibeTag) => {
+    setSelectedVibe(tag)
+    setSelectedSpice(null)
+    setSelectedIngredients([])
+    setShowResult(false)
+    setTimeout(() => step2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
+  }
+
+  const pickSpice = (level: number) => {
+    setSelectedSpice(level)
+    setSelectedIngredients([])
+    setShowResult(false)
+    setTimeout(() => step3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
+  }
 
   const toggleIngredient = (ing: Ingredient) =>
-    setIngredients(prev => prev.includes(ing) ? prev.filter(i => i !== ing) : [...prev, ing])
+    setSelectedIngredients(prev => prev.includes(ing) ? prev.filter(i => i !== ing) : [...prev, ing])
 
-  const results = step === 'result' && vibe && spice !== null
-    ? recommend(items, vibe, spice, ingredients)
+  const showResults = (skipIngredients = false) => {
+    if (skipIngredients) setSelectedIngredients([])
+    setShowResult(true)
+    setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
+  }
+
+  const reset = () => {
+    setSelectedVibe(null)
+    setSelectedSpice(null)
+    setSelectedIngredients([])
+    setShowResult(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const results = showResult && selectedVibe && selectedSpice !== null
+    ? recommend(items, selectedVibe, selectedSpice, selectedIngredients)
     : []
 
-  const reset = () => { setStep(1); setVibe(null); setSpice(null); setIngredients([]) }
+  const vibeLabel = selectedVibe ? VIBE_OPTIONS.find(o => o.tag === selectedVibe)?.label[lang] : undefined
+  const spiceLabel = selectedSpice !== null ? SPICE_OPTIONS.find(o => o.level === selectedSpice)?.label[lang] : undefined
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => step === 1 ? router.back() : step === 2 ? setStep(1) : step === 3 ? setStep(2) : reset()}
-            className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
+          <button onClick={() => router.back()} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
           <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
-          <div className="text-xs text-gray-400">
-            {step !== 'result' ? `${L.step} ${step} / 3` : L.result}
-          </div>
+          <div className="w-12" />
         </div>
       </header>
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-8">
-        {/* 1단계: 기분 */}
-        {step === 1 && (
-          <div className="space-y-4">
-            <h2 className="text-lg font-bold text-gray-900">{L.q1}</h2>
-            <div className="grid grid-cols-2 gap-3">
-              {VIBE_OPTIONS.map(opt => (
-                <button key={opt.tag} onClick={() => { setVibe(opt.tag); setStep(2) }}
-                  className="bg-white rounded-2xl border border-gray-200 p-4 text-left hover:border-emerald-400 hover:shadow-sm transition-all">
-                  <div className="text-3xl mb-2">{opt.emoji}</div>
-                  <div className="text-sm font-bold text-gray-900">{opt.label[lang]}</div>
-                  <div className="text-xs text-gray-500 mt-1">{opt.desc[lang]}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 space-y-6">
 
-        {/* 2단계: 맵기 */}
-        {step === 2 && (
-          <div className="space-y-4">
-            <h2 className="text-lg font-bold text-gray-900">{L.q2}</h2>
+        {/* 1단계: 기분 */}
+        <div>
+          <SectionHeader num={1} label={L.q1} chosen={vibeLabel} />
+          <div className="grid grid-cols-2 gap-3">
+            {VIBE_OPTIONS.map(opt => (
+              <button key={opt.tag} onClick={() => pickVibe(opt.tag)}
+                className={`bg-white rounded-2xl border p-4 text-left transition-all
+                  ${selectedVibe === opt.tag ? 'border-emerald-500 bg-emerald-50 shadow-sm' : 'border-gray-200 hover:border-emerald-300'}`}>
+                <div className="text-3xl mb-2">{opt.emoji}</div>
+                <div className="text-sm font-bold text-gray-900">{opt.label[lang]}</div>
+                <div className="text-xs text-gray-500 mt-1">{opt.desc[lang]}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* 2단계: 맵기 — 1단계 선택 후 표시 */}
+        {selectedVibe && (
+          <div ref={step2Ref} className="scroll-mt-16">
+            <SectionHeader num={2} label={L.q2} chosen={spiceLabel} />
             <div className="space-y-2">
               {SPICE_OPTIONS.map(opt => (
-                <button key={opt.level} onClick={() => { setSpice(opt.level); setStep(3) }}
-                  className="w-full bg-white rounded-2xl border border-gray-200 px-4 py-3 text-left hover:border-emerald-400 hover:shadow-sm transition-all flex items-center gap-3">
-                  <span className="text-sm">{'🌶️'.repeat(opt.level)}</span>
+                <button key={opt.level} onClick={() => pickSpice(opt.level)}
+                  className={`w-full bg-white rounded-2xl border px-4 py-3 text-left transition-all flex items-center gap-3
+                    ${selectedSpice === opt.level ? 'border-emerald-500 bg-emerald-50 shadow-sm' : 'border-gray-200 hover:border-emerald-300'}`}>
+                  <span className="text-sm w-20 shrink-0">{'🌶️'.repeat(opt.level)}</span>
                   <span className="text-sm font-medium text-gray-800">{opt.label[lang]}</span>
                 </button>
               ))}
@@ -142,26 +184,26 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
           </div>
         )}
 
-        {/* 3단계: 재료 */}
-        {step === 3 && (
-          <div className="space-y-4">
-            <h2 className="text-lg font-bold text-gray-900">{L.q3}</h2>
-            <div className="grid grid-cols-3 gap-3">
+        {/* 3단계: 재료 — 2단계 선택 후 표시 */}
+        {selectedSpice !== null && (
+          <div ref={step3Ref} className="scroll-mt-16">
+            <SectionHeader num={3} label={L.q3} />
+            <div className="grid grid-cols-3 gap-3 mb-4">
               {INGREDIENT_OPTIONS.map(opt => (
                 <button key={opt.key} onClick={() => toggleIngredient(opt.key)}
                   className={`bg-white rounded-2xl border p-4 text-center transition-all
-                    ${ingredients.includes(opt.key) ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-300'}`}>
+                    ${selectedIngredients.includes(opt.key) ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-300'}`}>
                   <div className="text-3xl mb-1">{opt.emoji}</div>
                   <div className="text-xs font-medium text-gray-800">{opt.label[lang]}</div>
                 </button>
               ))}
             </div>
-            <div className="space-y-2 pt-2">
-              <button onClick={() => setStep('result')}
+            <div className="space-y-2">
+              <button onClick={() => showResults(false)}
                 className="w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors">
-                {L.next} →
+                {L.recommend} →
               </button>
-              <button onClick={() => { setIngredients([]); setStep('result') }}
+              <button onClick={() => showResults(true)}
                 className="w-full bg-white border border-gray-200 text-gray-500 py-3 rounded-2xl text-sm hover:bg-gray-50 transition-colors">
                 {L.q3skip}
               </button>
@@ -170,9 +212,9 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
         )}
 
         {/* 결과 */}
-        {step === 'result' && (
-          <div className="space-y-4">
-            <h2 className="text-lg font-bold text-gray-900">{L.recommend}</h2>
+        {showResult && (
+          <div ref={resultRef} className="scroll-mt-16 space-y-3">
+            <h2 className="text-base font-bold text-gray-900">{L.recommend}</h2>
             {results.length === 0 ? (
               <p className="text-gray-400 text-center py-10">{L.noResult}</p>
             ) : (
@@ -188,7 +230,8 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
                 ))}
               </div>
             )}
-            <div className="mt-4 bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-3 text-sm text-emerald-700">
+
+            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-3 text-sm text-emerald-700">
               {lang === 'ko' && '이 라면 드셨나요? 먹어본 후 한 줄 남겨주세요 →'}
               {lang === 'en' && 'Tried this ramen? Leave a quick note after eating →'}
               {lang === 'zh' && '吃过这款拉面了吗？吃完后留下简短评价 →'}
@@ -199,7 +242,8 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
                 My Ramen Log
               </button>
             </div>
-            <div className="space-y-2 pt-2">
+
+            <div className="space-y-2 pt-1">
               <button onClick={reset}
                 className="w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors">
                 {L.retry}
@@ -211,6 +255,7 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
             </div>
           </div>
         )}
+
       </main>
     </div>
   )
