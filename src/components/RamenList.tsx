@@ -27,10 +27,10 @@ const HEAT_SOURCE_LABEL: Record<string, Record<Lang, string>> = {
 }
 
 const OFFICIAL_PAGE_LABEL: Record<Lang, string> = {
-  ko: '제품 상세 · 성분 · 알레르기 확인',
-  en: 'Product details · ingredients · allergens',
-  zh: '产品详情 · 成分 · 过敏原',
-  ja: '製品詳細 · 成分 · アレルギー情報',
+  ko: '📋 제품 상세 정보',
+  en: '📋 Product Details',
+  zh: '📋 产品详情',
+  ja: '📋 製品詳細情報',
 }
 
 const USD_RATE = 1380
