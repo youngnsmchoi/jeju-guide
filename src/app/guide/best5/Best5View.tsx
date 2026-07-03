@@ -14,25 +14,25 @@ const LABEL: Record<Lang, {
   ko: {
     title: 'Best 5 추천',
     back: '← 뒤로',
-    intro: '제주 편의점에서 꼭 먹어봐야 할 라면 5개를 골랐습니다.',
+    intro: '편의점에서 꼭 먹어봐야 할 라면 5개를 골랐습니다.',
     badge: '운영자 픽',
   },
   en: {
     title: 'Best 5 Picks',
     back: '← Back',
-    intro: '5 ramen you must try at a Jeju convenience store.',
+    intro: '5 ramen you must try at a convenience store.',
     badge: "Editor's Pick",
   },
   zh: {
     title: 'Best 5 推荐',
     back: '← 返回',
-    intro: '在济州便利店必须尝试的5款拉面。',
+    intro: '在便利店必须尝试的5款拉面。',
     badge: '编辑推荐',
   },
   ja: {
     title: 'Best 5 おすすめ',
     back: '← 戻る',
-    intro: '済州のコンビニで絶対食べてほしいラーメン5選。',
+    intro: 'コンビニで絶対食べてほしいラーメン5選。',
     badge: 'エディターズピック',
   },
 }
