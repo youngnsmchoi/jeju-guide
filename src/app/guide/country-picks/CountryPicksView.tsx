@@ -9,16 +9,16 @@ import type { CountryPick } from '@/app/admin/CountryPicksAdmin'
 
 const LABEL: Record<Lang, {
   title: string; back: string; intro: string; selectPrompt: string
-  source: string; rank: string; score: string; comingSoon: string
+  source: string; rank: string; score: string; comingSoon: string; popularity: string
 }> = {
-  ko: { title: '나라별 인기 라면', back: '← 뒤로', intro: '내 나라 사람들은 어떤 한국 라면을 좋아할까요?', selectPrompt: '나라를 선택하세요', source: '출처', rank: '위', score: '점', comingSoon: '준비 중' },
-  en: { title: 'Popular Ramen by Country', back: '← Back', intro: 'What Korean ramen do people from your country love?', selectPrompt: 'Select your country', source: 'Source', rank: '#', score: 'pts', comingSoon: 'Coming soon' },
-  zh: { title: '各国人气拉面', back: '← 返回', intro: '你的国家的人喜欢哪款韩国拉面？', selectPrompt: '选择国家', source: '来源', rank: '位', score: '分', comingSoon: '即将推出' },
-  ja: { title: '国別人気ラーメン', back: '← 戻る', intro: '自分の国の人はどんな韓国ラーメンが好き？', selectPrompt: '国を選んでください', source: '出典', rank: '位', score: '点', comingSoon: '準備中' },
+  ko: { title: '나라별 인기 라면', back: '← 뒤로', intro: '내 나라 사람들은 어떤 한국 라면을 좋아할까요?', selectPrompt: '나라를 선택하세요', source: '출처', rank: '위', score: '점', comingSoon: '준비 중', popularity: '인기도' },
+  en: { title: 'Popular Ramen by Country', back: '← Back', intro: 'What Korean ramen do people from your country love?', selectPrompt: 'Select your country', source: 'Source', rank: '#', score: 'pts', comingSoon: 'Coming soon', popularity: 'Popularity' },
+  zh: { title: '各国人气拉面', back: '← 返回', intro: '你的国家的人喜欢哪款韩国拉面？', selectPrompt: '选择国家', source: '来源', rank: '位', score: '分', comingSoon: '即将推出', popularity: '人气' },
+  ja: { title: '国別人気ラーメン', back: '← 戻る', intro: '自分の国の人はどんな韓国ラーメンが好き？', selectPrompt: '国を選んでください', source: '出典', rank: '位', score: '点', comingSoon: '準備中', popularity: '人気度' },
 }
 
 const COMING_SOON_COUNTRIES = [
-  { flag: '🇨🇳', name: { ko: '중국', en: 'China', zh: '中国', ja: '中国' } },
+  { flag: '🇹🇼', name: { ko: '대만', en: 'Taiwan', zh: '台湾', ja: '台湾' } },
   { flag: '🇹🇭', name: { ko: '태국', en: 'Thailand', zh: '泰国', ja: 'タイ' } },
   { flag: '🇺🇸', name: { ko: '미국', en: 'USA', zh: '美国', ja: 'アメリカ' } },
   { flag: '🇻🇳', name: { ko: '베트남', en: 'Vietnam', zh: '越南', ja: 'ベトナム' } },
@@ -31,11 +31,15 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
   const L = LABEL[lang]
   const [selected, setSelected] = useState<string | null>(null)
 
-  // DB에서 나라 목록 추출 (중복 제거)
+  // DB에서 나라 목록 추출 (중복 제거, 순서 유지)
   const countries = Array.from(new Map(picks.map(p => [p.country_code, p])).values())
 
   const selectedPicks = selected ? picks.filter(p => p.country_code === selected) : []
   const selectedCountry = countries.find(c => c.country_code === selected)
+
+  // 나라별 출처 정보 (첫 번째 항목에서 추출)
+  const sourceLabel = selectedCountry ? (selectedCountry[`source_${lang}` as keyof CountryPick] as string) || selectedCountry.source_ko : null
+  const sourceUrl = selectedCountry?.source_url
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -62,7 +66,7 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
                     ? 'bg-emerald-600 text-white border-emerald-600'
                     : 'bg-white text-gray-700 border-gray-200 hover:border-emerald-300'}`}>
                 <span>{c.flag}</span>
-                <span>{c[`country_${lang}` as keyof CountryPick] as string || c.country_ko}</span>
+                <span>{(c[`country_${lang}` as keyof CountryPick] as string) || c.country_ko}</span>
               </button>
             ))}
             {COMING_SOON_COUNTRIES.map(c => (
@@ -79,24 +83,15 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
         {/* 선택된 나라 라면 목록 */}
         {selectedCountry && selectedPicks.length > 0 && (
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-gray-800">
-                {selectedCountry.flag} {(selectedCountry[`country_${lang}` as keyof CountryPick] as string) || selectedCountry.country_ko} Top {selectedPicks.length}
-              </h2>
-              {selectedCountry.source_url && (
-                <a href={selectedCountry.source_url} target="_blank" rel="noopener noreferrer"
-                  className="text-xs text-gray-400 underline">{L.source}</a>
-              )}
-            </div>
-            {selectedCountry[`source_${lang}` as keyof CountryPick] && (
-              <p className="text-xs text-gray-400">{selectedCountry[`source_${lang}` as keyof CountryPick] as string}</p>
-            )}
+            <h2 className="text-sm font-bold text-gray-800">
+              {selectedCountry.flag} {(selectedCountry[`country_${lang}` as keyof CountryPick] as string) || selectedCountry.country_ko} Top {selectedPicks.length}
+            </h2>
 
             {selectedPicks.map(pick => (
               <div key={pick.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full shrink-0
                       ${pick.rank_num === 1 ? 'bg-yellow-100 text-yellow-700' :
                         pick.rank_num === 2 ? 'bg-gray-100 text-gray-600' :
                         pick.rank_num === 3 ? 'bg-orange-100 text-orange-600' :
@@ -107,15 +102,31 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
                       {(pick[`name_${lang}` as keyof CountryPick] as string) || pick.name_ko}
                     </h3>
                   </div>
-                  {pick.score != null && (
-                    <span className="text-xs text-emerald-600 font-medium shrink-0">{pick.score}{L.score}</span>
-                  )}
+                  {/* 점수 또는 🔥 인기도 */}
+                  {pick.score != null
+                    ? <span className="text-xs text-emerald-600 font-medium shrink-0">{pick.score}{L.score}</span>
+                    : pick.popularity
+                      ? <span className="text-sm shrink-0">{pick.popularity}</span>
+                      : null
+                  }
                 </div>
                 <p className="text-xs text-gray-500 leading-relaxed">
                   {(pick[`reason_${lang}` as keyof CountryPick] as string) || pick.reason_ko}
                 </p>
               </div>
             ))}
+
+            {/* 하단 출처 */}
+            {sourceLabel && (
+              <div className="pt-2 border-t border-gray-100">
+                <p className="text-xs text-gray-400">
+                  {L.source}: {sourceUrl
+                    ? <a href={sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600">{sourceLabel}</a>
+                    : sourceLabel
+                  }
+                </p>
+              </div>
+            )}
           </div>
         )}
       </main>

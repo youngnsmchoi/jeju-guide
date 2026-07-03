@@ -25,6 +25,7 @@ export type CountryPick = {
   name_zh: string | null
   name_ja: string | null
   score: number | null
+  popularity: string | null
   reason_ko: string | null
   reason_en: string | null
   reason_zh: string | null
@@ -45,6 +46,7 @@ const emptyForm = (): FormState => ({
   rank_num: 1,
   name_ko: '', name_en: '', name_zh: '', name_ja: '',
   score: null,
+  popularity: null,
   reason_ko: '', reason_en: '', reason_zh: '', reason_ja: '',
   source_ko: '', source_en: '', source_zh: '', source_ja: '',
   source_url: '',
@@ -96,6 +98,7 @@ export default function CountryPicksAdmin() {
     ...pick,
     country_en: pick.country_en || '', country_zh: pick.country_zh || '', country_ja: pick.country_ja || '',
     name_en: pick.name_en || '', name_zh: pick.name_zh || '', name_ja: pick.name_ja || '',
+    popularity: pick.popularity || '',
     reason_ko: pick.reason_ko || '', reason_en: pick.reason_en || '', reason_zh: pick.reason_zh || '', reason_ja: pick.reason_ja || '',
     source_ko: pick.source_ko || '', source_en: pick.source_en || '', source_zh: pick.source_zh || '', source_ja: pick.source_ja || '',
     source_url: pick.source_url || '',
@@ -185,11 +188,18 @@ export default function CountryPicksAdmin() {
                 className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500" />
             </div>
             <div>
-              <label className="text-xs text-gray-400 font-medium">점수</label>
+              <label className="text-xs text-gray-400 font-medium">점수 (있을 경우)</label>
               <input type="number" step="0.1" value={form.score ?? ''} onChange={e => setField('score', e.target.value ? Number(e.target.value) : null)}
                 placeholder="81.2"
                 className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500" />
             </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-400 font-medium">인기도 (점수 없을 때 — 예: 🔥🔥🔥)</label>
+            <input value={form.popularity || ''} onChange={e => setField('popularity', e.target.value || null)}
+              placeholder="🔥🔥🔥"
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm mt-1 focus:outline-none focus:border-emerald-500" />
           </div>
 
           <div>
