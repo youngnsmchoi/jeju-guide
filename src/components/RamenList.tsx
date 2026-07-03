@@ -59,6 +59,13 @@ const VIBE_LABEL: Record<Lang, string> = {
   ja: '🎯 Vibeでおすすめ',
 }
 
+const PAYMENT_BANNER: Record<Lang, { label: string; sub: string }> = {
+  ko: { label: '💳 편의점 결제 방법', sub: '봉투 질문에 당황하지 마세요' },
+  en: { label: '💳 How to Pay', sub: "Don't get caught off guard at checkout" },
+  zh: { label: '💳 如何付款', sub: '不要在收银台慌乱' },
+  ja: { label: '💳 お会計の方法', sub: 'レジで慌てないために' },
+}
+
 export default function RamenList({ items, lang }: { items: RamenItem[]; lang: Lang }) {
   const [sortBySpicy, setSortBySpicy] = useState(false)
   const router = useRouter()
@@ -77,6 +84,16 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
         onClick={() => router.push('/vibe')}
         className="w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors"
       >{VIBE_LABEL[lang]}</button>
+      <button
+        onClick={() => router.push('/guide/payment')}
+        className="w-full bg-white border border-gray-200 rounded-2xl px-4 py-3 flex items-center justify-between hover:border-emerald-300 hover:shadow-sm transition-all"
+      >
+        <div className="text-left">
+          <p className="text-sm font-semibold text-gray-800">{PAYMENT_BANNER[lang].label}</p>
+          <p className="text-xs text-gray-400 mt-0.5">{PAYMENT_BANNER[lang].sub}</p>
+        </div>
+        <span className="text-gray-300 text-lg">›</span>
+      </button>
       <div className="flex justify-end gap-2">
         <button
           onClick={() => setSortBySpicy(false)}
