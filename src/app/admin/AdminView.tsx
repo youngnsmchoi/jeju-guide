@@ -8,6 +8,7 @@ import RamenAdmin from './RamenAdmin'
 import RamenLogAdmin from './RamenLogAdmin'
 import Best5Admin from './Best5Admin'
 import ToppingsAdmin from './ToppingsAdmin'
+import CountryPicksAdmin from './CountryPicksAdmin'
 
 const BlockEditor = dynamic(() => import('@/components/BlockEditor'), { ssr: false })
 
@@ -51,6 +52,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
   const [showLog, setShowLog] = useState(false)
   const [showBest5, setShowBest5] = useState(false)
   const [showToppings, setShowToppings] = useState(false)
+  const [showCountryPicks, setShowCountryPicks] = useState(false)
   const [form, setForm] = useState<FormState | null>(null)
   const [activeLang, setActiveLang] = useState<Lang>('ko')
   const [saving, setSaving] = useState(false)
@@ -87,6 +89,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
     setShowLog(false)
     setShowBest5(false)
     setShowToppings(false)
+    setShowCountryPicks(false)
     setSelectedCat(cat)
     setForm(null)
     const data = await fetch(`/api/items?category_id=${cat.id}`).then(r => r.json())
@@ -216,11 +219,18 @@ export default function AdminView({ categories }: { categories: Category[] }) {
               🏆 Best 5
             </button>
             <button
-              onClick={() => { setShowToppings(true); setShowLog(false); setShowRamen(false); setShowBest5(false); setSelectedCat(null); setForm(null) }}
+              onClick={() => { setShowToppings(true); setShowLog(false); setShowRamen(false); setShowBest5(false); setShowCountryPicks(false); setSelectedCat(null); setForm(null) }}
               className={`flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-medium transition-colors
                 ${showToppings ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
             >
               🍳 꿀조합
+            </button>
+            <button
+              onClick={() => { setShowCountryPicks(true); setShowToppings(false); setShowLog(false); setShowRamen(false); setShowBest5(false); setSelectedCat(null); setForm(null) }}
+              className={`flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-medium transition-colors
+                ${showCountryPicks ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            >
+              🌏 나라별 픽
             </button>
           </div>
         </div>
@@ -236,6 +246,9 @@ export default function AdminView({ categories }: { categories: Category[] }) {
 
         {/* 꿀조합 관리 */}
         {showToppings && <ToppingsAdmin />}
+
+        {/* 나라별 인기 라면 관리 */}
+        {showCountryPicks && <CountryPicksAdmin />}
 
         {/* 항목 목록 */}
         {selectedCat && !form && (
