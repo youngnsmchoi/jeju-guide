@@ -98,7 +98,7 @@ const SECTIONS: Section[] = [
       zh: '鸡蛋 · 芝士 · 饭团组合',
       ja: '卵 · チーズ · おにぎり',
     },
-    href: null,
+    href: '/guide/toppings',
   },
   {
     emoji: '⭐',
