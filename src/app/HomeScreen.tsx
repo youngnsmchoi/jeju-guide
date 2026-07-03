@@ -87,7 +87,7 @@ const SECTIONS: Section[] = [
       zh: '成分 · 过敏原 · 清真认证',
       ja: '成分 · アレルギー · ハラール',
     },
-    href: null,
+    href: '/guide/ingredients',
   },
   {
     emoji: '🥚',
