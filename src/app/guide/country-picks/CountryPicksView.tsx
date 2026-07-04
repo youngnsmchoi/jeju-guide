@@ -37,10 +37,12 @@ const REF_SITES: Record<string, { name: string; url: string }[]> = {
   us: [
     { name: '미국에서 사랑받는 한국라면 TOP 5 — College Inside(미주중앙일보)', url: 'https://college.koreadaily.com/%EB%AF%B8%EA%B5%AD%EC%97%90%EC%84%9C-%EC%82%AC%EB%9E%91%EB%B0%9B%EB%8A%94-%ED%95%9C%EA%B5%AD%EB%9D%BC%EB%A9%B4-top-5/' },
   ],
+  vn: [
+    { name: 'Top 10 Mì Gói Hàn Quốc Ngon Nhất — Bún Đậu Mắm Tôm Tiến Hải', url: 'https://bundaumamtomtienhai.vn/mi-goi-han-quoc-ngon-nhat/' },
+  ],
 }
 
 const COMING_SOON_COUNTRIES = [
-  { flag: '🇻🇳', name: { ko: '베트남', en: 'Vietnam', zh: '越南', ja: 'ベトナム' } },
   { flag: '🇵🇭', name: { ko: '필리핀', en: 'Philippines', zh: '菲律宾', ja: 'フィリピン' } },
 ]
 
