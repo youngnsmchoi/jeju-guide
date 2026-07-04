@@ -106,6 +106,11 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
               {selectedCountry.flag} {(selectedCountry[`country_${lang}` as keyof CountryPick] as string) || selectedCountry.country_ko} Top {selectedPicks.length}
             </h2>
 
+            {/* 순위 기준 — 타이틀 바로 아래 */}
+            {sourceLabel && (
+              <p className="text-xs text-gray-400">{L.source}: {sourceLabel}</p>
+            )}
+
             {/* 🔥 범례 — 인기도 방식일 때만 표시 */}
             {hasPopularity && (
               <p className="text-xs text-gray-400">{L.popularityLegend}</p>
