@@ -28,10 +28,12 @@ const REF_SITES: Record<string, { name: string; url: string }[]> = {
   jp: [
     { name: '일본인이 선택한 한국라면 Top 10 — 카카오 뉴스', url: 'https://v.daum.net/v/fw7shoc6Ho' },
   ],
+  tw: [
+    { name: '辛拉麵竟沒上榜！台灣人最愛韓國泡麵TOP5 — beauty321', url: 'https://www.beauty321.com/post/64318' },
+  ],
 }
 
 const COMING_SOON_COUNTRIES = [
-  { flag: '🇹🇼', name: { ko: '대만', en: 'Taiwan', zh: '台湾', ja: '台湾' } },
   { flag: '🇹🇭', name: { ko: '태국', en: 'Thailand', zh: '泰国', ja: 'タイ' } },
   { flag: '🇺🇸', name: { ko: '미국', en: 'USA', zh: '美国', ja: 'アメリカ' } },
   { flag: '🇻🇳', name: { ko: '베트남', en: 'Vietnam', zh: '越南', ja: 'ベトナム' } },
