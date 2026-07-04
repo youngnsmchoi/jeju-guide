@@ -40,11 +40,12 @@ const REF_SITES: Record<string, { name: string; url: string }[]> = {
   vn: [
     { name: 'Top 10 Mì Gói Hàn Quốc Ngon Nhất — Bún Đậu Mắm Tôm Tiến Hải', url: 'https://bundaumamtomtienhai.vn/mi-goi-han-quoc-ngon-nhat/' },
   ],
+  ph: [
+    { name: '10 Best Korean Noodles in the Philippines — mybest', url: 'https://ph.my-best.com/15643' },
+  ],
 }
 
-const COMING_SOON_COUNTRIES = [
-  { flag: '🇵🇭', name: { ko: '필리핀', en: 'Philippines', zh: '菲律宾', ja: 'フィリピン' } },
-]
+const COMING_SOON_COUNTRIES: { flag: string; name: Record<Lang, string> }[] = []
 
 export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
   const { lang } = useLang()
