@@ -31,10 +31,12 @@ const REF_SITES: Record<string, { name: string; url: string }[]> = {
   tw: [
     { name: '辛拉麵竟沒上榜！台灣人最愛韓國泡麵TOP5 — beauty321', url: 'https://www.beauty321.com/post/64318' },
   ],
+  th: [
+    { name: 'แนะนำ 10 มาม่าเกาหลี ยี่ห้อไหนอร่อย — Thairath Shopping', url: 'https://www.thairath.co.th/shopping/food/1000387' },
+  ],
 }
 
 const COMING_SOON_COUNTRIES = [
-  { flag: '🇹🇭', name: { ko: '태국', en: 'Thailand', zh: '泰国', ja: 'タイ' } },
   { flag: '🇺🇸', name: { ko: '미국', en: 'USA', zh: '美国', ja: 'アメリカ' } },
   { flag: '🇻🇳', name: { ko: '베트남', en: 'Vietnam', zh: '越南', ja: 'ベトナム' } },
   { flag: '🇵🇭', name: { ko: '필리핀', en: 'Philippines', zh: '菲律宾', ja: 'フィリピン' } },
