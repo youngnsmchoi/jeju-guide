@@ -9,12 +9,25 @@ import type { CountryPick } from '@/app/admin/CountryPicksAdmin'
 
 const LABEL: Record<Lang, {
   title: string; back: string; intro: string; selectPrompt: string
-  source: string; rank: string; score: string; comingSoon: string; popularity: string
+  source: string; rank: string; score: string; comingSoon: string
+  popularityLegend: string; refSites: string
 }> = {
-  ko: { title: '나라별 인기 라면', back: '← 뒤로', intro: '내 나라 사람들은 어떤 한국 라면을 좋아할까요?', selectPrompt: '나라를 선택하세요', source: '출처', rank: '위', score: '점', comingSoon: '준비 중', popularity: '인기도' },
-  en: { title: 'Popular Ramen by Country', back: '← Back', intro: 'What Korean ramen do people from your country love?', selectPrompt: 'Select your country', source: 'Source', rank: '#', score: 'pts', comingSoon: 'Coming soon', popularity: 'Popularity' },
-  zh: { title: '各国人气拉面', back: '← 返回', intro: '你的国家的人喜欢哪款韩国拉面？', selectPrompt: '选择国家', source: '来源', rank: '位', score: '分', comingSoon: '即将推出', popularity: '人气' },
-  ja: { title: '国別人気ラーメン', back: '← 戻る', intro: '自分の国の人はどんな韓国ラーメンが好き？', selectPrompt: '国を選んでください', source: '出典', rank: '位', score: '点', comingSoon: '準備中', popularity: '人気度' },
+  ko: { title: '나라별 인기 라면', back: '← 뒤로', intro: '내 나라 사람들은 어떤 한국 라면을 좋아할까요?', selectPrompt: '나라를 선택하세요', source: '출처', rank: '위', score: '점', comingSoon: '준비 중', popularityLegend: '🔥🔥🔥 매우 인기   🔥🔥 인기   🔥 보통', refSites: '참고 사이트' },
+  en: { title: 'Popular Ramen by Country', back: '← Back', intro: 'What Korean ramen do people from your country love?', selectPrompt: 'Select your country', source: 'Source', rank: '#', score: 'pts', comingSoon: 'Coming soon', popularityLegend: '🔥🔥🔥 Very popular   🔥🔥 Popular   🔥 Moderate', refSites: 'Reference sites' },
+  zh: { title: '各国人气拉面', back: '← 返回', intro: '你的国家的人喜欢哪款韩国拉面？', selectPrompt: '选择国家', source: '来源', rank: '位', score: '分', comingSoon: '即将推出', popularityLegend: '🔥🔥🔥 非常热门   🔥🔥 热门   🔥 一般', refSites: '参考网站' },
+  ja: { title: '国別人気ラーメン', back: '← 戻る', intro: '自分の国の人はどんな韓国ラーメンが好き？', selectPrompt: '国を選んでください', source: '出典', rank: '位', score: '点', comingSoon: '準備中', popularityLegend: '🔥🔥🔥 大人気   🔥🔥 人気   🔥 普通', refSites: '参考サイト' },
+}
+
+// 나라별 참고 사이트 (여러 개일 경우 여기에 추가)
+const REF_SITES: Record<string, { name: string; url: string }[]> = {
+  cn: [
+    { name: '韩国最受欢迎的十大拉面 — 金吉列留学', url: 'https://www.jjl.cn/article/1018154.html' },
+    { name: '韩式炸酱面的破圈时刻！— 知乎', url: 'https://zhuanlan.zhihu.com/p/656351549' },
+    { name: '2025最新韩国泡面排名 — Extrabux', url: 'https://www.extrabux.com/chs/guide/8575976' },
+  ],
+  jp: [
+    { name: '일본인이 선택한 한국라면 Top 10 — 카카오 뉴스', url: 'https://v.daum.net/v/fw7shoc6Ho' },
+  ],
 }
 
 const COMING_SOON_COUNTRIES = [
@@ -31,15 +44,18 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
   const L = LABEL[lang]
   const [selected, setSelected] = useState<string | null>(null)
 
-  // DB에서 나라 목록 추출 (중복 제거, 순서 유지)
   const countries = Array.from(new Map(picks.map(p => [p.country_code, p])).values())
-
   const selectedPicks = selected ? picks.filter(p => p.country_code === selected) : []
   const selectedCountry = countries.find(c => c.country_code === selected)
 
-  // 나라별 출처 정보 (첫 번째 항목에서 추출)
-  const sourceLabel = selectedCountry ? (selectedCountry[`source_${lang}` as keyof CountryPick] as string) || selectedCountry.source_ko : null
-  const sourceUrl = selectedCountry?.source_url
+  // 선택한 나라에 🔥 인기도가 있는지 확인 (점수 없는 나라)
+  const hasPopularity = selectedPicks.some(p => p.popularity && !p.score)
+  const refSites = selected ? (REF_SITES[selected] ?? []) : []
+
+  // 출처 텍스트 (DB의 source 컬럼)
+  const sourceLabel = selectedCountry
+    ? (selectedCountry[`source_${lang}` as keyof CountryPick] as string) || selectedCountry.source_ko
+    : null
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -83,10 +99,17 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
         {/* 선택된 나라 라면 목록 */}
         {selectedCountry && selectedPicks.length > 0 && (
           <div className="space-y-3">
+            {/* 타이틀 */}
             <h2 className="text-sm font-bold text-gray-800">
               {selectedCountry.flag} {(selectedCountry[`country_${lang}` as keyof CountryPick] as string) || selectedCountry.country_ko} Top {selectedPicks.length}
             </h2>
 
+            {/* 🔥 범례 — 인기도 방식일 때만 표시 */}
+            {hasPopularity && (
+              <p className="text-xs text-gray-400">{L.popularityLegend}</p>
+            )}
+
+            {/* 라면 카드 */}
             {selectedPicks.map(pick => (
               <div key={pick.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
                 <div className="flex items-center justify-between gap-2">
@@ -102,7 +125,6 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
                       {(pick[`name_${lang}` as keyof CountryPick] as string) || pick.name_ko}
                     </h3>
                   </div>
-                  {/* 점수 또는 🔥 인기도 */}
                   {pick.score != null
                     ? <span className="text-xs text-emerald-600 font-medium shrink-0">{pick.score}{L.score}</span>
                     : pick.popularity
@@ -116,17 +138,30 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
               </div>
             ))}
 
-            {/* 하단 출처 */}
-            {sourceLabel && (
-              <div className="pt-2 border-t border-gray-100">
-                <p className="text-xs text-gray-400">
-                  {L.source}: {sourceUrl
-                    ? <a href={sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600">{sourceLabel}</a>
-                    : sourceLabel
-                  }
-                </p>
-              </div>
-            )}
+            {/* 하단 출처 영역 */}
+            <div className="pt-3 border-t border-gray-100 space-y-2">
+              {/* 데이터 기준 설명 */}
+              {sourceLabel && (
+                <p className="text-xs text-gray-400">{L.source}: {sourceLabel}</p>
+              )}
+
+              {/* 참고 사이트 링크 목록 */}
+              {refSites.length > 0 && (
+                <div>
+                  <p className="text-xs text-gray-400 mb-1">{L.refSites}</p>
+                  <ul className="space-y-1">
+                    {refSites.map((site, i) => (
+                      <li key={i}>
+                        <a href={site.url} target="_blank" rel="noopener noreferrer"
+                          className="text-xs text-emerald-600 hover:text-emerald-800 underline leading-relaxed">
+                          {site.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </main>
