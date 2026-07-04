@@ -34,10 +34,12 @@ const REF_SITES: Record<string, { name: string; url: string }[]> = {
   th: [
     { name: 'แนะนำ 10 มาม่าเกาหลี ยี่ห้อไหนอร่อย — Thairath Shopping', url: 'https://www.thairath.co.th/shopping/food/1000387' },
   ],
+  us: [
+    { name: '미국에서 사랑받는 한국라면 TOP 5 — College Inside(미주중앙일보)', url: 'https://college.koreadaily.com/%EB%AF%B8%EA%B5%AD%EC%97%90%EC%84%9C-%EC%82%AC%EB%9E%91%EB%B0%9B%EB%8A%94-%ED%95%9C%EA%B5%AD%EB%9D%BC%EB%A9%B4-top-5/' },
+  ],
 }
 
 const COMING_SOON_COUNTRIES = [
-  { flag: '🇺🇸', name: { ko: '미국', en: 'USA', zh: '美国', ja: 'アメリカ' } },
   { flag: '🇻🇳', name: { ko: '베트남', en: 'Vietnam', zh: '越南', ja: 'ベトナム' } },
   { flag: '🇵🇭', name: { ko: '필리핀', en: 'Philippines', zh: '菲律宾', ja: 'フィリピン' } },
 ]
