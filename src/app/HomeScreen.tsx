@@ -198,7 +198,7 @@ export default function HomeScreen() {
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         {GROUPS.map((group, gi) => (
           <div key={gi} className="bg-white rounded-2xl border border-gray-200 p-4">
-            <p className="text-xs text-gray-400 font-medium mb-3">{group.label[lang]}</p>
+            <p className="text-xs text-gray-500 font-semibold mb-3">{group.label[lang]}</p>
             <div className="grid grid-cols-2 gap-2">
               {group.sections.map((section, si) => {
                 const ready = section.href !== null
@@ -207,16 +207,13 @@ export default function HomeScreen() {
                     key={si}
                     onClick={() => ready && router.push(section.href!)}
                     disabled={!ready}
-                    className={`rounded-xl border px-3 py-3 flex flex-col items-start gap-1.5 text-left transition-all
+                    className={`rounded-xl border px-3 py-3 flex flex-col items-start gap-0.5 text-left transition-all
                       ${ready
                         ? 'bg-gray-50 border-gray-100 hover:border-emerald-300 hover:bg-emerald-50'
                         : 'bg-gray-50 border-gray-100 cursor-default opacity-50'}`}
                   >
-                    <span className="text-xl">{section.emoji}</span>
-                    <div className="w-full">
-                      <p className="text-xs font-bold text-gray-900 leading-snug">{section.title[lang]}</p>
-                      <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">{section.desc[lang]}</p>
-                    </div>
+                    <p className="text-xs font-bold text-gray-900 leading-snug">{section.title[lang]}</p>
+                    <p className="text-xs text-gray-400 leading-relaxed">{section.desc[lang]}</p>
                     {!ready && (
                       <span className="text-xs text-gray-300">{COMING_SOON[lang]}</span>
                     )}
