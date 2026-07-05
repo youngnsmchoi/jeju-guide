@@ -2,6 +2,7 @@
 // 편의점 결제 4단계 가이드 — 외국인 여행자용
 
 import Image from 'next/image'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
@@ -13,10 +14,10 @@ const LABEL: Record<Lang, {
   steps: { emoji: string; title: string; desc: string }[]
   bagTitle: string
   bagNote: string
+  bagNote2: string
   bagYes: string
   bagNo: string
-  bagCopy: string
-  bagCopied: string
+  bagExpand: string
   signTitle: string
   signKorean: string
   signForeign: string
@@ -31,15 +32,15 @@ const LABEL: Record<Lang, {
     steps: [
       { emoji: '🛒', title: 'Pick your items', desc: 'Choose what you want from the shelves.' },
       { emoji: '🧾', title: 'Bring to the counter', desc: 'Hand your items to the cashier.' },
-      { emoji: '🛍️', title: 'Bag question', desc: 'The cashier will ask if you need a bag. Show them the phrase below.' },
+      { emoji: '🛍️', title: 'Bag question', desc: 'Show the cashier the phrase below before they start scanning.' },
       { emoji: '💳', title: 'Pay', desc: 'Card or cash — both are accepted.' },
     ],
-    bagTitle: 'Bag question — show this to the cashier',
-    bagNote: 'The cashier asks right before payment. Be ready!',
+    bagTitle: 'Bag — show this before scanning',
+    bagNote: 'Show this when handing over your items.',
+    bagNote2: 'Bags are sold as a product — scanned and added to your total. (₩100 each)',
     bagYes: '봉투 주세요 (Yes, a bag please)',
     bagNo: '필요 없어요 (No bag, thanks)',
-    bagCopy: 'Copy',
-    bagCopied: 'Copied!',
+    bagExpand: 'Show',
     signTitle: '✍️ Signature guide for foreign cards',
     signKorean: '🇰🇷 Korean card — no signature needed under ₩50,000',
     signForeign: '🌏 Foreign card — signature may be requested regardless of amount',
@@ -54,15 +55,15 @@ const LABEL: Record<Lang, {
     steps: [
       { emoji: '🛒', title: '상품 고르기', desc: '진열대에서 원하는 상품을 고르세요.' },
       { emoji: '🧾', title: '계산대로 전달', desc: '점원에게 물건을 건네세요.' },
-      { emoji: '🛍️', title: '봉투 여부 확인', desc: '점원이 봉투가 필요한지 물어봅니다. 아래 문구를 미리 준비하세요.' },
+      { emoji: '🛍️', title: '봉투 여부 확인', desc: '상품 바코드를 찍기 전에 아래 문구를 점원에게 보여주세요.' },
       { emoji: '💳', title: '결제', desc: '카드 또는 현금 모두 가능합니다.' },
     ],
-    bagTitle: '봉투 질문 — 점원에게 보여주세요',
-    bagNote: '결제 직전에 묻습니다. 미리 준비해 두세요.',
+    bagTitle: '봉투 — 바코드 찍기 전에 보여주세요',
+    bagNote: '상품을 건네기 전에 보여주세요.',
+    bagNote2: '봉투도 상품으로 먼저 스캔합니다. (1개 100원)',
     bagYes: '봉투 주세요',
     bagNo: '필요 없어요',
-    bagCopy: '복사',
-    bagCopied: '복사됨!',
+    bagExpand: '확대',
     signTitle: '✍️ 해외 카드 서명 안내',
     signKorean: '🇰🇷 한국 카드 — 5만원 이하 서명 생략',
     signForeign: '🌏 해외 카드 — 금액과 관계없이 서명 요청 받을 수 있음',
@@ -77,15 +78,15 @@ const LABEL: Record<Lang, {
     steps: [
       { emoji: '🛒', title: '选择商品', desc: '从货架上挑选您想要的商品。' },
       { emoji: '🧾', title: '拿到收银台', desc: '将商品递给收银员。' },
-      { emoji: '🛍️', title: '袋子问题', desc: '收银员会问您是否需要袋子。提前准备好下方的短语。' },
+      { emoji: '🛍️', title: '袋子问题', desc: '在收银员扫描商品前，出示下方短语。' },
       { emoji: '💳', title: '付款', desc: '支持刷卡和现金付款。' },
     ],
-    bagTitle: '袋子问题 — 出示给收银员',
-    bagNote: '付款前会被问到，提前准备好！',
+    bagTitle: '袋子 — 扫描前出示给收银员',
+    bagNote: '递给收银员商品前先出示。',
+    bagNote2: '袋子也是商品，需要先扫描。(每个100韩元)',
     bagYes: '봉투 주세요（需要袋子）',
     bagNo: '필요 없어요（不需要袋子）',
-    bagCopy: '复制',
-    bagCopied: '已复制！',
+    bagExpand: '放大',
     signTitle: '✍️ 海外卡签名说明',
     signKorean: '🇰🇷 韩国卡 — 5万韩元以下免签名',
     signForeign: '🌏 海外卡 — 无论金额多少都可能需要签名',
@@ -100,15 +101,15 @@ const LABEL: Record<Lang, {
     steps: [
       { emoji: '🛒', title: '商品を選ぶ', desc: '棚から欲しい商品を選んでください。' },
       { emoji: '🧾', title: 'レジへ持っていく', desc: '店員に商品を渡してください。' },
-      { emoji: '🛍️', title: '袋の確認', desc: '店員が袋が必要か聞いてきます。下のフレーズを事前に準備しておきましょう。' },
+      { emoji: '🛍️', title: '袋の確認', desc: '商品をスキャンする前に、下のフレーズを店員に見せてください。' },
       { emoji: '💳', title: 'お支払い', desc: 'カードも現金も使えます。' },
     ],
-    bagTitle: '袋の質問 — 店員に見せてください',
-    bagNote: 'お会計直前に聞かれます。事前に準備しておきましょう！',
+    bagTitle: '袋 — スキャン前に見せてください',
+    bagNote: '商品を渡す前に見せてください。',
+    bagNote2: '袋も商品として先にスキャンします。(1枚100ウォン)',
     bagYes: '봉투 주세요（袋をください）',
     bagNo: '필요 없어요（袋は不要です）',
-    bagCopy: 'コピー',
-    bagCopied: 'コピー済み！',
+    bagExpand: '拡大',
     signTitle: '✍️ 海外カードのサイン案内',
     signKorean: '🇰🇷 韓国カード — 5万ウォン以下はサイン不要',
     signForeign: '🌏 海外カード — 金額に関わらずサインを求められる場合あり',
@@ -122,6 +123,7 @@ export default function PaymentView() {
   const { lang } = useLang()
   const router = useRouter()
   const L = LABEL[lang]
+  const [overlay, setOverlay] = useState<string | null>(null)
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -155,9 +157,10 @@ export default function PaymentView() {
         {/* 봉투 문구 카드 */}
         <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 space-y-3">
           <p className="text-sm font-bold text-emerald-800">{L.bagTitle}</p>
-          <p className="text-xs text-emerald-600">{L.bagNote}</p>
-          <BagButton text={L.bagYes} korean="봉투 주세요" copyLabel={L.bagCopy} copiedLabel={L.bagCopied} />
-          <BagButton text={L.bagNo} korean="필요 없어요" copyLabel={L.bagCopy} copiedLabel={L.bagCopied} />
+          <p className="text-xs text-emerald-700 font-medium">{L.bagNote}</p>
+          <p className="text-xs text-emerald-600">{L.bagNote2}</p>
+          <BagButton text={L.bagYes} expandLabel={L.bagExpand} onExpand={() => setOverlay(L.bagYes)} />
+          <BagButton text={L.bagNo} expandLabel={L.bagExpand} onExpand={() => setOverlay(L.bagNo)} />
         </div>
 
         {/* 서명 안내 박스 */}
@@ -179,29 +182,34 @@ export default function PaymentView() {
           <p className="text-xs text-red-500 mt-1">{L.warningDesc}</p>
         </div>
       </main>
+
+      {/* 전체화면 오버레이 */}
+      {overlay && (
+        <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center px-8"
+          onClick={() => setOverlay(null)}>
+          <p className="text-5xl font-bold text-gray-900 text-center leading-tight">{overlay}</p>
+          <button
+            onClick={() => setOverlay(null)}
+            className="absolute top-6 right-6 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-xl hover:bg-gray-200">
+            ✕
+          </button>
+        </div>
+      )}
     </div>
   )
 }
 
-function BagButton({ text, korean, copyLabel, copiedLabel }: {
-  text: string; korean: string; copyLabel: string; copiedLabel: string
+function BagButton({ text, expandLabel, onExpand }: {
+  text: string
+  expandLabel: string
+  onExpand: () => void
 }) {
-  const copy = async () => {
-    await navigator.clipboard.writeText(korean)
-    const btn = document.activeElement as HTMLButtonElement
-    if (btn) {
-      const orig = btn.textContent
-      btn.textContent = copiedLabel
-      setTimeout(() => { btn.textContent = orig }, 1500)
-    }
-  }
-
   return (
     <div className="bg-white rounded-xl border border-emerald-200 px-4 py-3 flex items-center justify-between gap-3">
       <p className="text-sm font-semibold text-gray-900">{text}</p>
-      <button onClick={copy}
+      <button onClick={onExpand}
         className="shrink-0 text-xs bg-emerald-600 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-700 transition-colors">
-        {copyLabel}
+        {expandLabel}
       </button>
     </div>
   )
