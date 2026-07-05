@@ -174,31 +174,33 @@ export default function HomeScreen() {
         <h2 className="text-xl font-bold">{HERO[lang].title}</h2>
       </div>
 
-      {/* 섹션 카드 목록 */}
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-3">
-        {SECTIONS.map((section, i) => {
-          const ready = section.href !== null
-          return (
-            <button
-              key={i}
-              onClick={() => ready && router.push(section.href!)}
-              disabled={!ready}
-              className={`w-full rounded-2xl border px-4 py-4 flex items-center gap-4 text-left transition-all
-                ${ready
-                  ? 'bg-white border-gray-200 hover:border-emerald-300 hover:shadow-sm'
-                  : 'bg-gray-50 border-gray-100 cursor-default opacity-60'}`}
-            >
-              <span className="text-2xl shrink-0">{section.emoji}</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-gray-900">{section.title[lang]}</p>
-                <p className="text-xs text-gray-400 mt-0.5 truncate">{section.desc[lang]}</p>
-              </div>
-              {ready
-                ? <span className="text-gray-300 text-lg shrink-0">›</span>
-                : <span className="text-xs text-gray-300 shrink-0">{COMING_SOON[lang]}</span>}
-            </button>
-          )
-        })}
+      {/* 섹션 카드 목록 — 2열 그리드 */}
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5">
+        <div className="grid grid-cols-2 gap-3">
+          {SECTIONS.map((section, i) => {
+            const ready = section.href !== null
+            return (
+              <button
+                key={i}
+                onClick={() => ready && router.push(section.href!)}
+                disabled={!ready}
+                className={`rounded-2xl border px-3 py-4 flex flex-col items-start gap-2 text-left transition-all
+                  ${ready
+                    ? 'bg-white border-gray-200 hover:border-emerald-300 hover:shadow-sm'
+                    : 'bg-gray-50 border-gray-100 cursor-default opacity-60'}`}
+              >
+                <span className="text-2xl">{section.emoji}</span>
+                <div className="w-full">
+                  <p className="text-sm font-bold text-gray-900 leading-snug">{section.title[lang]}</p>
+                  <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">{section.desc[lang]}</p>
+                </div>
+                {!ready && (
+                  <span className="text-xs text-gray-300">{COMING_SOON[lang]}</span>
+                )}
+              </button>
+            )
+          })}
+        </div>
       </main>
     </div>
   )
