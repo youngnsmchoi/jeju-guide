@@ -35,12 +35,14 @@ type Section = {
 
 type Group = {
   label: Record<Lang, string>
+  color: string
   sections: Section[]
 }
 
 const GROUPS: Group[] = [
   {
     label: { ko: '편의점 가이드', en: 'Convenience Store Guide', zh: '便利店指南', ja: 'コンビニガイド' },
+    color: 'text-emerald-600',
     sections: [
       {
         emoji: '💳',
@@ -68,6 +70,7 @@ const GROUPS: Group[] = [
   },
   {
     label: { ko: '라면 탐색', en: 'Explore Ramen', zh: '探索拉面', ja: 'ラーメンを探す' },
+    color: 'text-orange-500',
     sections: [
       {
         emoji: '🌏',
@@ -117,6 +120,7 @@ const GROUPS: Group[] = [
   },
   {
     label: { ko: '라면 정보', en: 'Ramen Info', zh: '拉面信息', ja: 'ラーメン情報' },
+    color: 'text-blue-500',
     sections: [
       {
         emoji: '🔥',
@@ -197,8 +201,8 @@ export default function HomeScreen() {
       {/* 그룹별 섹션 카드 */}
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         {GROUPS.map((group, gi) => (
-          <div key={gi} className="bg-white rounded-2xl border border-gray-200 p-4">
-            <p className="text-xs text-gray-500 font-semibold mb-3">{group.label[lang]}</p>
+          <div key={gi} className="bg-white rounded-2xl border border-gray-100 shadow-md p-4">
+            <p className={`text-xs font-bold mb-3 ${group.color}`}>{group.label[lang]}</p>
             <div className="grid grid-cols-2 gap-2">
               {group.sections.map((section, si) => {
                 const ready = section.href !== null
