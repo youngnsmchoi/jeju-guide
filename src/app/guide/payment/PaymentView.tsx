@@ -1,6 +1,7 @@
 'use client'
 // 편의점 결제 4단계 가이드 — 외국인 여행자용
 
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
@@ -16,6 +17,10 @@ const LABEL: Record<Lang, {
   bagNo: string
   bagCopy: string
   bagCopied: string
+  signTitle: string
+  signKorean: string
+  signForeign: string
+  signTip: string
   warning: string
   warningDesc: string
 }> = {
@@ -28,7 +33,6 @@ const LABEL: Record<Lang, {
       { emoji: '🧾', title: 'Bring to the counter', desc: 'Hand your items to the cashier.' },
       { emoji: '🛍️', title: 'Bag question', desc: 'The cashier will ask if you need a bag. Show them the phrase below.' },
       { emoji: '💳', title: 'Pay', desc: 'Card or cash — both are accepted.' },
-      { emoji: '✍️', title: 'Signature', desc: 'Korean cards skip signatures under ₩50,000. Foreign cards may require a signature regardless of amount — just sign the pad naturally if asked.' },
     ],
     bagTitle: 'Bag question — show this to the cashier',
     bagNote: 'The cashier asks right before payment. Be ready!',
@@ -36,6 +40,10 @@ const LABEL: Record<Lang, {
     bagNo: '필요 없어요 (No bag, thanks)',
     bagCopy: 'Copy',
     bagCopied: 'Copied!',
+    signTitle: '✍️ Signature guide for foreign cards',
+    signKorean: '🇰🇷 Korean card — no signature needed under ₩50,000',
+    signForeign: '🌏 Foreign card — signature may be requested regardless of amount',
+    signTip: 'If asked, simply sign on the pad naturally.',
     warning: '⚠️ Do not eat before paying',
     warningDesc: 'All items must be paid for before consuming. Opening or eating before payment is not allowed.',
   },
@@ -48,7 +56,6 @@ const LABEL: Record<Lang, {
       { emoji: '🧾', title: '계산대로 전달', desc: '점원에게 물건을 건네세요.' },
       { emoji: '🛍️', title: '봉투 여부 확인', desc: '점원이 봉투가 필요한지 물어봅니다. 아래 문구를 미리 준비하세요.' },
       { emoji: '💳', title: '결제', desc: '카드 또는 현금 모두 가능합니다.' },
-      { emoji: '✍️', title: '결제 서명 안내', desc: '한국 발급 카드는 5만원 이하 서명 생략. 해외 발급 카드는 금액과 관계없이 서명을 요청받을 수 있습니다. 점원이 요청하면 패드에 자연스럽게 서명하세요.' },
     ],
     bagTitle: '봉투 질문 — 점원에게 보여주세요',
     bagNote: '결제 직전에 묻습니다. 미리 준비해 두세요.',
@@ -56,6 +63,10 @@ const LABEL: Record<Lang, {
     bagNo: '필요 없어요',
     bagCopy: '복사',
     bagCopied: '복사됨!',
+    signTitle: '✍️ 해외 카드 서명 안내',
+    signKorean: '🇰🇷 한국 카드 — 5만원 이하 서명 생략',
+    signForeign: '🌏 해외 카드 — 금액과 관계없이 서명 요청 받을 수 있음',
+    signTip: '점원이 요청하면 패드에 자연스럽게 서명하세요.',
     warning: '⚠️ 결제 전 섭취 금지',
     warningDesc: '모든 상품은 결제 후에만 섭취 가능합니다.',
   },
@@ -68,7 +79,6 @@ const LABEL: Record<Lang, {
       { emoji: '🧾', title: '拿到收银台', desc: '将商品递给收银员。' },
       { emoji: '🛍️', title: '袋子问题', desc: '收银员会问您是否需要袋子。提前准备好下方的短语。' },
       { emoji: '💳', title: '付款', desc: '支持刷卡和现金付款。' },
-      { emoji: '✍️', title: '签名说明', desc: '韩国发行的卡在5万韩元以下免签名。海外发行的卡无论金额多少都可能需要签名。收银员要求时，在签名板上自然签名即可。' },
     ],
     bagTitle: '袋子问题 — 出示给收银员',
     bagNote: '付款前会被问到，提前准备好！',
@@ -76,6 +86,10 @@ const LABEL: Record<Lang, {
     bagNo: '필요 없어요（不需要袋子）',
     bagCopy: '复制',
     bagCopied: '已复制！',
+    signTitle: '✍️ 海外卡签名说明',
+    signKorean: '🇰🇷 韩国卡 — 5万韩元以下免签名',
+    signForeign: '🌏 海外卡 — 无论金额多少都可能需要签名',
+    signTip: '收银员要求时，在签名板上自然签名即可。',
     warning: '⚠️ 付款前请勿食用',
     warningDesc: '所有商品必须付款后才能食用，付款前不得拆封或食用。',
   },
@@ -88,7 +102,6 @@ const LABEL: Record<Lang, {
       { emoji: '🧾', title: 'レジへ持っていく', desc: '店員に商品を渡してください。' },
       { emoji: '🛍️', title: '袋の確認', desc: '店員が袋が必要か聞いてきます。下のフレーズを事前に準備しておきましょう。' },
       { emoji: '💳', title: 'お支払い', desc: 'カードも現金も使えます。' },
-      { emoji: '✍️', title: 'サイン案内', desc: '韓国発行のカードは5万ウォン以下でサイン不要。海外発行のカードは金額に関わらずサインを求められる場合があります。店員に求められたらパッドに自然にサインしてください。' },
     ],
     bagTitle: '袋の質問 — 店員に見せてください',
     bagNote: 'お会計直前に聞かれます。事前に準備しておきましょう！',
@@ -96,6 +109,10 @@ const LABEL: Record<Lang, {
     bagNo: '필요 없어요（袋は不要です）',
     bagCopy: 'コピー',
     bagCopied: 'コピー済み！',
+    signTitle: '✍️ 海外カードのサイン案内',
+    signKorean: '🇰🇷 韓国カード — 5万ウォン以下はサイン不要',
+    signForeign: '🌏 海外カード — 金額に関わらずサインを求められる場合あり',
+    signTip: '店員に求められたら、パッドに自然にサインしてください。',
     warning: '⚠️ 会計前の飲食禁止',
     warningDesc: 'すべての商品はお会計後にのみお召し上がりください。会計前の開封・飲食はできません。',
   },
@@ -141,6 +158,19 @@ export default function PaymentView() {
           <p className="text-xs text-emerald-600">{L.bagNote}</p>
           <BagButton text={L.bagYes} korean="봉투 주세요" copyLabel={L.bagCopy} copiedLabel={L.bagCopied} />
           <BagButton text={L.bagNo} korean="필요 없어요" copyLabel={L.bagCopy} copiedLabel={L.bagCopied} />
+        </div>
+
+        {/* 서명 안내 박스 */}
+        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 space-y-3">
+          <p className="text-sm font-bold text-blue-800">{L.signTitle}</p>
+          <div className="space-y-1.5">
+            <p className="text-xs text-blue-700">{L.signKorean}</p>
+            <p className="text-xs text-blue-700">{L.signForeign}</p>
+          </div>
+          <p className="text-xs text-blue-500">{L.signTip}</p>
+          <div className="rounded-xl overflow-hidden bg-white flex items-center justify-center p-2">
+            <Image src="/card-reader.png" alt="card reader" width={240} height={160} className="object-contain mix-blend-multiply" />
+          </div>
         </div>
 
         {/* 주의사항 */}
