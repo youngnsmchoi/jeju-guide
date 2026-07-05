@@ -106,11 +106,6 @@ export default function PaymentView() {
   const router = useRouter()
   const L = LABEL[lang]
 
-  const copy = (text: string, which: 'yes' | 'no') => {
-    navigator.clipboard.writeText(which === 'yes' ? '봉투 주세요' : '필요 없어요')
-    // 짧은 시각 피드백은 CSS로 처리
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
