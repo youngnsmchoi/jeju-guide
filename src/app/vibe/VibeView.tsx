@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
+import PageFooter from '@/components/PageFooter'
 
 type VibeTag = 'hangover' | 'comfort' | 'challenge' | 'mild'
 type Ingredient = 'cheese' | 'egg' | 'gimbap'
@@ -255,8 +256,8 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
             </div>
           </div>
         )}
-
       </main>
+      <PageFooter />
     </div>
   )
 }

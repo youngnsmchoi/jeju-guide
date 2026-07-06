@@ -4,6 +4,7 @@
 import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
+import PageFooter from '@/components/PageFooter'
 
 const LABEL: Record<Lang, {
   title: string
@@ -207,8 +208,8 @@ export default function CvsBrandsView() {
             ))}
           </ul>
         </div>
-
       </main>
+      <PageFooter />
     </div>
   )
 }

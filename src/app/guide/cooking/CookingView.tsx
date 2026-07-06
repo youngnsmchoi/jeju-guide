@@ -7,6 +7,7 @@ import { useLang } from '@/context/LangContext'
 import type { Item, Lang } from '@/lib/types'
 import { getContent } from '@/lib/types'
 import BlockRenderer from '@/components/BlockRenderer'
+import PageFooter from '@/components/PageFooter'
 
 type Tab = 'cup' | 'bag' | 'dry'
 
@@ -173,6 +174,7 @@ export default function CookingView({ cupItem, bagItem, dryItem }: {
         {tab === 'bag' && <TabContent item={bagItem} lang={lang} emptyEmoji="🍜" comingSoon={L.comingSoon} />}
         {tab === 'dry' && <TabContent item={dryItem} lang={lang} emptyEmoji="🥢" comingSoon={L.comingSoon} />}
       </main>
+      <PageFooter />
     </div>
   )
 }

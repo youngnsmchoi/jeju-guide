@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
+import PageFooter from '@/components/PageFooter'
 
 const LABEL: Record<Lang, {
   title: string
@@ -182,6 +183,7 @@ export default function PaymentView() {
           <p className="text-xs text-red-500 mt-1">{L.warningDesc}</p>
         </div>
       </main>
+      <PageFooter />
 
       {/* 전체화면 오버레이 */}
       {overlay && (

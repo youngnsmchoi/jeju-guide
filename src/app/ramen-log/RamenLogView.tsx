@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
+import PageFooter from '@/components/PageFooter'
 
 const COUNTRIES = [
   { code: 'china',       flag: '🇨🇳', label: 'China' },
@@ -187,6 +188,7 @@ export default function RamenLogView({ items }: { items: RamenItem[] }) {
           <p className="text-xs text-gray-400 text-center leading-relaxed px-2">{L.privacy}</p>
         </div>
       </main>
+      <PageFooter />
     </div>
   )
 }

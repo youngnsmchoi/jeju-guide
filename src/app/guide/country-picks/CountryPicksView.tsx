@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import type { CountryPick } from '@/app/admin/CountryPicksAdmin'
+import PageFooter from '@/components/PageFooter'
 
 const LABEL: Record<Lang, {
   title: string; back: string; intro: string; selectPrompt: string
@@ -179,6 +180,7 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
           </div>
         )}
       </main>
+      <PageFooter />
     </div>
   )
 }
