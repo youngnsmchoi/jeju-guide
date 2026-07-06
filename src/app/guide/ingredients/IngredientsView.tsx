@@ -125,7 +125,7 @@ export default function IngredientsView() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => router.back()} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
+          <button onClick={() => router.push('/')} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
           <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
           <div className="w-12" />
         </div>

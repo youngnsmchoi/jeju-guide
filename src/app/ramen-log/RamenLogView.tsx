@@ -114,7 +114,7 @@ export default function RamenLogView({ items }: { items: RamenItem[] }) {
         <div className="text-5xl mb-4">🍜</div>
         <h2 className="text-xl font-bold text-gray-900 mb-2">{L.done}</h2>
         <p className="text-sm text-gray-500 mb-8">{L.doneMsg}</p>
-        <button onClick={() => router.back()}
+        <button onClick={() => router.push('/')}
           className="bg-emerald-600 text-white px-8 py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors">
           {L.back}
         </button>
@@ -126,7 +126,7 @@ export default function RamenLogView({ items }: { items: RamenItem[] }) {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => router.back()} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
+          <button onClick={() => router.push('/')} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
           <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
           <div className="w-12" />
         </div>
