@@ -72,6 +72,7 @@ type Brand = {
   badgeText: string
   borderColor: string
   cardBg: string
+  url: string
   desc: Record<Lang, string>
   feature: Record<Lang, string>
 }
@@ -83,6 +84,7 @@ const BRANDS: Brand[] = [
     badgeText: 'text-white',
     borderColor: 'border-purple-200',
     cardBg: 'bg-purple-50',
+    url: 'https://cu.bgfretail.com/',
     desc: {
       ko: 'BGF리테일 운영. 보라색 간판.',
       en: 'Operated by BGF Retail. Purple signage.',
@@ -102,6 +104,7 @@ const BRANDS: Brand[] = [
     badgeText: 'text-white',
     borderColor: 'border-blue-200',
     cardBg: 'bg-blue-50',
+    url: 'https://gs25.gsretail.com/',
     desc: {
       ko: 'GS리테일 운영. 파란색 간판.',
       en: 'Operated by GS Retail. Blue signage.',
@@ -121,6 +124,7 @@ const BRANDS: Brand[] = [
     badgeText: 'text-white',
     borderColor: 'border-red-200',
     cardBg: 'bg-red-50',
+    url: 'https://www.7-eleven.co.kr/',
     desc: {
       ko: '코리아세븐 운영. 빨간·초록 간판.',
       en: 'Operated by Korea Seven. Red & green signage.',
@@ -140,6 +144,7 @@ const BRANDS: Brand[] = [
     badgeText: 'text-gray-900',
     borderColor: 'border-yellow-200',
     cardBg: 'bg-yellow-50',
+    url: 'https://emart24.co.kr/',
     desc: {
       ko: '이마트 계열. 노란색 간판.',
       en: 'Part of Emart group. Yellow signage.',
@@ -177,10 +182,11 @@ export default function CvsBrandsView() {
         {/* 브랜드 카드 */}
         {BRANDS.map((brand) => (
           <div key={brand.name} className={`rounded-2xl border ${brand.borderColor} ${brand.cardBg} p-4 flex gap-4 items-start`}>
-            {/* 브랜드 배지 */}
-            <div className={`${brand.badgeBg} ${brand.badgeText} rounded-xl px-3 py-4 flex items-center justify-center shrink-0 w-20 text-center font-black text-base leading-tight`}>
+            {/* 브랜드 배지 — 클릭 시 공식 홈페이지 이동 */}
+            <a href={brand.url} target="_blank" rel="noopener noreferrer"
+              className={`${brand.badgeBg} ${brand.badgeText} rounded-xl px-3 py-4 flex items-center justify-center shrink-0 w-28 text-center font-black text-sm leading-tight hover:opacity-80 transition-opacity`}>
               {brand.name}
-            </div>
+            </a>
             {/* 설명 */}
             <div className="flex-1 space-y-1">
               <p className="text-sm text-gray-700">{brand.desc[lang]}</p>
