@@ -84,6 +84,17 @@ const GROUPS: Group[] = [
         },
         href: '/guide/cvs-brands',
       },
+      {
+        emoji: '💡',
+        title: { ko: '편의점 꿀팁', en: 'CVS Tips', zh: '便利店小贴士', ja: 'コンビニお役立ち' },
+        desc: {
+          ko: '전자레인지 · 삼각김밥 · T-money',
+          en: 'Microwave · Onigiri · T-money',
+          zh: '微波炉 · 三角饭团 · T-money',
+          ja: '電子レンジ · おにぎり · T-money',
+        },
+        href: '/guide/cvs-tips',
+      },
     ],
   },
   {
