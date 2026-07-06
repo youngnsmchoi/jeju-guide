@@ -26,6 +26,13 @@ const COMING_SOON: Record<Lang, string> = {
   ja: '準備中',
 }
 
+const SHARE: Record<Lang, { label: string; title: string; text: string }> = {
+  ko: { label: '공유', title: 'K-Ramen Picks', text: '제주 편의점 라면 가이드 — 외국인 여행자용' },
+  en: { label: 'Share', title: 'K-Ramen Picks', text: 'Jeju convenience store ramen guide for travelers' },
+  zh: { label: '分享', title: 'K-Ramen Picks', text: '济州便利店拉面指南 — 外国游客专用' },
+  ja: { label: 'シェア', title: 'K-Ramen Picks', text: '済州コンビニラーメンガイド — 外国人旅行者向け' },
+}
+
 type Section = {
   emoji: string
   title: Record<Lang, string>
@@ -185,6 +192,15 @@ export default function HomeScreen() {
   const { lang, setLang } = useLang()
   const router = useRouter()
 
+  const handleShare = () => {
+    const s = SHARE[lang]
+    if (navigator.share) {
+      navigator.share({ title: s.title, text: s.text, url: window.location.href })
+    } else {
+      navigator.clipboard?.writeText(window.location.href)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* 헤더 */}
@@ -204,9 +220,14 @@ export default function HomeScreen() {
       </header>
 
       {/* 히어로 */}
-      <div className="bg-emerald-700 text-white text-center py-6 px-4">
+      <div className="bg-emerald-700 text-white text-center py-6 px-4 relative">
         <p className="text-xs text-emerald-200 mb-1">{HERO[lang].sub}</p>
         <h2 className="text-xl font-bold">{HERO[lang].title}</h2>
+        <button
+          onClick={handleShare}
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-full border border-emerald-500 transition-colors">
+          {SHARE[lang].label} ↗
+        </button>
       </div>
 
       {/* 그룹별 섹션 카드 */}
