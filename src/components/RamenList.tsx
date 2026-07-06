@@ -33,6 +33,45 @@ const OFFICIAL_PAGE_LABEL: Record<Lang, string> = {
   ja: '📋 製品詳細情報',
 }
 
+const SPICY_GUIDE: Record<Lang, { title: string; levels: { icon: string; label: string; desc: string }[] }> = {
+  ko: {
+    title: '🌶️ 맵기 기준',
+    levels: [
+      { icon: '😊', label: '순함', desc: '신라면보다 약함' },
+      { icon: '🌶️', label: '보통', desc: '신라면 수준' },
+      { icon: '🌶️🌶️', label: '매움', desc: '신라면보다 강함' },
+      { icon: '🌶️🌶️🌶️', label: '극매움', desc: '불닭 수준' },
+    ],
+  },
+  en: {
+    title: '🌶️ Spice guide',
+    levels: [
+      { icon: '😊', label: 'Mild', desc: 'Less than Shin Ramyun' },
+      { icon: '🌶️', label: 'Medium', desc: 'Shin Ramyun level' },
+      { icon: '🌶️🌶️', label: 'Hot', desc: 'Hotter than Shin Ramyun' },
+      { icon: '🌶️🌶️🌶️', label: 'Extreme', desc: 'Buldak level' },
+    ],
+  },
+  zh: {
+    title: '🌶️ 辣度参考',
+    levels: [
+      { icon: '😊', label: '微辣', desc: '比辛拉面辣度低' },
+      { icon: '🌶️', label: '中辣', desc: '辛拉面水平' },
+      { icon: '🌶️🌶️', label: '辣', desc: '比辛拉面更辣' },
+      { icon: '🌶️🌶️🌶️', label: '极辣', desc: '火鸡面水平' },
+    ],
+  },
+  ja: {
+    title: '🌶️ 辛さの目安',
+    levels: [
+      { icon: '😊', label: '辛くない', desc: '辛ラーメンより弱め' },
+      { icon: '🌶️', label: '普通', desc: '辛ラーメンと同レベル' },
+      { icon: '🌶️🌶️', label: '辛い', desc: '辛ラーメンより強め' },
+      { icon: '🌶️🌶️🌶️', label: '激辛', desc: 'ブルダックレベル' },
+    ],
+  },
+}
+
 const USD_RATE = 1380
 const RATE_DATE = 'Jun 2026'
 
@@ -63,8 +102,26 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
     ? [...items].sort((a, b) => (b.spicy_level ?? 0) - (a.spicy_level ?? 0))
     : items
 
+  const guide = SPICY_GUIDE[lang]
+
   return (
     <div className="px-4 py-5 space-y-5">
+      {/* 맵기 범례 */}
+      <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4">
+        <p className="text-sm font-bold text-orange-800 mb-3">{guide.title}</p>
+        <div className="grid grid-cols-2 gap-2">
+          {guide.levels.map((l, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <span className="text-sm w-16 shrink-0">{l.icon}</span>
+              <div>
+                <p className="text-xs font-bold text-gray-800">{l.label}</p>
+                <p className="text-xs text-gray-500">{l.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="flex justify-end gap-2">
         <button
           onClick={() => setSortBySpicy(false)}
