@@ -7,6 +7,7 @@ import { getTitle, getContent } from '@/lib/types'
 import type { Item, Category, Lang, RamenItem } from '@/lib/types'
 import BlockRenderer from '@/components/BlockRenderer'
 import RamenList from '@/components/RamenList'
+import PageFooter from '@/components/PageFooter'
 
 const LANG_LABELS: { code: Lang; label: string }[] = [
   { code: 'ko', label: '한국어' },
@@ -139,6 +140,7 @@ export default function GuideView({ item, category, ramenItems }: { item: Item; 
           </div>
         )}
       </main>
+      <PageFooter />
     </div>
   )
 }
