@@ -224,7 +224,7 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
           <div className="p-4 space-y-3">
             {item.noodle_type && !item.image_url && (
               <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded-md
-                ${item.noodle_type === 'cup' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}`}>
+                ${item.noodle_type === 'cup' ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
                 {item.noodle_type === 'cup' ? 'Cup' : 'Bag'}
               </span>
             )}
