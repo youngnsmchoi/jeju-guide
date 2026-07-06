@@ -116,7 +116,7 @@ const BRANDS: Brand[] = [
     },
   },
   {
-    name: '7-Eleven',
+    name: '세븐일레븐',
     badgeBg: 'bg-red-600',
     badgeText: 'text-white',
     borderColor: 'border-red-200',
