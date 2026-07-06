@@ -6,6 +6,57 @@ import { Clock } from 'lucide-react'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
 
+const GLOSSARY: Record<Lang, { title: string; toggle: string; terms: { ko: string; tr: string; desc: string }[] }> = {
+  ko: {
+    title: '📖 라면 용어 사전',
+    toggle: '접기',
+    terms: [
+      { ko: '컵라면', tr: 'Cup Noodle', desc: '뜨거운 물만 부으면 되는 용기형' },
+      { ko: '봉지라면', tr: 'Bag Ramen', desc: '냄비에 끓여 먹는 봉지형' },
+      { ko: '비빔면', tr: 'Cold Mix Noodle', desc: '차갑게 비벼 먹는 면' },
+      { ko: '볶음면', tr: 'Stir-fry Noodle', desc: '소스에 볶아 먹는 건면' },
+      { ko: '짜장면', tr: 'Black Bean Noodle', desc: '짜장 소스 면 요리' },
+      { ko: '짬뽕', tr: 'Spicy Seafood Noodle', desc: '해물 매운 국물 면' },
+    ],
+  },
+  en: {
+    title: '📖 Ramen Glossary',
+    toggle: 'Close',
+    terms: [
+      { ko: '컵라면', tr: 'Cup Noodle', desc: 'Just add hot water — no cooking needed' },
+      { ko: '봉지라면', tr: 'Bag Ramen', desc: 'Boil in a pot' },
+      { ko: '비빔면', tr: 'Cold Mix Noodle', desc: 'Served cold, mixed with sauce' },
+      { ko: '볶음면', tr: 'Stir-fry Noodle', desc: 'Dry noodle tossed in sauce' },
+      { ko: '짜장면', tr: 'Black Bean Noodle', desc: 'Noodles in black bean sauce' },
+      { ko: '짬뽕', tr: 'Spicy Seafood Noodle', desc: 'Spicy broth with seafood' },
+    ],
+  },
+  zh: {
+    title: '📖 拉面术语表',
+    toggle: '收起',
+    terms: [
+      { ko: '컵라면', tr: '杯面', desc: '只需加热水，无需烹饪' },
+      { ko: '봉지라면', tr: '袋面', desc: '用锅煮食' },
+      { ko: '비빔면', tr: '凉拌面', desc: '冷食，拌酱食用' },
+      { ko: '볶음면', tr: '炒面', desc: '干面拌酱食用' },
+      { ko: '짜장면', tr: '炸酱面', desc: '黑豆酱拌面' },
+      { ko: '짬뽕', tr: '炒码面', desc: '辣味海鲜汤面' },
+    ],
+  },
+  ja: {
+    title: '📖 ラーメン用語集',
+    toggle: '閉じる',
+    terms: [
+      { ko: '컵라면', tr: 'カップ麺', desc: 'お湯を注ぐだけ — 調理不要' },
+      { ko: '봉지라면', tr: '袋麺', desc: '鍋で茹でて食べる' },
+      { ko: '비빔면', tr: '冷やし混ぜ麺', desc: '冷たくしてソースと混ぜる' },
+      { ko: '볶음면', tr: '炒め麺', desc: 'ソースで和える乾麺' },
+      { ko: '짜장면', tr: 'ジャージャー麺', desc: '黒豆ソースの麺料理' },
+      { ko: '짬뽕', tr: 'チャンポン', desc: '辛い海鮮スープ麺' },
+    ],
+  },
+}
+
 const SORT_LABEL: Record<Lang, { default: string; spicy: string }> = {
   ko: { default: '추천순', spicy: '맵기순' },
   en: { default: 'Recommended', spicy: 'Spiciest' },
@@ -103,9 +154,32 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
     : items
 
   const guide = SPICY_GUIDE[lang]
+  const glossary = GLOSSARY[lang]
+  const [glossaryOpen, setGlossaryOpen] = useState(false)
 
   return (
     <div className="px-4 py-5 space-y-5">
+      {/* 라면 용어 사전 — 토글 */}
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <button
+          onClick={() => setGlossaryOpen(o => !o)}
+          className="w-full px-4 py-3 flex items-center justify-between text-left">
+          <p className="text-sm font-bold text-gray-800">{glossary.title}</p>
+          <span className="text-xs text-gray-400">{glossaryOpen ? glossary.toggle : '▾'}</span>
+        </button>
+        {glossaryOpen && (
+          <div className="border-t border-gray-100 px-4 pb-4 pt-3 grid grid-cols-1 gap-2">
+            {glossary.terms.map((term, i) => (
+              <div key={i} className="flex gap-3 items-start">
+                <span className="text-xs font-bold text-emerald-700 w-16 shrink-0">{term.ko}</span>
+                <span className="text-xs font-semibold text-gray-700 w-24 shrink-0">{term.tr}</span>
+                <span className="text-xs text-gray-400">{term.desc}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* 맵기 범례 */}
       <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4">
         <p className="text-sm font-bold text-orange-800 mb-3">{guide.title}</p>
