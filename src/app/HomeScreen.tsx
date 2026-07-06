@@ -66,6 +66,17 @@ const GROUPS: Group[] = [
         },
         href: '/guide/convenience-store-1plus1',
       },
+      {
+        emoji: '🏪',
+        title: { ko: '편의점 브랜드', en: 'CVS Brands', zh: '便利店品牌', ja: 'コンビニブランド' },
+        desc: {
+          ko: 'CU · GS25 · 세븐일레븐 · 이마트24',
+          en: 'CU · GS25 · 7-Eleven · Emart24',
+          zh: 'CU · GS25 · 7-Eleven · Emart24',
+          ja: 'CU · GS25 · セブン · イーマート24',
+        },
+        href: '/guide/cvs-brands',
+      },
     ],
   },
   {
