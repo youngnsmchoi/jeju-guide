@@ -4,13 +4,7 @@
 import { useState, useEffect, useRef } from 'react'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
-
-const LANGS = [
-  { code: 'ko' as Lang, label: '한국어' },
-  { code: 'en' as Lang, label: 'English' },
-  { code: 'zh' as Lang, label: '中文' },
-  { code: 'ja' as Lang, label: '日本語' },
-]
+import { LANGS } from '@/lib/langs'
 
 const TEXT_FIELDS = [
   { key: 'name' as const, label: '라면 이름' },

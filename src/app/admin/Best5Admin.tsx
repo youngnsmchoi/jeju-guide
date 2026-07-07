@@ -4,13 +4,7 @@
 import { useState, useEffect } from 'react'
 import type { Lang } from '@/lib/types'
 import type { Best5Pick } from '@/app/guide/best5/Best5View'
-
-const LANGS: { code: Lang; label: string }[] = [
-  { code: 'ko', label: '한국어' },
-  { code: 'en', label: 'English' },
-  { code: 'zh', label: '中文' },
-  { code: 'ja', label: '日本語' },
-]
+import { LANGS } from '@/lib/langs'
 
 type FormState = Omit<Best5Pick, 'id'> & { id?: number }
 
