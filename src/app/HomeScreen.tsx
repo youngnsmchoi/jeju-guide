@@ -13,10 +13,10 @@ const LANG_LABELS: { code: Lang; label: string }[] = [
 ]
 
 const HERO: Record<Lang, { title: string; sub: string }> = {
-  ko: { title: 'K-Ramen Picks', sub: '제주 편의점 라면 가이드' },
-  en: { title: 'K-Ramen Picks', sub: 'Jeju Convenience Store Ramen Guide' },
-  zh: { title: 'K-Ramen Picks', sub: '济州便利店拉面指南' },
-  ja: { title: 'K-Ramen Picks', sub: '済州コンビニラーメンガイド' },
+  ko: { title: 'K-Ramen Picks', sub: '여행자를 위한 K-Ramen 완전 가이드' },
+  en: { title: 'K-Ramen Picks', sub: 'The Complete K-Ramen Guide for Travelers' },
+  zh: { title: 'K-Ramen Picks', sub: '旅行者的韩国拉面完全指南' },
+  ja: { title: 'K-Ramen Picks', sub: '旅行者のためのK-Ramen完全ガイド' },
 }
 
 const COMING_SOON: Record<Lang, string> = {
