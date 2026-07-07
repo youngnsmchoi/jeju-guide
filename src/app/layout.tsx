@@ -14,13 +14,15 @@ export const metadata: Metadata = {
     description: 'Jeju convenience store ramen guide for travelers — spice levels, prices & tips.',
     url: 'https://jeju-guide-two.vercel.app',
     siteName: 'K-Ramen Picks',
+    images: [{ url: 'https://jeju-guide-two.vercel.app/og-image.png', width: 1200, height: 630 }],
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'K-Ramen Picks',
     description: 'Jeju convenience store ramen guide for travelers — spice levels, prices & tips.',
+    images: ['https://jeju-guide-two.vercel.app/og-image.png'],
   },
 }
 
