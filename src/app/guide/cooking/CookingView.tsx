@@ -21,7 +21,7 @@ const LABEL: Record<Lang, {
   eatPlaceSteps: string[]
 }> = {
   ko: {
-    title: '라면 끓이는 법', back: '← 뒤로', cup: '☕ 컵라면', bag: '🍜 봉지라면', dry: '🥢 비벼먹기', comingSoon: '준비 중입니다.',
+    title: '라면 끓이는 법', back: '← 뒤로', cup: '컵라면', bag: '봉지라면', dry: '비벼먹기', comingSoon: '준비 중입니다.',
     hotWaterTitle: '💧 뜨거운 물 받는 법',
     hotWaterSteps: [
       '카운터 옆 온수기를 찾으세요. (대부분 편의점에 비치)',
@@ -36,7 +36,7 @@ const LABEL: Record<Lang, {
     ],
   },
   en: {
-    title: 'How to Cook', back: '← Back', cup: '☕ Cup', bag: '🍜 Bag', dry: '🥢 Dry Style', comingSoon: 'Coming soon.',
+    title: 'How to Cook', back: '← Back', cup: 'Cup', bag: 'Bag', dry: 'Dry Style', comingSoon: 'Coming soon.',
     hotWaterTitle: '💧 How to get hot water',
     hotWaterSteps: [
       'Find the hot water dispenser near the counter. (Available at most convenience stores)',
@@ -51,7 +51,7 @@ const LABEL: Record<Lang, {
     ],
   },
   zh: {
-    title: '如何烹饪', back: '← 返回', cup: '☕ 杯面', bag: '🍜 袋面', dry: '🥢 干拌', comingSoon: '即将推出。',
+    title: '如何烹饪', back: '← 返回', cup: '杯面', bag: '袋面', dry: '干拌', comingSoon: '即将推出。',
     hotWaterTitle: '💧 如何接热水',
     hotWaterSteps: [
       '在收银台旁找热水机。(大多数便利店都有)',
@@ -66,7 +66,7 @@ const LABEL: Record<Lang, {
     ],
   },
   ja: {
-    title: '作り方', back: '← 戻る', cup: '☕ カップ', bag: '🍜 袋', dry: '🥢 まぜそば', comingSoon: '準備中です。',
+    title: '作り方', back: '← 戻る', cup: 'カップ', bag: '袋', dry: 'まぜそば', comingSoon: '準備中です。',
     hotWaterTitle: '💧 お湯の注ぎ方',
     hotWaterSteps: [
       'レジ横のお湯サーバーを探してください。(ほとんどのコンビニにあります)',
