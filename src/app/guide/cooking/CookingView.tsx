@@ -82,6 +82,33 @@ const LABEL: Record<Lang, {
   },
 }
 
+const BAG_STEPS: Record<Lang, { title: string; desc: string }[]> = {
+  ko: [
+    { title: '물 550ml 끓이기', desc: '냄비에 물 550ml를 넣고 끓이세요.' },
+    { title: '면과 스프 넣기', desc: '물이 끓으면 면과 스프를 함께 넣으세요.' },
+    { title: '3~4분 끓이기', desc: '중불에서 3~4분간 끓이며 가끔 저어주세요.' },
+    { title: '그릇에 담기', desc: '불을 끄고 그릇에 담아 바로 드세요.' },
+  ],
+  en: [
+    { title: '1. Boil 550ml Water', desc: 'Pour 550ml of water into a pot and bring to a boil.' },
+    { title: '2. Add Noodle & Seasoning', desc: 'Once boiling, add the noodles and soup base together.' },
+    { title: '3. Cook & Stir', desc: 'Boil for 3–4 minutes over medium heat, stirring occasionally.' },
+    { title: '4. Serve & Enjoy', desc: 'Turn off heat, pour into a bowl and serve immediately.' },
+  ],
+  zh: [
+    { title: '1. 烧550ml水', desc: '锅中加入550ml水，大火烧开。' },
+    { title: '2. 放入面条和汤料', desc: '水开后，同时放入面条和汤料包。' },
+    { title: '3. 煮3~4分钟', desc: '中火煮3~4分钟，偶尔搅拌一下。' },
+    { title: '4. 盛碗享用', desc: '关火，盛入碗中立即享用。' },
+  ],
+  ja: [
+    { title: '1. 水550mlを沸かす', desc: '鍋に水550mlを入れて沸騰させてください。' },
+    { title: '2. 麺とスープを入れる', desc: '沸騰したら麺とスープの素を一緒に入れてください。' },
+    { title: '3. 3〜4分煮る', desc: '中火で3〜4分煮ながら、時々かき混ぜてください。' },
+    { title: '4. 器に盛る', desc: '火を止めて器に盛り、すぐにお召し上がりください。' },
+  ],
+}
+
 const TABS: Tab[] = ['cup', 'bag', 'dry']
 
 function TabContent({ item, lang, emptyEmoji, comingSoon }: {
@@ -171,7 +198,22 @@ export default function CookingView({ cupItem, bagItem, dryItem }: {
             </div>
           </>
         )}
-        {tab === 'bag' && <TabContent item={bagItem} lang={lang} emptyEmoji="🍜" comingSoon={L.comingSoon} />}
+        {tab === 'bag' && (
+          <div className="space-y-4">
+            {BAG_STEPS[lang].map((step, i) => (
+              <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <img src={`/cooking/bag-${i + 1}.png`} alt={step.title} className="w-full object-cover" />
+                <div className="px-4 py-3 flex gap-3 items-start">
+                  <span className="shrink-0 w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center text-xs font-bold">{i + 1}</span>
+                  <div>
+                    <p className="text-sm font-bold text-gray-900">{step.title}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{step.desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         {tab === 'dry' && <TabContent item={dryItem} lang={lang} emptyEmoji="🥢" comingSoon={L.comingSoon} />}
       </main>
       <PageFooter />
