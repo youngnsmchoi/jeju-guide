@@ -64,6 +64,13 @@ const SORT_LABEL: Record<Lang, { default: string; spicy: string }> = {
   ja: { default: 'おすすめ順', spicy: '辛さ順' },
 }
 
+const FILTER_LABEL: Record<Lang, { all: string; cup: string; bag: string }> = {
+  ko: { all: '전체', cup: '컵라면', bag: '봉지라면' },
+  en: { all: 'All', cup: 'Cup', bag: 'Bag' },
+  zh: { all: '全部', cup: '杯面', bag: '袋面' },
+  ja: { all: 'すべて', cup: 'カップ', bag: '袋' },
+}
+
 const PREP_TIME_LABEL: Record<Lang, (min: number) => string> = {
   ko: (min) => `권장 조리 시간: ${min}분`,
   en: (min) => `Recommended prep time: ${min} min`,
@@ -144,14 +151,16 @@ function SpicyLevel({ level }: { level: number }) {
 
 export default function RamenList({ items, lang }: { items: RamenItem[]; lang: Lang }) {
   const [sortBySpicy, setSortBySpicy] = useState(false)
+  const [typeFilter, setTypeFilter] = useState<'all' | 'cup' | 'bag'>('all')
 
   if (items.length === 0) {
     return <p className="text-center text-gray-400 py-20">등록된 라면이 없습니다.</p>
   }
 
+  const filteredItems = typeFilter === 'all' ? items : items.filter(item => item.noodle_type === typeFilter)
   const sortedItems = sortBySpicy
-    ? [...items].sort((a, b) => (b.spicy_level ?? 0) - (a.spicy_level ?? 0))
-    : items
+    ? [...filteredItems].sort((a, b) => (b.spicy_level ?? 0) - (a.spicy_level ?? 0))
+    : filteredItems
 
   const guide = SPICY_GUIDE[lang]
   const glossary = GLOSSARY[lang]
@@ -196,17 +205,30 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
         </div>
       </div>
 
-      <div className="flex justify-end gap-2">
-        <button
-          onClick={() => setSortBySpicy(false)}
-          className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors
-            ${!sortBySpicy ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-500'}`}
-        >{SORT_LABEL[lang].default}</button>
-        <button
-          onClick={() => setSortBySpicy(true)}
-          className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors
-            ${sortBySpicy ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-500'}`}
-        >🌶️ {SORT_LABEL[lang].spicy}</button>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex gap-1.5">
+          {(['all', 'cup', 'bag'] as const).map(t => (
+            <button key={t} onClick={() => setTypeFilter(t)}
+              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors
+                ${typeFilter === t
+                  ? t === 'cup' ? 'bg-blue-500 text-white' : t === 'bag' ? 'bg-orange-500 text-white' : 'bg-gray-900 text-white'
+                  : 'bg-gray-100 text-gray-500'}`}>
+              {FILTER_LABEL[lang][t]}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-1.5">
+          <button onClick={() => setSortBySpicy(false)}
+            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors
+              ${!sortBySpicy ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-500'}`}>
+            {SORT_LABEL[lang].default}
+          </button>
+          <button onClick={() => setSortBySpicy(true)}
+            className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors
+              ${sortBySpicy ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-500'}`}>
+            🌶️ {SORT_LABEL[lang].spicy}
+          </button>
+        </div>
       </div>
       {sortedItems.map((item) => (
         <div key={item.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
