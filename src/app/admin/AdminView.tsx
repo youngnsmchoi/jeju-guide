@@ -1,8 +1,8 @@
 'use client'
-// 관리자 페이지 — 로그인, 카테고리 선택, 항목 목록
+// 관리자 페이지 — 사이드바(PC) + 햄버거(모바일) 레이아웃
 
 import { useState, useEffect } from 'react'
-import type { Category, Item, Block, Lang } from '@/lib/types'
+import type { Category, Item } from '@/lib/types'
 import RamenAdmin from './RamenAdmin'
 import RamenLogAdmin from './RamenLogAdmin'
 import Best5Admin from './Best5Admin'
@@ -20,15 +20,19 @@ const emptyForm = (categoryId: number): ItemFormState => ({
   blocks: [],
 })
 
-type Tab = 'ramen' | 'log' | 'best5' | 'toppings' | 'countryPicks' | null
+type Tab = 'ramen' | 'log' | 'best5' | 'toppings' | 'countryPicks' | { catId: number }
+
+function isCatTab(tab: Tab | null): tab is { catId: number } {
+  return typeof tab === 'object' && tab !== null
+}
 
 export default function AdminView({ categories }: { categories: Category[] }) {
   const [authed, setAuthed] = useState(false)
   const [pw, setPw] = useState('')
   const [pwError, setPwError] = useState(false)
+  const [activeTab, setActiveTab] = useState<Tab>('ramen')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [items, setItems] = useState<Item[]>([])
-  const [selectedCat, setSelectedCat] = useState<Category | null>(null)
-  const [activeTab, setActiveTab] = useState<Tab>(null)
   const [form, setForm] = useState<ItemFormState | null>(null)
   const [saving, setSaving] = useState(false)
 
@@ -48,21 +52,43 @@ export default function AdminView({ categories }: { categories: Category[] }) {
     })
   }, [])
 
-  const loadItems = async (cat: Category) => {
-    setActiveTab(null)
-    setSelectedCat(cat)
+  const loadCat = async (cat: Category) => {
+    setActiveTab({ catId: cat.id })
     setForm(null)
+    setSidebarOpen(false)
     const data = await fetch(`/api/items?category_id=${cat.id}`).then(r => r.json())
     setItems(Array.isArray(data) ? data : [])
   }
 
   const selectTab = (tab: Tab) => {
     setActiveTab(tab)
-    setSelectedCat(null)
     setForm(null)
+    setSidebarOpen(false)
   }
 
-  const startNew = () => setForm(emptyForm(selectedCat!.id))
+  const selectedCat = isCatTab(activeTab)
+    ? categories.find(c => c.id === activeTab.catId) ?? null
+    : null
+
+  const save = async () => {
+    if (!form || !selectedCat) return
+    setSaving(true)
+    const method = form.id ? 'PUT' : 'POST'
+    const res = await fetch('/api/admin/items', {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form),
+    })
+    if (res.ok) { await loadCat(selectedCat); setForm(null) }
+    else { const err = await res.json(); alert('저장 실패: ' + err.error) }
+    setSaving(false)
+  }
+
+  const deleteItem = async (id: number) => {
+    if (!confirm('삭제하시겠습니까?')) return
+    await fetch(`/api/admin/items?id=${id}`, { method: 'DELETE' })
+    if (selectedCat) await loadCat(selectedCat)
+  }
 
   const startEdit = (item: Item) => setForm({
     ...item,
@@ -73,26 +99,6 @@ export default function AdminView({ categories }: { categories: Category[] }) {
     map_keyword: item.map_keyword || '',
     blocks: item.blocks || [],
   } as ItemFormState)
-
-  const save = async () => {
-    if (!form) return
-    setSaving(true)
-    const method = form.id ? 'PUT' : 'POST'
-    const res = await fetch('/api/admin/items', {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    })
-    if (res.ok) { await loadItems(selectedCat!); setForm(null) }
-    else { const err = await res.json(); alert('저장 실패: ' + err.error) }
-    setSaving(false)
-  }
-
-  const deleteItem = async (id: number) => {
-    if (!confirm('삭제하시겠습니까?')) return
-    await fetch(`/api/admin/items?id=${id}`, { method: 'DELETE' })
-    await loadItems(selectedCat!)
-  }
 
   if (!authed) {
     return (
@@ -112,93 +118,130 @@ export default function AdminView({ categories }: { categories: Category[] }) {
     )
   }
 
-  const TAB_BTNS: { tab: Tab; label: string }[] = [
-    { tab: 'ramen',        label: '🍜 라면 관리' },
-    { tab: 'log',          label: '📋 Ramen Log' },
-    { tab: 'best5',        label: '🏆 Best 5' },
-    { tab: 'toppings',     label: '🍳 꿀조합' },
-    { tab: 'countryPicks', label: '🌏 나라별 픽' },
+  const MENU = [
+    { tab: 'ramen' as Tab,        label: '라면 관리',  icon: '🍜' },
+    { tab: 'log' as Tab,          label: 'Ramen Log',  icon: '📋' },
+    { tab: 'best5' as Tab,        label: 'Best 5',     icon: '🏆' },
+    { tab: 'toppings' as Tab,     label: '꿀조합',     icon: '🍳' },
+    { tab: 'countryPicks' as Tab, label: '나라별 픽',  icon: '🌏' },
   ]
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-emerald-700 text-white px-6 py-4 flex items-center justify-between">
-        <h1 className="text-lg font-bold">K-Ramen 관리자</h1>
-        <button onClick={async () => { await fetch('/api/admin/login', { method: 'DELETE' }); setAuthed(false) }}
-          className="text-sm px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-800 transition-colors">
-          로그아웃
+  const isActive = (tab: Tab) => JSON.stringify(activeTab) === JSON.stringify(tab)
+
+  const Sidebar = () => (
+    <nav className="flex flex-col h-full">
+      <div className="px-5 py-5 border-b border-emerald-800">
+        <p className="text-white font-bold text-base">K-Ramen Admin</p>
+      </div>
+      <div className="flex-1 overflow-y-auto py-3 space-y-0.5 px-2">
+        {MENU.map(({ tab, label, icon }) => (
+          <button key={String(tab)} onClick={() => selectTab(tab)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-left
+              ${isActive(tab) ? 'bg-emerald-500 text-white' : 'text-emerald-100 hover:bg-emerald-700'}`}>
+            <span>{icon}</span>{label}
+          </button>
+        ))}
+
+        {categories.length > 0 && (
+          <>
+            <p className="text-xs text-emerald-400 font-medium px-3 pt-4 pb-1">카테고리</p>
+            {categories.map(cat => {
+              const tab: Tab = { catId: cat.id }
+              return (
+                <button key={cat.id} onClick={() => loadCat(cat)}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-left
+                    ${isActive(tab) ? 'bg-emerald-500 text-white' : 'text-emerald-100 hover:bg-emerald-700'}`}>
+                  <span>{cat.icon}</span>{cat.title_ko}
+                </button>
+              )
+            })}
+          </>
+        )}
+      </div>
+      <div className="px-2 py-3 border-t border-emerald-800">
+        <button
+          onClick={async () => { await fetch('/api/admin/login', { method: 'DELETE' }); setAuthed(false) }}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-emerald-200 hover:bg-emerald-700 transition-colors">
+          ← 로그아웃
         </button>
-      </header>
+      </div>
+    </nav>
+  )
 
-      <div className="max-w-2xl mx-auto p-4 space-y-4">
-        {/* 카테고리 + 탭 선택 */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <p className="text-xs text-gray-400 font-medium mb-3">카테고리</p>
-          <div className="flex flex-wrap gap-2">
-            {categories.map(cat => (
-              <button key={cat.id} onClick={() => loadItems(cat)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors
-                  ${selectedCat?.id === cat.id ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
-                {cat.icon} {cat.title_ko}
-              </button>
-            ))}
-          </div>
-          <p className="text-xs text-gray-400 font-medium mt-3 mb-2">관리 메뉴</p>
-          <div className="flex flex-wrap gap-2">
-            {TAB_BTNS.map(({ tab, label }) => (
-              <button key={tab} onClick={() => selectTab(tab)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors
-                  ${activeTab === tab ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
-                {label}
-              </button>
-            ))}
-          </div>
+  return (
+    <div className="min-h-screen flex bg-gray-100">
+      {/* PC 사이드바 */}
+      <aside className="hidden md:flex flex-col w-56 bg-emerald-700 shrink-0 sticky top-0 h-screen">
+        <Sidebar />
+      </aside>
+
+      {/* 모바일 오버레이 사이드바 */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setSidebarOpen(false)} />
+          <aside className="absolute left-0 top-0 h-full w-56 bg-emerald-700 z-50">
+            <Sidebar />
+          </aside>
         </div>
+      )}
 
-        {activeTab === 'ramen'        && <RamenAdmin />}
-        {activeTab === 'log'          && <RamenLogAdmin />}
-        {activeTab === 'best5'        && <Best5Admin />}
-        {activeTab === 'toppings'     && <ToppingsAdmin />}
-        {activeTab === 'countryPicks' && <CountryPicksAdmin />}
+      {/* 메인 콘텐츠 */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* 모바일 상단 헤더 */}
+        <header className="md:hidden bg-emerald-700 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-30">
+          <button onClick={() => setSidebarOpen(true)} className="text-white p-1">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <p className="font-bold text-sm">K-Ramen Admin</p>
+          <div className="w-8" />
+        </header>
 
-        {/* 카테고리 항목 목록 */}
-        {selectedCat && !form && (
-          <div className="bg-white rounded-2xl p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-xs text-gray-400 font-medium">{selectedCat.title_ko} 항목</p>
-              <button onClick={startNew}
-                className="bg-emerald-600 text-white text-sm px-4 py-2 rounded-xl hover:bg-emerald-700 transition-colors">
-                + 새 항목
-              </button>
-            </div>
-            {items.length === 0 ? (
-              <p className="text-center text-gray-400 py-8 text-sm">항목이 없습니다.</p>
-            ) : (
-              <div className="space-y-2">
-                {items.map(item => (
-                  <div key={item.id} className="flex items-center justify-between border border-gray-100 rounded-xl px-4 py-3">
-                    <span className="text-sm text-gray-800">{item.title_ko}</span>
-                    <div className="flex gap-2">
-                      <button onClick={() => startEdit(item)} className="text-xs text-emerald-600 hover:underline">수정</button>
-                      <button onClick={() => deleteItem(item.id)} className="text-xs text-red-400 hover:underline">삭제</button>
-                    </div>
-                  </div>
-                ))}
+        <main className="flex-1 p-4 md:p-6 max-w-4xl w-full mx-auto space-y-4">
+          {activeTab === 'ramen'        && <RamenAdmin />}
+          {activeTab === 'log'          && <RamenLogAdmin />}
+          {activeTab === 'best5'        && <Best5Admin />}
+          {activeTab === 'toppings'     && <ToppingsAdmin />}
+          {activeTab === 'countryPicks' && <CountryPicksAdmin />}
+
+          {isCatTab(activeTab) && selectedCat && !form && (
+            <div className="bg-white rounded-2xl p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-sm font-semibold text-gray-700">{selectedCat.title_ko} 항목</p>
+                <button onClick={() => setForm(emptyForm(selectedCat.id))}
+                  className="bg-emerald-600 text-white text-sm px-4 py-2 rounded-xl hover:bg-emerald-700 transition-colors">
+                  + 새 항목
+                </button>
               </div>
-            )}
-          </div>
-        )}
+              {items.length === 0 ? (
+                <p className="text-center text-gray-400 py-8 text-sm">항목이 없습니다.</p>
+              ) : (
+                <div className="space-y-2">
+                  {items.map(item => (
+                    <div key={item.id} className="flex items-center justify-between border border-gray-100 rounded-xl px-4 py-3">
+                      <span className="text-sm text-gray-800">{item.title_ko}</span>
+                      <div className="flex gap-2">
+                        <button onClick={() => startEdit(item)} className="text-xs text-emerald-600 hover:underline">수정</button>
+                        <button onClick={() => deleteItem(item.id)} className="text-xs text-red-400 hover:underline">삭제</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
-        {/* 편집 폼 */}
-        {form && (
-          <ItemEditForm
-            form={form}
-            onChange={setForm}
-            onSave={save}
-            onCancel={() => setForm(null)}
-            saving={saving}
-          />
-        )}
+          {isCatTab(activeTab) && form && (
+            <ItemEditForm
+              form={form}
+              onChange={setForm}
+              onSave={save}
+              onCancel={() => setForm(null)}
+              saving={saving}
+            />
+          )}
+        </main>
       </div>
     </div>
   )
