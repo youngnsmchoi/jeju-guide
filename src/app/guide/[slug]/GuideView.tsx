@@ -42,10 +42,10 @@ export default function GuideView({ item, category, ramenItems }: { item: Item; 
       <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <button
-            onClick={() => category ? router.push(`/category/${category.slug}`) : router.push('/')}
+            onClick={() => router.push('/')}
             className="flex items-center gap-1 text-sm text-gray-500 hover:text-emerald-600"
           >
-            ← {category ? getTitle(category, lang) : '홈'}
+            ← 홈
           </button>
           <div className="flex gap-2">
             {LANG_LABELS.map((l) => (
