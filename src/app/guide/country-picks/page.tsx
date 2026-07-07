@@ -2,7 +2,7 @@
 import { supabase } from '@/lib/supabase'
 import CountryPicksView from './CountryPicksView'
 
-export const revalidate = 0
+export const revalidate = 60
 
 export default async function CountryPicksPage() {
   const { data } = await supabase

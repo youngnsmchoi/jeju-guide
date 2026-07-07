@@ -2,7 +2,7 @@
 import { supabase } from '@/lib/supabase'
 import ToppingsView from './ToppingsView'
 
-export const revalidate = 0
+export const revalidate = 60
 
 export default async function ToppingsPage() {
   const { data } = await supabase.from('topping_combos').select('*').order('order_num')
