@@ -7,8 +7,21 @@ import { LangProvider } from '@/context/LangContext'
 const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '제주 서귀포 스마트 생존 가이드',
-  description: 'Jeju Seogwipo Smart Survival Guide for foreigners',
+  title: 'K-Ramen Picks — Jeju Convenience Store Ramen Guide',
+  description: 'Find the best Korean instant ramen at Jeju convenience stores. Spice levels, prices, cooking tips, and where to buy overseas.',
+  openGraph: {
+    title: 'K-Ramen Picks',
+    description: 'Jeju convenience store ramen guide for travelers — spice levels, prices & tips.',
+    url: 'https://jeju-guide-two.vercel.app',
+    siteName: 'K-Ramen Picks',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'K-Ramen Picks',
+    description: 'Jeju convenience store ramen guide for travelers — spice levels, prices & tips.',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
