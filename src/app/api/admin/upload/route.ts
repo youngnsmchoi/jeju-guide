@@ -1,6 +1,7 @@
 // 이미지 업로드 API — Supabase Storage에 저장 후 URL 반환
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { requireAdmin } from '@/lib/adminAuth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!.trim(),
@@ -8,6 +9,8 @@ const supabase = createClient(
 )
 
 export async function POST(request: Request) {
+  const authError = await requireAdmin()
+  if (authError) return authError
   const formData = await request.formData()
   const file = formData.get('file') as File
   if (!file) return NextResponse.json({ error: 'file required' }, { status: 400 })

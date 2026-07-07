@@ -76,12 +76,15 @@ export default function AdminView({ categories }: { categories: Category[] }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password: pw }),
     })
-    if (res.ok) { localStorage.setItem('admin_authed', '1'); setAuthed(true); setPwError(false) }
+    if (res.ok) { setAuthed(true); setPwError(false) }
     else setPwError(true)
   }
 
   useEffect(() => {
-    if (localStorage.getItem('admin_authed') === '1') setAuthed(true)
+    // 쿠키 유효 여부를 서버에서 확인
+    fetch('/api/admin/ramen-log').then(res => {
+      if (res.status !== 401) setAuthed(true)
+    })
   }, [])
 
   const loadItems = async (cat: Category) => {
@@ -177,7 +180,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
       <header className="bg-emerald-700 text-white px-6 py-4 flex items-center justify-between">
         <h1 className="text-lg font-bold">제주 가이드 관리자</h1>
         <button
-          onClick={() => { localStorage.removeItem('admin_authed'); setAuthed(false) }}
+          onClick={async () => { await fetch('/api/admin/login', { method: 'DELETE' }); setAuthed(false) }}
           className="text-sm px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-800 transition-colors"
         >로그아웃</button>
       </header>
