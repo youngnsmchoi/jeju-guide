@@ -71,6 +71,13 @@ const FILTER_LABEL: Record<Lang, { all: string; cup: string; bag: string }> = {
   ja: { all: 'すべて', cup: 'カップ', bag: '袋' },
 }
 
+const SEARCH_PLACEHOLDER: Record<Lang, string> = {
+  ko: '라면 이름으로 검색',
+  en: 'Search by name',
+  zh: '按名称搜索',
+  ja: '名前で検索',
+}
+
 const PREP_TIME_LABEL: Record<Lang, (min: number) => string> = {
   ko: (min) => `권장 조리 시간: ${min}분`,
   en: (min) => `Recommended prep time: ${min} min`,
@@ -152,12 +159,18 @@ function SpicyLevel({ level }: { level: number }) {
 export default function RamenList({ items, lang }: { items: RamenItem[]; lang: Lang }) {
   const [sortBySpicy, setSortBySpicy] = useState(false)
   const [typeFilter, setTypeFilter] = useState<'all' | 'cup' | 'bag'>('all')
+  const [query, setQuery] = useState('')
 
   if (items.length === 0) {
     return <p className="text-center text-gray-400 py-20">등록된 라면이 없습니다.</p>
   }
 
-  const filteredItems = typeFilter === 'all' ? items : items.filter(item => item.noodle_type === typeFilter)
+  const q = query.trim().toLowerCase()
+  const filteredItems = items.filter(item => {
+    if (typeFilter !== 'all' && item.noodle_type !== typeFilter) return false
+    if (q) return (getRamenField(item, 'name', lang) ?? '').toLowerCase().includes(q)
+    return true
+  })
   const sortedItems = sortBySpicy
     ? [...filteredItems].sort((a, b) => (b.spicy_level ?? 0) - (a.spicy_level ?? 0))
     : filteredItems
@@ -205,6 +218,23 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
         </div>
       </div>
 
+      {/* 검색창 */}
+      <div className="relative">
+        <input
+          type="text"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder={SEARCH_PLACEHOLDER[lang]}
+          className="w-full bg-white border border-gray-200 rounded-2xl px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-emerald-400"
+        />
+        {query && (
+          <button onClick={() => setQuery('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none">
+            ✕
+          </button>
+        )}
+      </div>
+
       <div className="flex items-center justify-between gap-2">
         <div className="flex gap-1.5">
           {(['all', 'cup', 'bag'] as const).map(t => (
@@ -230,6 +260,11 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
           </button>
         </div>
       </div>
+      {sortedItems.length === 0 && (
+        <p className="text-center text-gray-400 py-10 text-sm">
+          {query ? `"${query}" — ` : ''}{lang === 'ko' ? '검색 결과가 없습니다.' : lang === 'en' ? 'No results found.' : lang === 'zh' ? '没有找到结果。' : '検索結果がありません。'}
+        </p>
+      )}
       {sortedItems.map((item) => (
         <div key={item.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
           {item.image_url && (
