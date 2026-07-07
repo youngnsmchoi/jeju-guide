@@ -145,6 +145,17 @@ const GROUPS: Group[] = [
         },
         href: '/guide/best5',
       },
+      {
+        emoji: '🛒',
+        title: { ko: '해외에서 라면 사기', en: 'Buy Ramen at Home', zh: '回国后买拉面', ja: '海外でラーメンを買う' },
+        desc: {
+          ko: 'Amazon · H-Mart · 카르디 · 돈키호테',
+          en: 'Amazon · H-Mart · Kaldi · Don Quijote',
+          zh: 'Amazon · H-Mart · Kaldi · 唐吉诃德',
+          ja: 'Amazon · H-Mart · カルディ · ドンキ',
+        },
+        href: '/guide/buy-overseas',
+      },
     ],
   },
   {
@@ -194,17 +205,6 @@ const GROUPS: Group[] = [
           ja: '食べたラーメンを記録',
         },
         href: '/ramen-log',
-      },
-      {
-        emoji: '🛒',
-        title: { ko: '해외에서 라면 사기', en: 'Buy Ramen at Home', zh: '回国后买拉面', ja: '海外でラーメンを買う' },
-        desc: {
-          ko: 'Amazon · H-Mart · 카르디 · 돈키호테',
-          en: 'Amazon · H-Mart · Kaldi · Don Quijote',
-          zh: 'Amazon · H-Mart · Kaldi · 唐吉诃德',
-          ja: 'Amazon · H-Mart · カルディ · ドンキ',
-        },
-        href: '/guide/buy-overseas',
       },
     ],
   },
