@@ -1,14 +1,12 @@
 'use client'
 // 나도 먹을 수 있나요? — 파파고로 성분 직접 확인하는 방법 안내
 
-import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
-import PageFooter from '@/components/PageFooter'
+import NavBar from '@/components/NavBar'
 
 const LABEL: Record<Lang, {
   title: string
-  back: string
   disclaimer: string
   steps: { emoji: string; title: string; desc: string }[]
   tip: string
@@ -17,7 +15,6 @@ const LABEL: Record<Lang, {
 }> = {
   en: {
     title: 'Can I Eat This?',
-    back: '← Back',
     disclaimer: 'This information is for reference only. Ingredients and certifications may change. Always check the product label or official page before purchasing.',
     steps: [
       {
@@ -42,7 +39,6 @@ const LABEL: Record<Lang, {
   },
   ko: {
     title: '나도 먹을 수 있나요?',
-    back: '← 뒤로',
     disclaimer: '본 정보는 참고용이며, 인증 및 성분은 변경될 수 있습니다. 구매 전 반드시 제품 라벨 또는 공식 페이지에서 최종 확인하세요.',
     steps: [
       {
@@ -67,7 +63,6 @@ const LABEL: Record<Lang, {
   },
   zh: {
     title: '我能吃吗？',
-    back: '← 返回',
     disclaimer: '本信息仅供参考，认证及成分可能随时变更。购买前请务必确认产品标签或官方页面。',
     steps: [
       {
@@ -92,7 +87,6 @@ const LABEL: Record<Lang, {
   },
   ja: {
     title: '食べられますか？',
-    back: '← 戻る',
     disclaimer: '本情報は参考用です。認証・成分は変更される場合があります。購入前に必ず製品ラベルまたは公式ページでご確認ください。',
     steps: [
       {
@@ -119,18 +113,11 @@ const LABEL: Record<Lang, {
 
 export default function IngredientsView() {
   const { lang } = useLang()
-  const router = useRouter()
   const L = LABEL[lang]
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => router.push('/')} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
-          <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
-          <div className="w-12" />
-        </div>
-      </header>
+      <NavBar />
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         {/* 면책 문구 */}
@@ -167,7 +154,6 @@ export default function IngredientsView() {
           {L.papago} →
         </a>
       </main>
-      <PageFooter />
     </div>
   )
 }

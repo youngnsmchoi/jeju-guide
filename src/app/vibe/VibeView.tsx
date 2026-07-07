@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
-import PageFooter from '@/components/PageFooter'
+import NavBar from '@/components/NavBar'
 
 type VibeTag = 'hangover' | 'comfort' | 'challenge' | 'mild'
 type Ingredient = 'cheese' | 'egg' | 'gimbap'
@@ -53,13 +53,13 @@ const INGREDIENT_OPTIONS: { key: Ingredient; emoji: string; label: Record<Lang, 
 ]
 
 const LABEL: Record<Lang, {
-  title: string; back: string; q1: string; q2: string; q3: string;
+  title: string; q1: string; q2: string; q3: string;
   q3skip: string; recommend: string; noResult: string; retry: string; viewAll: string
 }> = {
-  ko: { title: 'K-Ramen Vibe', back: '← 뒤로', q1: '지금 기분이 어때요?', q2: '매운맛은 얼마나 괜찮아요?', q3: '같이 먹고 싶은 것이 있나요?', q3skip: '그냥 라면만', recommend: '추천 라면', noResult: '조건에 맞는 라면이 없어요. 다시 선택해 보세요.', retry: '다시 하기', viewAll: '전체 목록 보기' },
-  en: { title: 'K-Ramen Vibe', back: '← Back', q1: "What's your vibe right now?", q2: 'How spicy can you handle?', q3: 'Want to add anything?', q3skip: 'Just ramen', recommend: 'Recommended', noResult: 'No match found. Try again!', retry: 'Try again', viewAll: 'View all' },
-  zh: { title: 'K-Ramen Vibe', back: '← 返回', q1: '你现在的心情？', q2: '能接受多辣？', q3: '想搭配什么？', q3skip: '只要泡面', recommend: '推荐拉面', noResult: '没有符合的拉面，请重试。', retry: '重新选择', viewAll: '查看全部' },
-  ja: { title: 'K-Ramen Vibe', back: '← 戻る', q1: '今の気分は？', q2: '辛さはどのくらいOK？', q3: '一緒に食べたいものは？', q3skip: 'ラーメンだけ', recommend: 'おすすめラーメン', noResult: '条件に合うラーメンがありません。', retry: 'もう一度', viewAll: '全部見る' },
+  ko: { title: 'K-Ramen Vibe', q1: '지금 기분이 어때요?', q2: '매운맛은 얼마나 괜찮아요?', q3: '같이 먹고 싶은 것이 있나요?', q3skip: '그냥 라면만', recommend: '추천 라면', noResult: '조건에 맞는 라면이 없어요. 다시 선택해 보세요.', retry: '다시 하기', viewAll: '전체 목록 보기' },
+  en: { title: 'K-Ramen Vibe', q1: "What's your vibe right now?", q2: 'How spicy can you handle?', q3: 'Want to add anything?', q3skip: 'Just ramen', recommend: 'Recommended', noResult: 'No match found. Try again!', retry: 'Try again', viewAll: 'View all' },
+  zh: { title: 'K-Ramen Vibe', q1: '你现在的心情？', q2: '能接受多辣？', q3: '想搭配什么？', q3skip: '只要泡面', recommend: '推荐拉面', noResult: '没有符合的拉面，请重试。', retry: '重新选择', viewAll: '查看全部' },
+  ja: { title: 'K-Ramen Vibe', q1: '今の気分は？', q2: '辛さはどのくらいOK？', q3: '一緒に食べたいものは？', q3skip: 'ラーメンだけ', recommend: 'おすすめラーメン', noResult: '条件に合うラーメンがありません。', retry: 'もう一度', viewAll: '全部見る' },
 }
 
 function recommend(items: RamenItem[], vibe: VibeTag, spice: number, ingredients: Ingredient[]): RamenItem[] {
@@ -142,13 +142,7 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => router.push('/')} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
-          <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
-          <div className="w-12" />
-        </div>
-      </header>
+      <NavBar />
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 space-y-6">
 
@@ -257,7 +251,6 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
           </div>
         )}
       </main>
-      <PageFooter />
     </div>
   )
 }

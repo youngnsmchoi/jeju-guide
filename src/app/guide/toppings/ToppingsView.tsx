@@ -1,14 +1,12 @@
 'use client'
 // 꿀조합 커스터마이징 — 라면별 편의점 토핑 조합 카드 (DB 연동)
 
-import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
-import PageFooter from '@/components/PageFooter'
+import NavBar from '@/components/NavBar'
 
 const LABEL: Record<Lang, {
   title: string
-  back: string
   intro: string
   tip: string
   tipDesc: string
@@ -17,7 +15,6 @@ const LABEL: Record<Lang, {
 }> = {
   ko: {
     title: '꿀조합 커스터마이징',
-    back: '← 뒤로',
     intro: '편의점 라면, 이것 하나만 더 넣으면 완전히 달라집니다.',
     tip: '💡 편의점에서 바로 구할 수 있어요',
     tipDesc: '계란, 치즈 슬라이스, 삼각김밥 모두 편의점 냉장코너에 있습니다.',
@@ -26,7 +23,6 @@ const LABEL: Record<Lang, {
   },
   en: {
     title: 'Topping Combos',
-    back: '← Back',
     intro: 'One topping from the fridge section — totally different ramen.',
     tip: '💡 All available in-store',
     tipDesc: 'Eggs, cheese slices, and rice balls are in the refrigerated section of any convenience store.',
@@ -35,7 +31,6 @@ const LABEL: Record<Lang, {
   },
   zh: {
     title: '黄金搭配',
-    back: '← 返回',
     intro: '便利店里加一样，拉面完全不同。',
     tip: '💡 便利店内均可购买',
     tipDesc: '鸡蛋、芝士片和饭团都在便利店冷藏区。',
@@ -44,7 +39,6 @@ const LABEL: Record<Lang, {
   },
   ja: {
     title: 'トッピング組み合わせ',
-    back: '← 戻る',
     intro: 'コンビニのトッピングを一つ足すだけで、まったく別のラーメンに。',
     tip: '💡 コンビニで全部そろう',
     tipDesc: '卵、チーズスライス、おにぎりはどのコンビニの冷蔵コーナーにもあります。',
@@ -92,18 +86,11 @@ function parseToppings(raw: string): Topping[] {
 
 export default function ToppingsView({ combos }: { combos: ToppingCombo[] }) {
   const { lang } = useLang()
-  const router = useRouter()
   const L = LABEL[lang]
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => router.push('/')} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
-          <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
-          <div className="w-12" />
-        </div>
-      </header>
+      <NavBar />
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <p className="text-sm text-gray-600 leading-relaxed">{L.intro}</p>
@@ -140,7 +127,6 @@ export default function ToppingsView({ combos }: { combos: ToppingCombo[] }) {
           <p className="text-xs text-amber-700 leading-relaxed">{L.whereDesc}</p>
         </div>
       </main>
-      <PageFooter />
     </div>
   )
 }

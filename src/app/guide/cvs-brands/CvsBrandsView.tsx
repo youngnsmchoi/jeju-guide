@@ -1,22 +1,19 @@
 'use client'
 // 한국 편의점 브랜드 소개 — 외국인 여행자용
 
-import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
-import PageFooter from '@/components/PageFooter'
+import NavBar from '@/components/NavBar'
 
 const LABEL: Record<Lang, {
   title: string
   subtitle: string
-  back: string
   commonTitle: string
   commonFeatures: string[]
 }> = {
   ko: {
     title: '편의점 브랜드',
     subtitle: '한국 대표 편의점 4곳',
-    back: '← 뒤로',
     commonTitle: '모든 편의점 공통 특징',
     commonFeatures: [
       '24시간 운영 (일부 매장 제외)',
@@ -29,7 +26,6 @@ const LABEL: Record<Lang, {
   en: {
     title: 'Convenience Store Brands',
     subtitle: '4 major Korean convenience stores',
-    back: '← Back',
     commonTitle: 'What all convenience stores have',
     commonFeatures: [
       'Open 24 hours (most locations)',
@@ -42,7 +38,6 @@ const LABEL: Record<Lang, {
   zh: {
     title: '便利店品牌',
     subtitle: '韩国四大连锁便利店',
-    back: '← 返回',
     commonTitle: '所有便利店共同特点',
     commonFeatures: [
       '24小时营业（部分门店除外）',
@@ -55,7 +50,6 @@ const LABEL: Record<Lang, {
   ja: {
     title: 'コンビニブランド',
     subtitle: '韓国の主要コンビニ4チェーン',
-    back: '← 戻る',
     commonTitle: '全コンビニ共通の特徴',
     commonFeatures: [
       '24時間営業（一部店舗を除く）',
@@ -163,21 +157,11 @@ const BRANDS: Brand[] = [
 
 export default function CvsBrandsView() {
   const { lang } = useLang()
-  const router = useRouter()
   const L = LABEL[lang]
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => router.push('/')} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
-          <div className="text-center">
-            <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
-            <p className="text-xs text-gray-400">{L.subtitle}</p>
-          </div>
-          <div className="w-12" />
-        </div>
-      </header>
+      <NavBar />
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         {/* 브랜드 카드 */}
@@ -209,7 +193,6 @@ export default function CvsBrandsView() {
           </ul>
         </div>
       </main>
-      <PageFooter />
     </div>
   )
 }

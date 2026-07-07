@@ -2,21 +2,20 @@
 // 나라별 인기 한국 라면 — DB 연동, 국가 선택 후 라면 리스트 표시
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import type { CountryPick } from '@/app/admin/CountryPicksAdmin'
-import PageFooter from '@/components/PageFooter'
+import NavBar from '@/components/NavBar'
 
 const LABEL: Record<Lang, {
-  title: string; back: string; intro: string; selectPrompt: string
+  title: string; intro: string; selectPrompt: string
   source: string; rank: string; score: string; comingSoon: string
   popularityLegend: string; refSites: string
 }> = {
-  ko: { title: '나라별 인기 라면', back: '← 뒤로', intro: '내 나라 사람들은 어떤 한국 라면을 좋아할까요?', selectPrompt: '나라를 선택하세요', source: '출처', rank: '위', score: '점', comingSoon: '준비 중', popularityLegend: '🔥🔥🔥 매우 인기   🔥🔥 인기   🔥 보통', refSites: '참고 사이트' },
-  en: { title: 'Popular Ramen by Country', back: '← Back', intro: 'What Korean ramen do people from your country love?', selectPrompt: 'Select your country', source: 'Source', rank: '#', score: 'pts', comingSoon: 'Coming soon', popularityLegend: '🔥🔥🔥 Very popular   🔥🔥 Popular   🔥 Moderate', refSites: 'Reference sites' },
-  zh: { title: '各国人气拉面', back: '← 返回', intro: '你的国家的人喜欢哪款韩国拉面？', selectPrompt: '选择国家', source: '来源', rank: '位', score: '分', comingSoon: '即将推出', popularityLegend: '🔥🔥🔥 非常热门   🔥🔥 热门   🔥 一般', refSites: '参考网站' },
-  ja: { title: '国別人気ラーメン', back: '← 戻る', intro: '自分の国の人はどんな韓国ラーメンが好き？', selectPrompt: '国を選んでください', source: '出典', rank: '位', score: '点', comingSoon: '準備中', popularityLegend: '🔥🔥🔥 大人気   🔥🔥 人気   🔥 普通', refSites: '参考サイト' },
+  ko: { title: '나라별 인기 라면', intro: '내 나라 사람들은 어떤 한국 라면을 좋아할까요?', selectPrompt: '나라를 선택하세요', source: '출처', rank: '위', score: '점', comingSoon: '준비 중', popularityLegend: '🔥🔥🔥 매우 인기   🔥🔥 인기   🔥 보통', refSites: '참고 사이트' },
+  en: { title: 'Popular Ramen by Country', intro: 'What Korean ramen do people from your country love?', selectPrompt: 'Select your country', source: 'Source', rank: '#', score: 'pts', comingSoon: 'Coming soon', popularityLegend: '🔥🔥🔥 Very popular   🔥🔥 Popular   🔥 Moderate', refSites: 'Reference sites' },
+  zh: { title: '各国人气拉面', intro: '你的国家的人喜欢哪款韩国拉面？', selectPrompt: '选择国家', source: '来源', rank: '位', score: '分', comingSoon: '即将推出', popularityLegend: '🔥🔥🔥 非常热门   🔥🔥 热门   🔥 一般', refSites: '参考网站' },
+  ja: { title: '国別人気ラーメン', intro: '自分の国の人はどんな韓国ラーメンが好き？', selectPrompt: '国を選んでください', source: '出典', rank: '位', score: '点', comingSoon: '準備中', popularityLegend: '🔥🔥🔥 大人気   🔥🔥 人気   🔥 普通', refSites: '参考サイト' },
 }
 
 // 나라별 참고 사이트 (여러 개일 경우 여기에 추가)
@@ -50,7 +49,6 @@ const COMING_SOON_COUNTRIES: { flag: string; name: Record<Lang, string> }[] = []
 
 export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
   const { lang } = useLang()
-  const router = useRouter()
   const L = LABEL[lang]
   const [selected, setSelected] = useState<string | null>(null)
 
@@ -69,13 +67,7 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => router.push('/')} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
-          <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
-          <div className="w-12" />
-        </div>
-      </header>
+      <NavBar />
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-5">
         <p className="text-sm text-gray-600 leading-relaxed">{L.intro}</p>
@@ -180,7 +172,6 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
           </div>
         )}
       </main>
-      <PageFooter />
     </div>
   )
 }

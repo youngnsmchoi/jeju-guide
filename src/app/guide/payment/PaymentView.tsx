@@ -3,15 +3,13 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
-import PageFooter from '@/components/PageFooter'
+import NavBar from '@/components/NavBar'
 
 const LABEL: Record<Lang, {
   title: string
   subtitle: string
-  back: string
   steps: { emoji: string; title: string; desc: string }[]
   bagTitle: string
   bagNote: string
@@ -29,7 +27,6 @@ const LABEL: Record<Lang, {
   en: {
     title: 'How to Pay',
     subtitle: 'At a Korean convenience store',
-    back: '← Back',
     steps: [
       { emoji: '🛒', title: 'Pick your items', desc: 'Choose what you want from the shelves.' },
       { emoji: '🧾', title: 'Bring to the counter', desc: 'Hand your items to the cashier.' },
@@ -52,7 +49,6 @@ const LABEL: Record<Lang, {
   ko: {
     title: '결제 방법',
     subtitle: '편의점 이용 가이드',
-    back: '← 뒤로',
     steps: [
       { emoji: '🛒', title: '상품 고르기', desc: '진열대에서 원하는 상품을 고르세요.' },
       { emoji: '🧾', title: '계산대로 전달', desc: '점원에게 물건을 건네세요.' },
@@ -75,7 +71,6 @@ const LABEL: Record<Lang, {
   zh: {
     title: '如何付款',
     subtitle: '便利店使用指南',
-    back: '← 返回',
     steps: [
       { emoji: '🛒', title: '选择商品', desc: '从货架上挑选您想要的商品。' },
       { emoji: '🧾', title: '拿到收银台', desc: '将商品递给收银员。' },
@@ -98,7 +93,6 @@ const LABEL: Record<Lang, {
   ja: {
     title: 'お会計の方法',
     subtitle: 'コンビニ利用ガイド',
-    back: '← 戻る',
     steps: [
       { emoji: '🛒', title: '商品を選ぶ', desc: '棚から欲しい商品を選んでください。' },
       { emoji: '🧾', title: 'レジへ持っていく', desc: '店員に商品を渡してください。' },
@@ -122,22 +116,12 @@ const LABEL: Record<Lang, {
 
 export default function PaymentView() {
   const { lang } = useLang()
-  const router = useRouter()
   const L = LABEL[lang]
   const [overlay, setOverlay] = useState<string | null>(null)
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => router.push('/')} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
-          <div className="text-center">
-            <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
-            <p className="text-xs text-gray-400">{L.subtitle}</p>
-          </div>
-          <div className="w-12" />
-        </div>
-      </header>
+      <NavBar />
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 space-y-4">
         {/* 4단계 */}
@@ -183,8 +167,6 @@ export default function PaymentView() {
           <p className="text-xs text-red-500 mt-1">{L.warningDesc}</p>
         </div>
       </main>
-      <PageFooter />
-
       {/* 전체화면 오버레이 */}
       {overlay && (
         <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center px-8"

@@ -1,14 +1,12 @@
 'use client'
 // 귀국 후 한국 라면을 해외에서 구매할 수 있는 쇼핑 채널 안내
 
-import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
-import PageFooter from '@/components/PageFooter'
+import NavBar from '@/components/NavBar'
 
 const LABEL: Record<Lang, {
   title: string
-  back: string
   intro: string
   online: string
   offline: string
@@ -17,7 +15,6 @@ const LABEL: Record<Lang, {
 }> = {
   ko: {
     title: '해외에서 라면 사기',
-    back: '← 뒤로',
     intro: '제주에서 맛있게 먹은 라면, 집에서도 먹고 싶다면?',
     online: '🌐 온라인 구매',
     offline: '🏪 오프라인 구매',
@@ -26,7 +23,6 @@ const LABEL: Record<Lang, {
   },
   en: {
     title: 'Buy Ramen at Home',
-    back: '← Back',
     intro: 'Loved the ramen in Jeju? Here\'s where to find it back home.',
     online: '🌐 Online',
     offline: '🏪 In-store',
@@ -35,7 +31,6 @@ const LABEL: Record<Lang, {
   },
   zh: {
     title: '回国后买拉面',
-    back: '← 返回',
     intro: '在济州吃到的拉面，回家也想吃？',
     online: '🌐 网购',
     offline: '🏪 实体店',
@@ -44,7 +39,6 @@ const LABEL: Record<Lang, {
   },
   ja: {
     title: '海外でラーメンを買う',
-    back: '← 戻る',
     intro: '済州で食べたラーメン、帰国後も食べたいなら？',
     online: '🌐 ネット通販',
     offline: '🏪 実店舗',
@@ -210,18 +204,11 @@ const OFFLINE_STORES: OfflineStore[] = [
 
 export default function BuyOverseasView() {
   const { lang } = useLang()
-  const router = useRouter()
   const L = LABEL[lang]
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => router.push('/')} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
-          <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
-          <div className="w-12" />
-        </div>
-      </header>
+      <NavBar />
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-5">
 
@@ -279,7 +266,6 @@ export default function BuyOverseasView() {
         </div>
 
       </main>
-      <PageFooter />
     </div>
   )
 }

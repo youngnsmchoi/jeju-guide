@@ -1,14 +1,12 @@
 'use client'
 // 상세 화면 렌더링 — 사진/영상 + 설명 + 지도 연동 버튼
 
-import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import { getTitle, getContent } from '@/lib/types'
 import type { Item, Category, Lang, RamenItem } from '@/lib/types'
 import BlockRenderer from '@/components/BlockRenderer'
 import RamenList from '@/components/RamenList'
-import PageFooter from '@/components/PageFooter'
-import LangSelector from '@/components/LangSelector'
+import NavBar from '@/components/NavBar'
 
 const MAP_LABELS: Record<Lang, { kakao: string; naver: string; google: string }> = {
   ko: { kakao: '카카오맵', naver: '네이버맵', google: '구글맵' },
@@ -24,7 +22,6 @@ function getYoutubeId(url: string): string | null {
 
 export default function GuideView({ item, category, ramenItems }: { item: Item; category: Category | null; ramenItems: RamenItem[] | null }) {
   const { lang } = useLang()
-  const router = useRouter()
 
   const mapLabels = MAP_LABELS[lang]
   const youtubeId = item.video_url ? getYoutubeId(item.video_url) : null
@@ -32,18 +29,7 @@ export default function GuideView({ item, category, ramenItems }: { item: Item; 
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* 헤더 */}
-      <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button
-            onClick={() => router.push('/')}
-            className="flex items-center gap-1 text-sm text-gray-500 hover:text-emerald-600"
-          >
-            ← 홈
-          </button>
-          <LangSelector />
-        </div>
-      </header>
+      <NavBar />
 
       <main className="flex-1 max-w-lg mx-auto w-full">
         {/* 제목 */}
@@ -123,7 +109,6 @@ export default function GuideView({ item, category, ramenItems }: { item: Item; 
           </div>
         )}
       </main>
-      <PageFooter />
     </div>
   )
 }

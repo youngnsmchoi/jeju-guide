@@ -1,38 +1,32 @@
 'use client'
 // Best 5 추천 — 운영자 픽 라면 순위 카드 (DB 연동)
 
-import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
-import PageFooter from '@/components/PageFooter'
+import NavBar from '@/components/NavBar'
 
 const LABEL: Record<Lang, {
   title: string
-  back: string
   intro: string
   badge: string
 }> = {
   ko: {
     title: 'Best 5 추천',
-    back: '← 뒤로',
     intro: '편의점에서 꼭 먹어봐야 할 라면 5개를 골랐습니다.',
     badge: '운영자 픽',
   },
   en: {
     title: 'Best 5 Picks',
-    back: '← Back',
     intro: '5 ramen you must try at a convenience store.',
     badge: "Editor's Pick",
   },
   zh: {
     title: 'Best 5 推荐',
-    back: '← 返回',
     intro: '在便利店必须尝试的5款拉面。',
     badge: '编辑推荐',
   },
   ja: {
     title: 'Best 5 おすすめ',
-    back: '← 戻る',
     intro: 'コンビニで絶対食べてほしいラーメン5選。',
     badge: 'エディターズピック',
   },
@@ -66,18 +60,11 @@ const MEDAL = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣']
 
 export default function Best5View({ picks }: { picks: Best5Pick[] }) {
   const { lang } = useLang()
-  const router = useRouter()
   const L = LABEL[lang]
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => router.push('/')} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
-          <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
-          <div className="w-12" />
-        </div>
-      </header>
+      <NavBar />
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <div className="flex items-center gap-2">
@@ -107,7 +94,6 @@ export default function Best5View({ picks }: { picks: Best5Pick[] }) {
           </div>
         ))}
       </main>
-      <PageFooter />
     </div>
   )
 }

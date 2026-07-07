@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
-import PageFooter from '@/components/PageFooter'
+import NavBar from '@/components/NavBar'
 
 const COUNTRIES = [
   { code: 'china',       flag: '🇨🇳', label: 'China' },
@@ -318,27 +318,22 @@ export default function RamenLogView({ items }: { items: RamenItem[] }) {
 
   if (done) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 text-center">
-        <div className="text-5xl mb-4">🍜</div>
-        <h2 className="text-xl font-bold text-gray-900 mb-2">{L.done}</h2>
-        <p className="text-sm text-gray-500 mb-8">{L.doneMsg}</p>
-        <button onClick={() => router.push('/')}
-          className="bg-emerald-600 text-white px-8 py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors">
-          {L.back}
-        </button>
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <NavBar />
+        <div className="flex-1 flex flex-col items-center justify-center px-4 text-center">
+          <div className="text-5xl mb-4">🍜</div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">{L.done}</h2>
+          <p className="text-sm text-gray-500 mb-8">{L.doneMsg}</p>
+        </div>
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => router.push('/')} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
-          <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
-          <div className="w-12" />
-        </div>
-        <div className="max-w-lg mx-auto flex gap-2 mt-2">
+      <NavBar />
+      <div className="bg-white border-b border-gray-100 px-4 py-2">
+        <div className="max-w-lg mx-auto flex gap-2">
           <button onClick={() => setTab('log')}
             className={`flex-1 py-1.5 rounded-xl text-sm font-medium transition-colors
               ${tab === 'log' ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
@@ -350,7 +345,7 @@ export default function RamenLogView({ items }: { items: RamenItem[] }) {
             {L.tabStats}
           </button>
         </div>
-      </header>
+      </div>
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 space-y-6">
         {tab === 'stats' && <StatsTab lang={lang} />}
@@ -435,7 +430,6 @@ export default function RamenLogView({ items }: { items: RamenItem[] }) {
           </>
         )}
       </main>
-      <PageFooter />
     </div>
   )
 }
