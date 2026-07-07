@@ -2,6 +2,7 @@
 // 라면 레코드를 세로 스크롤 카드 목록으로 렌더링
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Clock } from 'lucide-react'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
@@ -98,6 +99,13 @@ const OFFICIAL_PAGE_LABEL: Record<Lang, string> = {
   ja: '📋 製品詳細情報',
 }
 
+const LOG_LABEL: Record<Lang, string> = {
+  ko: '📝 먹어봤어요',
+  en: '📝 I tried this',
+  zh: '📝 我吃过了',
+  ja: '📝 食べました',
+}
+
 const SPICY_GUIDE: Record<Lang, { title: string; levels: { icon: string; label: string; desc: string }[] }> = {
   ko: {
     title: '🌶️ 맵기 기준',
@@ -157,6 +165,7 @@ function SpicyLevel({ level }: { level: number }) {
 
 
 export default function RamenList({ items, lang }: { items: RamenItem[]; lang: Lang }) {
+  const router = useRouter()
   const [sortBySpicy, setSortBySpicy] = useState(false)
   const [typeFilter, setTypeFilter] = useState<'all' | 'cup' | 'bag'>('all')
   const [query, setQuery] = useState('')
@@ -342,6 +351,12 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
                 )}
               </p>
             )}
+
+            <button
+              onClick={() => router.push(`/ramen-log?ramen_id=${item.id}`)}
+              className="w-full text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 hover:bg-gray-100 transition-colors text-left">
+              {LOG_LABEL[lang]}
+            </button>
 
           </div>
         </div>
