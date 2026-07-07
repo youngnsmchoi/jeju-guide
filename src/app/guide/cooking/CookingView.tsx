@@ -109,6 +109,33 @@ const BAG_STEPS: Record<Lang, { title: string; desc: string }[]> = {
   ],
 }
 
+const DRY_STEPS: Record<Lang, { title: string; desc: string }[]> = {
+  ko: [
+    { title: '물 적게 끓이기', desc: '봉지라면보다 물을 적게 넣으세요. (약 100~150ml 적게)' },
+    { title: '면만 넣기', desc: '물이 끓으면 면만 넣으세요. 스프는 아직 넣지 마세요.' },
+    { title: '물 따라내기', desc: '면이 익으면 물을 최대한 따라내세요. 조금만 남겨도 됩니다.' },
+    { title: '소스 비벼서 완성', desc: '스프·소스를 넣고 면에 골고루 비벼서 바로 드세요.' },
+  ],
+  en: [
+    { title: '1. Boil Less Water', desc: 'Use less water than for regular bag ramen. (Approx. 100~150ml less)' },
+    { title: '2. Add Noodle Only', desc: 'Once boiling, add only the noodles. Save the seasoning for later.' },
+    { title: '3. Drain Water', desc: 'Once noodles are cooked, drain most of the water, leaving just a little.' },
+    { title: '4. Mix Sauce & Serve', desc: 'Add the seasoning sauce and mix thoroughly until fully coated. Serve and enjoy.' },
+  ],
+  zh: [
+    { title: '1. 少加水', desc: '比普通袋面少加100~150ml水。' },
+    { title: '2. 只放面条', desc: '水开后只放面条，暂时不放调料包。' },
+    { title: '3. 倒掉水', desc: '面条煮熟后，把水大部分倒掉，留一点点即可。' },
+    { title: '4. 拌酱享用', desc: '加入调料酱，充分拌匀后立即享用。' },
+  ],
+  ja: [
+    { title: '1. 水を少なめに沸かす', desc: '袋麺より水を少なめに。(約100〜150ml少なく)' },
+    { title: '2. 麺だけ入れる', desc: '沸騰したら麺だけ入れてください。スープの素はまだ入れません。' },
+    { title: '3. 水を切る', desc: '麺が茹で上がったら、水をできるだけ切ってください。少し残してもOK。' },
+    { title: '4. ソースを混ぜて完成', desc: 'スープの素・ソースを入れて麺全体によく混ぜ、すぐにお召し上がりください。' },
+  ],
+}
+
 const TABS: Tab[] = ['cup', 'bag', 'dry']
 
 function TabContent({ item, lang, emptyEmoji, comingSoon }: {
@@ -214,7 +241,22 @@ export default function CookingView({ cupItem, bagItem, dryItem }: {
             ))}
           </div>
         )}
-        {tab === 'dry' && <TabContent item={dryItem} lang={lang} emptyEmoji="🥢" comingSoon={L.comingSoon} />}
+        {tab === 'dry' && (
+          <div className="space-y-4">
+            {DRY_STEPS[lang].map((step, i) => (
+              <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <img src={`/cooking/dry-${i + 1}.png`} alt={step.title} className="w-full object-cover" />
+                <div className="px-4 py-3 flex gap-3 items-start">
+                  <span className="shrink-0 w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center text-xs font-bold">{i + 1}</span>
+                  <div>
+                    <p className="text-sm font-bold text-gray-900">{step.title}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{step.desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </main>
       <PageFooter />
     </div>
