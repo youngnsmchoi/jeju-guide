@@ -7,7 +7,7 @@ import { LangProvider } from '@/context/LangContext'
 const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'K-Ramen Picks — Jeju Convenience Store Ramen Guide',
+  title: 'K-Ramen Picks',
   description: 'Find the best Korean instant ramen at Jeju convenience stores. Spice levels, prices, cooking tips, and where to buy overseas.',
   openGraph: {
     title: 'K-Ramen Picks',
