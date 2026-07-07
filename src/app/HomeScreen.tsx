@@ -4,13 +4,7 @@
 import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
-
-const LANG_LABELS: { code: Lang; label: string }[] = [
-  { code: 'ko', label: '한국어' },
-  { code: 'en', label: 'English' },
-  { code: 'zh', label: '中文' },
-  { code: 'ja', label: '日本語' },
-]
+import LangSelector from '@/components/LangSelector'
 
 const HERO: Record<Lang, { title: string; sub: string }> = {
   ko: { title: 'K-Ramen Picks', sub: '여행자를 위한 K-Ramen 완전 가이드' },
@@ -211,7 +205,7 @@ const GROUPS: Group[] = [
 ]
 
 export default function HomeScreen() {
-  const { lang, setLang } = useLang()
+  const { lang } = useLang()
   const router = useRouter()
 
   const handleShare = () => {
@@ -229,15 +223,7 @@ export default function HomeScreen() {
       <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <h1 className="text-sm font-bold text-gray-800">{HERO[lang].title}</h1>
-          <div className="flex gap-2">
-            {LANG_LABELS.map(l => (
-              <button key={l.code} onClick={() => setLang(l.code)}
-                className={`text-xs px-2 py-0.5 rounded-full font-medium transition-colors
-                  ${lang === l.code ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-                {l.label}
-              </button>
-            ))}
-          </div>
+          <LangSelector />
         </div>
       </header>
 

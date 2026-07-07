@@ -8,13 +8,7 @@ import type { Item, Category, Lang, RamenItem } from '@/lib/types'
 import BlockRenderer from '@/components/BlockRenderer'
 import RamenList from '@/components/RamenList'
 import PageFooter from '@/components/PageFooter'
-
-const LANG_LABELS: { code: Lang; label: string }[] = [
-  { code: 'ko', label: '한국어' },
-  { code: 'en', label: 'English' },
-  { code: 'zh', label: '中文' },
-  { code: 'ja', label: '日本語' },
-]
+import LangSelector from '@/components/LangSelector'
 
 const MAP_LABELS: Record<Lang, { kakao: string; naver: string; google: string }> = {
   ko: { kakao: '카카오맵', naver: '네이버맵', google: '구글맵' },
@@ -29,7 +23,7 @@ function getYoutubeId(url: string): string | null {
 }
 
 export default function GuideView({ item, category, ramenItems }: { item: Item; category: Category | null; ramenItems: RamenItem[] | null }) {
-  const { lang, setLang } = useLang()
+  const { lang } = useLang()
   const router = useRouter()
 
   const mapLabels = MAP_LABELS[lang]
@@ -47,18 +41,7 @@ export default function GuideView({ item, category, ramenItems }: { item: Item; 
           >
             ← 홈
           </button>
-          <div className="flex gap-2">
-            {LANG_LABELS.map((l) => (
-              <button
-                key={l.code}
-                onClick={() => setLang(l.code)}
-                className={`text-xs px-2 py-0.5 rounded-full font-medium transition-colors
-                  ${lang === l.code ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
+          <LangSelector />
         </div>
       </header>
 
