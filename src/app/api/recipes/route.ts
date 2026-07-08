@@ -14,14 +14,17 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const { ramen_id, ingredients, description, nickname, country, gender, age_group } = await req.json()
-  if (!ingredients || !description) {
+  const { ramen_id, title, ingredients, description, steps, tip, nickname, country, gender, age_group } = await req.json()
+  if (!ingredients || !steps) {
     return NextResponse.json({ error: '필수 항목 누락' }, { status: 400 })
   }
   const { error } = await supabase.from('recipes').insert({
     ramen_id: ramen_id ?? null,
+    title: title || null,
     ingredients,
-    description,
+    description: description || null,
+    steps,
+    tip: tip || null,
     nickname: nickname || null,
     country: country || null,
     gender: gender || null,

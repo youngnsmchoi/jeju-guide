@@ -90,8 +90,11 @@ export interface RamenItem {
 export interface Recipe {
   id: number
   ramen_id: number | null
+  title: string | null
   ingredients: string
-  description: string
+  description: string | null
+  steps: string | null
+  tip: string | null
   nickname: string | null
   country: string | null
   gender: string | null
