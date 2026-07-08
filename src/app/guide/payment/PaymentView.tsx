@@ -52,8 +52,8 @@ const LABEL: Record<Lang, {
       {
         emoji: '💳', title: 'Pay',
         desc: 'Card or cash — both accepted.',
-        detail: '🌏 Foreign card — you may be asked to sign regardless of amount.\n🇰🇷 Korean card — no signature needed under ₩50,000.',
-        tip: 'If asked to sign, just sign naturally on the pad.',
+        detail: '🇰🇷 Korean card — no signature needed under ₩50,000.',
+        tip: 'When the signature pad appears, sign it. Foreign cards almost always require a signature.',
         signBox: true,
       },
     ],
@@ -86,8 +86,8 @@ const LABEL: Record<Lang, {
       {
         emoji: '💳', title: '결제',
         desc: '카드 또는 현금 모두 가능합니다.',
-        detail: '🌏 해외 카드 — 금액과 관계없이 서명 요청 받을 수 있음\n🇰🇷 한국 카드 — 5만원 이하 서명 생략',
-        tip: '서명 요청 시 패드에 자연스럽게 서명하세요.',
+        detail: '🇰🇷 한국 카드 — 5만원 이하 서명 생략',
+        tip: '서명 패드가 나오면 바로 서명하세요. 외국 카드는 거의 항상 서명을 요청합니다.',
         signBox: true,
       },
     ],
@@ -120,8 +120,8 @@ const LABEL: Record<Lang, {
       {
         emoji: '💳', title: '付款',
         desc: '支持刷卡和现金付款。',
-        detail: '🌏 海外卡 — 无论金额多少都可能需要签名\n🇰🇷 韩国卡 — 5万韩元以下免签名',
-        tip: '收银员要求签名时，在签名板上自然签名即可。',
+        detail: '🇰🇷 韩国卡 — 5万韩元以下免签名',
+        tip: '签名板出现时请直接签名。外国卡几乎都需要签名。',
         signBox: true,
       },
     ],
@@ -154,8 +154,8 @@ const LABEL: Record<Lang, {
       {
         emoji: '💳', title: 'お支払い',
         desc: 'カードも現金も使えます。',
-        detail: '🌏 海外カード — 金額に関わらずサインを求められる場合あり\n🇰🇷 韓国カード — 5万ウォン以下はサイン不要',
-        tip: 'サインを求められたら、パッドに自然にサインしてください。',
+        detail: '🇰🇷 韓国カード — 5万ウォン以下はサイン不要',
+        tip: 'サインパッドが出たらすぐにサインを。海外カードはほぼ必ずサインが求められます。',
         signBox: true,
       },
     ],
@@ -213,19 +213,21 @@ export default function PaymentView() {
               </div>
             )}
 
-            {/* 카드 단말기 이미지 */}
-            {step.signBox && (
-              <div className="pl-10">
-                <div className="rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center p-2">
-                  <Image src="/card-reader.png" alt="card reader" width={200} height={130} className="object-contain mix-blend-multiply" />
-                </div>
-              </div>
-            )}
-
             {/* 팁 */}
             {step.tip && (
               <div className="pl-10">
-                <p className="text-xs text-emerald-600 font-medium">💡 {step.tip}</p>
+                {step.signBox ? (
+                  <>
+                    <div className="bg-amber-50 border border-amber-300 rounded-xl px-4 py-3 mb-2">
+                      <p className="text-sm font-bold text-amber-800">✍️ {step.tip}</p>
+                    </div>
+                    <div className="rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center p-2">
+                      <Image src="/card-reader.png" alt="card reader" width={200} height={130} className="object-contain mix-blend-multiply" />
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-xs text-emerald-600 font-medium">💡 {step.tip}</p>
+                )}
               </div>
             )}
           </div>
