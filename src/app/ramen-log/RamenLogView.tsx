@@ -7,6 +7,7 @@ import { useLang } from '@/context/LangContext'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
 import NavBar from '@/components/NavBar'
+import BottomNav from '@/components/BottomNav'
 
 const COUNTRIES = [
   { code: 'china',       flag: '🇨🇳', label: 'China' },
@@ -347,7 +348,7 @@ export default function RamenLogView({ items }: { items: RamenItem[] }) {
         </div>
       </div>
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 space-y-6">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 pb-20 space-y-6">
         {tab === 'stats' && <StatsTab lang={lang} />}
 
         {tab === 'log' && (
@@ -430,6 +431,7 @@ export default function RamenLogView({ items }: { items: RamenItem[] }) {
           </>
         )}
       </main>
+      <BottomNav />
     </div>
   )
 }

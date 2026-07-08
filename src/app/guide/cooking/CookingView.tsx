@@ -7,6 +7,7 @@ import type { Item, Lang } from '@/lib/types'
 import { getContent } from '@/lib/types'
 import BlockRenderer from '@/components/BlockRenderer'
 import NavBar from '@/components/NavBar'
+import BottomNav from '@/components/BottomNav'
 
 type Tab = 'cup' | 'bag' | 'dry'
 
@@ -189,7 +190,7 @@ export default function CookingView({ cupItem, bagItem, dryItem }: {
         </div>
       </div>
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 pb-20 space-y-4">
         {tab === 'cup' && (
           <>
             <TabContent item={cupItem} lang={lang} emptyEmoji="☕" comingSoon={L.comingSoon} />
@@ -252,6 +253,7 @@ export default function CookingView({ cupItem, bagItem, dryItem }: {
           </div>
         )}
       </main>
+      <BottomNav />
     </div>
   )
 }

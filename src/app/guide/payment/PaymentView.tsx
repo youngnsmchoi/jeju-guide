@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
+import BottomNav from '@/components/BottomNav'
 
 const LABEL: Record<Lang, {
   title: string
@@ -123,7 +124,7 @@ export default function PaymentView() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 space-y-4">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 pb-20 space-y-4">
         {/* 4단계 */}
         {L.steps.map((step, i) => (
           <div key={i} className={`bg-white rounded-2xl border p-4 flex gap-4 items-start
@@ -179,6 +180,7 @@ export default function PaymentView() {
           </button>
         </div>
       )}
+      <BottomNav />
     </div>
   )
 }
