@@ -17,6 +17,7 @@ const LABEL: Record<Lang, {
   ingredients: string; ingredientsPlaceholder: string
   steps: string; stepsPlaceholder: string
   tip: string; tipPlaceholder: string
+  sourceUrl: string; sourceUrlPlaceholder: string
   nickname: string; nicknamePlaceholder: string
   country: string; countryPlaceholder: string
   gender: string; genderM: string; genderF: string; genderO: string
@@ -32,6 +33,7 @@ const LABEL: Record<Lang, {
     ingredients: '재료 *', ingredientsPlaceholder: '예) 라면 1봉지, 대파 반 대, 계란 1개, 식용유 2큰술',
     steps: '조리 순서 *', stepsPlaceholder: '1. 냄비에 식용유를 두르고 대파를 볶습니다.\n2. 물을 붓고 스프를 넣어 끓입니다.\n3. 면을 넣고 계란을 올려 완성합니다.',
     tip: '💡 팁 (선택)', tipPlaceholder: '맛있게 만드는 비법이 있다면 알려주세요',
+    sourceUrl: '출처 URL (선택)', sourceUrlPlaceholder: '예) https://youtube.com/shorts/...',
     nickname: '닉네임 (선택)', nicknamePlaceholder: '미입력 시 익명',
     country: '국가 (선택)', countryPlaceholder: '예) Japan, USA...',
     gender: '성별 (선택)', genderM: '남', genderF: '여', genderO: '기타',
@@ -47,6 +49,7 @@ const LABEL: Record<Lang, {
     ingredients: 'Ingredients *', ingredientsPlaceholder: 'e.g. 1 pack ramen, ½ green onion, 1 egg, 2 tbsp oil',
     steps: 'Steps *', stepsPlaceholder: '1. Heat oil and stir-fry green onion.\n2. Add water and seasoning packet.\n3. Add noodles and top with egg.',
     tip: '💡 Tip (optional)', tipPlaceholder: 'Share your secret for making it extra delicious',
+    sourceUrl: 'Source URL (optional)', sourceUrlPlaceholder: 'e.g. https://youtube.com/shorts/...',
     nickname: 'Nickname (optional)', nicknamePlaceholder: 'Anonymous if blank',
     country: 'Country (optional)', countryPlaceholder: 'e.g. Japan, USA...',
     gender: 'Gender (optional)', genderM: 'Male', genderF: 'Female', genderO: 'Other',
@@ -62,6 +65,7 @@ const LABEL: Record<Lang, {
     ingredients: '食材 *', ingredientsPlaceholder: '例如：拉面1包，大葱半根，鸡蛋1个，食用油2大勺',
     steps: '做法 *', stepsPlaceholder: '1. 锅中加油，炒香大葱。\n2. 加水和调料包煮沸。\n3. 放入面条，打上鸡蛋即成。',
     tip: '💡 小贴士（可选）', tipPlaceholder: '分享您的秘诀',
+    sourceUrl: '来源链接（可选）', sourceUrlPlaceholder: '例如 https://youtube.com/shorts/...',
     nickname: '昵称（可选）', nicknamePlaceholder: '不填则显示匿名',
     country: '国家（可选）', countryPlaceholder: '例如：Japan, USA...',
     gender: '性别（可选）', genderM: '男', genderF: '女', genderO: '其他',
@@ -77,6 +81,7 @@ const LABEL: Record<Lang, {
     ingredients: '材料 *', ingredientsPlaceholder: '例）ラーメン1袋、長ねぎ半本、卵1個、油大さじ2',
     steps: '作り方 *', stepsPlaceholder: '1. 油でねぎを炒めます。\n2. 水とスープを入れて沸かします。\n3. 麺を入れて卵を乗せて完成。',
     tip: '💡 ヒント（任意）', tipPlaceholder: 'おいしく作るコツを教えてください',
+    sourceUrl: '出典URL（任意）', sourceUrlPlaceholder: '例）https://youtube.com/shorts/...',
     nickname: 'ニックネーム（任意）', nicknamePlaceholder: '未入力は匿名',
     country: '国（任意）', countryPlaceholder: '例）Japan, USA...',
     gender: '性別（任意）', genderM: '男性', genderF: '女性', genderO: 'その他',
@@ -99,6 +104,7 @@ export default function RecipeNewView({ ramenList }: { ramenList: RamenOption[] 
   const [ingredients, setIngredients] = useState('')
   const [steps, setSteps] = useState('')
   const [tip, setTip] = useState('')
+  const [sourceUrl, setSourceUrl] = useState('')
   const [nickname, setNickname] = useState('')
   const [country, setCountry] = useState('')
   const [gender, setGender] = useState('')
@@ -119,6 +125,7 @@ export default function RecipeNewView({ ramenList }: { ramenList: RamenOption[] 
         ingredients: ingredients.trim(),
         steps: steps.trim(),
         tip: tip.trim() || null,
+        source_url: sourceUrl.trim() || null,
         nickname: nickname.trim() || null,
         country: country.trim() || null,
         gender: gender || null,
@@ -204,6 +211,14 @@ export default function RecipeNewView({ ramenList }: { ramenList: RamenOption[] 
           <textarea value={tip} onChange={e => setTip(e.target.value)}
             placeholder={L.tipPlaceholder} rows={2}
             className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300 resize-none" />
+        </div>
+
+        {/* 출처 URL */}
+        <div>
+          <label className="text-xs font-bold text-gray-700 mb-1 block">{L.sourceUrl}</label>
+          <input value={sourceUrl} onChange={e => setSourceUrl(e.target.value)}
+            placeholder={L.sourceUrlPlaceholder}
+            className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300" />
         </div>
 
         {/* 닉네임 */}

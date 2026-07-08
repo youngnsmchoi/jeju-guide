@@ -150,9 +150,20 @@ export default function RecipesView() {
 
               {/* 팁 */}
               {recipe.tip && isExpanded && (
-                <div className="mx-4 mb-4 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5">
+                <div className="mx-4 mb-3 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5">
                   <p className="text-xs font-bold text-amber-700 mb-1">{L.tip}</p>
                   <p className="text-xs text-amber-700 leading-relaxed">{recipe.tip}</p>
+                </div>
+              )}
+
+              {/* 출처 URL */}
+              {recipe.source_url && isExpanded && (
+                <div className="mx-4 mb-4">
+                  <a href={recipe.source_url} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs text-red-500 hover:text-red-600 font-medium">
+                    <span className="text-base">▶</span>
+                    {recipe.source_url.includes('youtube') ? 'YouTube에서 보기' : '출처 보기'}
+                  </a>
                 </div>
               )}
 

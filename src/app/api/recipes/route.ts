@@ -14,7 +14,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const { ramen_id, title, ingredients, description, steps, tip, nickname, country, gender, age_group } = await req.json()
+  const { ramen_id, title, ingredients, description, steps, tip, source_url, nickname, country, gender, age_group } = await req.json()
   if (!ingredients || !steps) {
     return NextResponse.json({ error: '필수 항목 누락' }, { status: 400 })
   }
@@ -25,6 +25,7 @@ export async function POST(req: Request) {
     description: description || null,
     steps,
     tip: tip || null,
+    source_url: source_url || null,
     nickname: nickname || null,
     country: country || null,
     gender: gender || null,

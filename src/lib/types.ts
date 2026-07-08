@@ -95,6 +95,7 @@ export interface Recipe {
   description: string | null
   steps: string | null
   tip: string | null
+  source_url: string | null
   nickname: string | null
   country: string | null
   gender: string | null
