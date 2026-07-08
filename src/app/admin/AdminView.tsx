@@ -8,6 +8,7 @@ import RamenLogAdmin from './RamenLogAdmin'
 import Best5Admin from './Best5Admin'
 import ToppingsAdmin from './ToppingsAdmin'
 import CountryPicksAdmin from './CountryPicksAdmin'
+import RecipeAdmin from './RecipeAdmin'
 import ItemEditForm, { type ItemFormState } from './ItemEditForm'
 
 const emptyForm = (categoryId: number): ItemFormState => ({
@@ -20,7 +21,7 @@ const emptyForm = (categoryId: number): ItemFormState => ({
   blocks: [],
 })
 
-type Tab = 'ramen' | 'log' | 'best5' | 'toppings' | 'countryPicks' | { catId: number }
+type Tab = 'ramen' | 'log' | 'best5' | 'toppings' | 'countryPicks' | 'recipes' | { catId: number }
 
 function isCatTab(tab: Tab | null): tab is { catId: number } {
   return typeof tab === 'object' && tab !== null
@@ -124,6 +125,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
     { tab: 'best5' as Tab,        label: 'Best 5',     icon: '🏆' },
     { tab: 'toppings' as Tab,     label: '꿀조합',     icon: '🍳' },
     { tab: 'countryPicks' as Tab, label: '나라별 픽',  icon: '🌏' },
+    { tab: 'recipes' as Tab,      label: '레시피',     icon: '✏️' },
   ]
 
   const isActive = (tab: Tab) => JSON.stringify(activeTab) === JSON.stringify(tab)
@@ -204,6 +206,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
           {activeTab === 'best5'        && <Best5Admin />}
           {activeTab === 'toppings'     && <ToppingsAdmin />}
           {activeTab === 'countryPicks' && <CountryPicksAdmin />}
+          {activeTab === 'recipes'      && <RecipeAdmin />}
 
           {isCatTab(activeTab) && selectedCat && !form && (
             <div className="bg-white rounded-2xl p-4 shadow-sm">

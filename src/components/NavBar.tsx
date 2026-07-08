@@ -14,6 +14,7 @@ const NAV: { href: string; label: Record<Lang, string> }[] = [
   { href: '/guide/toppings',      label: { ko: '꿀조합', en: 'Combos', zh: '搭配', ja: 'トッピング' } },
   { href: '/guide/country-picks', label: { ko: '나라별', en: 'Country', zh: '各国', ja: '国別' } },
   { href: '/vibe',                label: { ko: 'Vibe', en: 'Vibe', zh: 'Vibe', ja: 'Vibe' } },
+  { href: '/recipes',             label: { ko: '레시피', en: 'Recipes', zh: '食谱', ja: 'レシピ' } },
   { href: '/ramen-log',           label: { ko: '로그', en: 'Log', zh: '记录', ja: 'ログ' } },
 ]
 

@@ -87,6 +87,21 @@ export interface RamenItem {
   ingredient_match: string | null
 }
 
+export interface Recipe {
+  id: number
+  ramen_id: number | null
+  ingredients: string
+  description: string
+  nickname: string | null
+  country: string | null
+  gender: string | null
+  age_group: string | null
+  likes: number
+  hidden: boolean
+  created_at: string
+  ramen_items?: { name_ko: string; name_en: string | null; name_zh: string | null; name_ja: string | null } | null
+}
+
 export function getRamenField(item: RamenItem, field: 'name' | 'flavor_desc' | 'comparison' | 'popularity' | 'texture', lang: Lang): string {
   return item[`${field}_${lang}`] || item[`${field}_ko`] || ''
 }
