@@ -14,6 +14,17 @@ const LABEL: Record<Lang, {
   expand: string
   warning: string
   warningDesc: string
+  cashLink: string
+  cashPopup: {
+    title: string
+    example: string
+    bills: string
+    give: string
+    change: string
+    changeAmt: string
+    note: string
+    close: string
+  }
   steps: {
     emoji: string
     title: string
@@ -22,6 +33,7 @@ const LABEL: Record<Lang, {
     tip?: string
     bagButtons?: boolean
     signBox?: boolean
+    cashGuide?: boolean
   }[]
 }> = {
   en: {
@@ -30,6 +42,17 @@ const LABEL: Record<Lang, {
     expand: 'Show',
     warning: '⚠️ Do not eat before paying',
     warningDesc: 'All items must be paid for before consuming.',
+    cashLink: '💵 How to use Korean cash →',
+    cashPopup: {
+      title: '💵 Korean Cash Guide',
+      example: 'Example total: ₩23,600',
+      bills: 'Hand the cashier:',
+      give: '💴 ₩10,000 × 3 bills',
+      change: 'You get back:',
+      changeAmt: '💰 ₩6,400',
+      note: 'Cashier will give you the change. Just hand over the bills and wait.',
+      close: 'Close',
+    },
     steps: [
       {
         emoji: '🛒', title: 'Pick your items',
@@ -55,6 +78,7 @@ const LABEL: Record<Lang, {
         detail: '🇰🇷 Korean card — no signature needed under ₩50,000.',
         tip: 'When the signature pad appears, sign it. Foreign cards almost always require a signature.',
         signBox: true,
+        cashGuide: true,
       },
     ],
   },
@@ -64,6 +88,17 @@ const LABEL: Record<Lang, {
     expand: '확대',
     warning: '⚠️ 결제 전 섭취 금지',
     warningDesc: '모든 상품은 결제 후에만 섭취 가능합니다.',
+    cashLink: '💵 한국 현금 사용법 →',
+    cashPopup: {
+      title: '💵 한국 현금 안내',
+      example: '예시 금액: ₩23,600',
+      bills: '점원에게 건네기',
+      give: '💴 만원 × 3장',
+      change: '거스름돈 받기',
+      changeAmt: '💰 6,400원',
+      note: '점원이 거스름돈을 돌려줍니다. 지폐만 건네고 기다리면 됩니다.',
+      close: '닫기',
+    },
     steps: [
       {
         emoji: '🛒', title: '상품 고르기',
@@ -89,6 +124,7 @@ const LABEL: Record<Lang, {
         detail: '🇰🇷 한국 카드 — 5만원 이하 서명 생략',
         tip: '서명 패드가 나오면 바로 서명하세요. 외국 카드는 거의 항상 서명을 요청합니다.',
         signBox: true,
+        cashGuide: true,
       },
     ],
   },
@@ -98,6 +134,17 @@ const LABEL: Record<Lang, {
     expand: '放大',
     warning: '⚠️ 付款前请勿食用',
     warningDesc: '所有商品必须付款后才能食用。',
+    cashLink: '💵 韩元现金使用指南 →',
+    cashPopup: {
+      title: '💵 韩元现金指南',
+      example: '示例金额：₩23,600',
+      bills: '递给收银员：',
+      give: '💴 ₩10,000 × 3张',
+      change: '找零：',
+      changeAmt: '💰 ₩6,400',
+      note: '收银员会找零给您。只需递上纸币等待即可。',
+      close: '关闭',
+    },
     steps: [
       {
         emoji: '🛒', title: '选择商品',
@@ -123,6 +170,7 @@ const LABEL: Record<Lang, {
         detail: '🇰🇷 韩国卡 — 5万韩元以下免签名',
         tip: '签名板出现时请直接签名。外国卡几乎都需要签名。',
         signBox: true,
+        cashGuide: true,
       },
     ],
   },
@@ -132,6 +180,17 @@ const LABEL: Record<Lang, {
     expand: '拡大',
     warning: '⚠️ 会計前の飲食禁止',
     warningDesc: 'すべての商品はお会計後にのみお召し上がりください。',
+    cashLink: '💵 韓国現金の使い方 →',
+    cashPopup: {
+      title: '💵 韓国現金ガイド',
+      example: '例：₩23,600',
+      bills: 'レジ係に渡す：',
+      give: '💴 ₩10,000 × 3枚',
+      change: 'おつり：',
+      changeAmt: '💰 ₩6,400',
+      note: 'レジ係がおつりを返してくれます。お札を渡して待つだけ。',
+      close: '閉じる',
+    },
     steps: [
       {
         emoji: '🛒', title: '商品を選ぶ',
@@ -157,15 +216,21 @@ const LABEL: Record<Lang, {
         detail: '🇰🇷 韓国カード — 5万ウォン以下はサイン不要',
         tip: 'サインパッドが出たらすぐにサインを。海外カードはほぼ必ずサインが求められます。',
         signBox: true,
+        cashGuide: true,
       },
     ],
   },
 }
 
+type OverlayType = 'bag-yes' | 'bag-no' | 'cash' | null
+
 export default function PaymentView() {
   const { lang } = useLang()
   const L = LABEL[lang]
-  const [overlay, setOverlay] = useState<string | null>(null)
+  const [overlay, setOverlay] = useState<OverlayType>(null)
+
+  const bagYesText = L.bagYes
+  const bagNoText = L.bagNo
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -192,10 +257,10 @@ export default function PaymentView() {
             {/* 봉투 버튼 */}
             {step.bagButtons && (
               <div className="space-y-2 pl-10">
-                {[L.bagYes, L.bagNo].map(text => (
-                  <div key={text} className="bg-emerald-50 rounded-xl border border-emerald-200 px-4 py-3 flex items-center justify-between gap-3">
+                {([['bag-yes', bagYesText], ['bag-no', bagNoText]] as const).map(([key, text]) => (
+                  <div key={key} className="bg-emerald-50 rounded-xl border border-emerald-200 px-4 py-3 flex items-center justify-between gap-3">
                     <p className="text-sm font-semibold text-gray-900">{text}</p>
-                    <button onClick={() => setOverlay(text)}
+                    <button onClick={() => setOverlay(key)}
                       className="shrink-0 text-xs bg-emerald-600 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-700 transition-colors">
                       {L.expand}
                     </button>
@@ -210,6 +275,17 @@ export default function PaymentView() {
                 {step.detail.split('\n').map((line, li) => (
                   <p key={li} className="text-xs text-blue-700 leading-relaxed">{line}</p>
                 ))}
+              </div>
+            )}
+
+            {/* 현금 안내 링크 */}
+            {step.cashGuide && (
+              <div className="pl-10">
+                <button
+                  onClick={() => setOverlay('cash')}
+                  className="text-xs text-emerald-700 font-semibold underline underline-offset-2 hover:text-emerald-800 transition-colors">
+                  {L.cashLink}
+                </button>
               </div>
             )}
 
@@ -241,15 +317,61 @@ export default function PaymentView() {
 
       </main>
 
-      {/* 전체화면 오버레이 */}
-      {overlay && (
+      {/* 봉투 문구 오버레이 */}
+      {(overlay === 'bag-yes' || overlay === 'bag-no') && (
         <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center px-8"
           onClick={() => setOverlay(null)}>
-          <p className="text-5xl font-bold text-gray-900 text-center leading-tight">{overlay}</p>
+          <p className="text-5xl font-bold text-gray-900 text-center leading-tight">
+            {overlay === 'bag-yes' ? bagYesText : bagNoText}
+          </p>
           <button onClick={() => setOverlay(null)}
             className="absolute top-6 right-6 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-xl hover:bg-gray-200">
             ✕
           </button>
+        </div>
+      )}
+
+      {/* 현금 안내 팝업 */}
+      {overlay === 'cash' && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center"
+          onClick={() => setOverlay(null)}>
+          <div className="bg-white rounded-t-3xl w-full max-w-lg px-6 pt-6 pb-10 space-y-5"
+            onClick={e => e.stopPropagation()}>
+
+            <div className="flex items-center justify-between">
+              <p className="text-base font-bold text-gray-900">{L.cashPopup.title}</p>
+              <button onClick={() => setOverlay(null)}
+                className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-sm hover:bg-gray-200">
+                ✕
+              </button>
+            </div>
+
+            <div className="bg-gray-50 rounded-2xl px-5 py-4 space-y-4">
+              <p className="text-sm font-semibold text-gray-700">{L.cashPopup.example}</p>
+
+              <div className="space-y-1">
+                <p className="text-xs text-gray-500 font-medium">{L.cashPopup.bills}</p>
+                <p className="text-2xl font-bold text-gray-900">{L.cashPopup.give}</p>
+                <div className="flex gap-1 pt-1">
+                  {['💴', '💴', '💴'].map((bill, i) => (
+                    <span key={i} className="text-3xl">{bill}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t border-gray-200 pt-3 space-y-1">
+                <p className="text-xs text-gray-500 font-medium">{L.cashPopup.change}</p>
+                <p className="text-2xl font-bold text-emerald-600">{L.cashPopup.changeAmt}</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-gray-400 leading-relaxed text-center">{L.cashPopup.note}</p>
+
+            <button onClick={() => setOverlay(null)}
+              className="w-full bg-gray-100 text-gray-700 py-3 rounded-2xl font-semibold hover:bg-gray-200 transition-colors">
+              {L.cashPopup.close}
+            </button>
+          </div>
         </div>
       )}
 
