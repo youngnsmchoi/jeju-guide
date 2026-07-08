@@ -129,6 +129,17 @@ export default function RecipesView() {
                 <p className="text-sm text-gray-700 leading-relaxed">{recipe.ingredients}</p>
               </div>
 
+              {/* 출처 URL — 재료 아래 항상 표시 */}
+              {recipe.source_url && (
+                <div className="px-4 pb-3">
+                  <a href={recipe.source_url} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs text-red-500 hover:text-red-600 font-medium">
+                    <span>▶</span>
+                    {recipe.source_url.includes('youtube') ? 'YouTube에서 보기' : '출처 보기'}
+                  </a>
+                </div>
+              )}
+
               {/* 조리 순서 — 펼치기/접기 */}
               {steps.length > 0 && (
                 <div className="border-t border-gray-50">
@@ -156,16 +167,6 @@ export default function RecipesView() {
                 </div>
               )}
 
-              {/* 출처 URL */}
-              {recipe.source_url && isExpanded && (
-                <div className="mx-4 mb-4">
-                  <a href={recipe.source_url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-xs text-red-500 hover:text-red-600 font-medium">
-                    <span className="text-base">▶</span>
-                    {recipe.source_url.includes('youtube') ? 'YouTube에서 보기' : '출처 보기'}
-                  </a>
-                </div>
-              )}
 
               {/* 작성자 */}
               <div className="px-4 pb-3 flex items-center gap-1 text-xs text-gray-400">
