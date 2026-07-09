@@ -8,22 +8,41 @@ import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 import BottomNav from '@/components/BottomNav'
 
-// 만원/오천원/천원권으로 결제 금액을 채우는 그리디 계산 (백원 이하는 거스름돈 처리)
-function calcBills(total: number) {
+type BillBreakdown = { fiftyK: number; tenK: number; fiveK: number; oneK: number; paid: number; change: number }
+
+function makeBreakdown(total: number, fiftyK: number, tenK: number, fiveK: number, oneK: number): BillBreakdown {
+  const paid = fiftyK * 50000 + tenK * 10000 + fiveK * 5000 + oneK * 1000
+  return { fiftyK, tenK, fiveK, oneK, paid, change: paid - total }
+}
+
+// 권종별로 어떤 지폐를 갖고 있을지 상황이 다르므로, 4가지 조합을 모두 계산해 사용자가 고르게 함
+function calcBillOptions(total: number) {
   const rounded = Math.floor(total / 100) * 100
-  const generous = Math.ceil(rounded / 10000) * 10000
 
-  const tenK = Math.floor(rounded / 10000)
-  const remainder = rounded - tenK * 10000
-  const fiveK = remainder >= 5000 ? 1 : 0
-  const afterFiveK = remainder - fiveK * 5000
+  // 1. 오만원 위주
+  const fiftyKOnly = Math.ceil(rounded / 50000)
+
+  // 2. 만원 위주 (오만원 없음)
+  const tenKOnly = Math.ceil(rounded / 10000)
+
+  // 3. 전 권종으로 딱 맞게 (오만원+만원+오천원+천원)
+  const fiftyK = Math.floor(rounded / 50000)
+  const afterFiftyK = rounded - fiftyK * 50000
+  const tenK = Math.floor(afterFiftyK / 10000)
+  const afterTenK = afterFiftyK - tenK * 10000
+  const fiveK = afterTenK >= 5000 ? 1 : 0
+  const afterFiveK = afterTenK - fiveK * 5000
   const oneK = Math.ceil(afterFiveK / 1000)
-  const exact = tenK * 10000 + fiveK * 5000 + oneK * 1000
 
-  return {
-    generous: { tenK: generous / 10000, fiveK: 0, oneK: 0, paid: generous, change: generous - total },
-    exact: { tenK, fiveK, oneK, paid: exact, change: exact - total },
-  }
+  // 4. 오천원 없이 딱 맞게 (오만원+만원+천원만)
+  const oneKNoFiveK = Math.ceil(afterTenK / 1000)
+
+  return [
+    makeBreakdown(total, fiftyKOnly, 0, 0, 0),
+    makeBreakdown(total, 0, tenKOnly, 0, 0),
+    makeBreakdown(total, fiftyK, tenK, fiveK, oneK),
+    makeBreakdown(total, fiftyK, tenK, 0, oneKNoFiveK),
+  ]
 }
 
 const LABEL: Record<Lang, {
@@ -37,10 +56,10 @@ const LABEL: Record<Lang, {
     title: string
     inputLabel: string
     inputPlaceholder: string
-    generousLabel: string
-    exactLabel: string
+    chooseLabel: string
     give: string
     change: string
+    bill50k: string
     bill10k: string
     bill5k: string
     bill1k: string
@@ -71,10 +90,10 @@ const LABEL: Record<Lang, {
       title: '💵 Korean Cash Guide',
       inputLabel: 'Enter the total on the register',
       inputPlaceholder: 'e.g. 23600',
-      generousLabel: 'Pay with round bills',
-      exactLabel: 'Pay close to exact',
+      chooseLabel: 'Choose one of 4 ways to pay',
       give: 'Hand the cashier:',
       change: 'You get back:',
+      bill50k: '50,000 KRW',
       bill10k: '10,000 KRW',
       bill5k: '5,000 KRW',
       bill1k: '1,000 KRW',
@@ -123,10 +142,10 @@ const LABEL: Record<Lang, {
       title: '💵 한국 현금 안내',
       inputLabel: 'POS 화면 금액을 입력하세요',
       inputPlaceholder: '예) 23600',
-      generousLabel: '넉넉하게 내기',
-      exactLabel: '딱 맞게 내기',
+      chooseLabel: '4가지 방법 중 선택하세요',
       give: '점원에게 건네기',
-      change: '거스름돈 받기',
+      change: '거스름돈',
+      bill50k: '오만원',
       bill10k: '만원',
       bill5k: '오천원',
       bill1k: '천원',
@@ -175,10 +194,10 @@ const LABEL: Record<Lang, {
       title: '💵 韩元现金指南',
       inputLabel: '请输入收银台显示的金额',
       inputPlaceholder: '例如 23600',
-      generousLabel: '整数支付',
-      exactLabel: '接近整数支付',
+      chooseLabel: '请选择以下4种支付方式之一',
       give: '递给收银员：',
       change: '找零：',
+      bill50k: '50,000 KRW',
       bill10k: '10,000 KRW',
       bill5k: '5,000 KRW',
       bill1k: '1,000 KRW',
@@ -227,10 +246,10 @@ const LABEL: Record<Lang, {
       title: '💵 韓国現金ガイド',
       inputLabel: 'レジ画面の金額を入力してください',
       inputPlaceholder: '例）23600',
-      generousLabel: 'きりのいい金額で払う',
-      exactLabel: 'できるだけ近い金額で払う',
+      chooseLabel: '4つの支払い方法から選んでください',
       give: 'レジ係に渡す：',
       change: 'おつり：',
+      bill50k: '50,000 KRW',
       bill10k: '10,000 KRW',
       bill5k: '5,000 KRW',
       bill1k: '1,000 KRW',
@@ -279,7 +298,7 @@ export default function PaymentView() {
   const [posInput, setPosInput] = useState('')
 
   const posAmount = parseInt(posInput.replace(/,/g, ''), 10)
-  const bills = !isNaN(posAmount) && posAmount > 0 ? calcBills(posAmount) : null
+  const billOptions = !isNaN(posAmount) && posAmount > 0 ? calcBillOptions(posAmount) : null
 
   const bagYesText = L.bagYes
   const bagNoText = L.bagNo
@@ -409,33 +428,37 @@ export default function PaymentView() {
               />
             </div>
 
-            {bills ? (
+            {billOptions ? (
               <div className="space-y-3">
-                {([
-                  ['generous', L.cashPopup.generousLabel, bills.generous],
-                  ['exact', L.cashPopup.exactLabel, bills.exact],
-                ] as const).map(([key, label, b]) => (
-                  <div key={key} className="bg-gray-50 rounded-2xl px-5 py-4 space-y-3">
-                    <p className="text-sm font-bold text-emerald-700">{label}</p>
+                <p className="text-xs font-bold text-gray-500">{L.cashPopup.chooseLabel}</p>
 
-                    <div className="space-y-1">
-                      <p className="text-xs text-gray-500 font-medium">{L.cashPopup.give}</p>
-                      <div className="flex flex-wrap gap-x-3 gap-y-1">
-                        {b.tenK > 0 && (
-                          <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill10k} × {b.tenK}</p>
-                        )}
-                        {b.fiveK > 0 && (
-                          <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill5k} × {b.fiveK}</p>
-                        )}
-                        {b.oneK > 0 && (
-                          <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill1k} × {b.oneK}</p>
-                        )}
+                {billOptions.map((b, i) => (
+                  <div key={i} className="bg-white rounded-2xl border-2 border-gray-200 px-5 py-4 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
+                        {i + 1}
                       </div>
+                      <p className="text-xs text-gray-500 font-medium">{L.cashPopup.give}</p>
                     </div>
 
-                    <div className="border-t border-gray-200 pt-2 space-y-1">
+                    <div className="flex flex-wrap gap-x-3 gap-y-1 pl-8">
+                      {b.fiftyK > 0 && (
+                        <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill50k} × {b.fiftyK}</p>
+                      )}
+                      {b.tenK > 0 && (
+                        <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill10k} × {b.tenK}</p>
+                      )}
+                      {b.fiveK > 0 && (
+                        <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill5k} × {b.fiveK}</p>
+                      )}
+                      {b.oneK > 0 && (
+                        <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill1k} × {b.oneK}</p>
+                      )}
+                    </div>
+
+                    <div className="border-t border-gray-100 pt-2 pl-8 flex items-baseline gap-2">
                       <p className="text-xs text-gray-500 font-medium">{L.cashPopup.change}</p>
-                      <p className="text-xl font-bold text-emerald-600">{b.change.toLocaleString()}{L.cashPopup.unit}</p>
+                      <p className="text-lg font-bold text-emerald-600">{b.change.toLocaleString()}{L.cashPopup.unit}</p>
                     </div>
                   </div>
                 ))}
