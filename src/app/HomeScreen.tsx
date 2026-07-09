@@ -57,6 +57,17 @@ const GROUPS: Group[] = [
         href: '/guide/payment',
       },
       {
+        emoji: '💵',
+        title: { ko: '한국 돈 안내', en: 'Korean Money Guide', zh: '韩元指南', ja: '韓国のお金' },
+        desc: {
+          ko: '지폐 구분 · 환율 변환기 · 편의점 가격 감각',
+          en: 'Banknotes · currency converter · CVS price guide',
+          zh: '纸币介绍 · 汇率换算 · 便利店价格',
+          ja: '紙幣の種類 · 換算機 · コンビニ価格',
+        },
+        href: '/guide/money',
+      },
+      {
         emoji: '🏷️',
         title: { ko: '할인 득템법', en: 'How to Save', zh: '优惠攻略', ja: 'お得な買い方' },
         desc: {
