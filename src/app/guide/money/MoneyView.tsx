@@ -103,7 +103,7 @@ const LABEL: Record<Lang, {
   ko: {
     title: '한국 돈 안내',
     billsSection: '지폐 종류',
-    billHint: '색상과 초상으로 구분하세요',
+    billHint: '숫자가 바로 금액입니다',
     equals: '장',
     converterSection: '환율 변환기',
     rateLabel: '현재 환율',
@@ -120,7 +120,7 @@ const LABEL: Record<Lang, {
   en: {
     title: 'Korean Money Guide',
     billsSection: 'Banknotes',
-    billHint: 'Tell them apart by color and portrait',
+    billHint: 'The number on the bill is the amount',
     equals: 'bills',
     converterSection: 'Currency Converter',
     rateLabel: 'Exchange rate',
@@ -137,7 +137,7 @@ const LABEL: Record<Lang, {
   zh: {
     title: '韩国货币指南',
     billsSection: '纸币种类',
-    billHint: '通过颜色和肖像区分',
+    billHint: '纸币上的数字就是金额',
     equals: '张',
     converterSection: '汇率换算器',
     rateLabel: '当前汇率',
@@ -154,7 +154,7 @@ const LABEL: Record<Lang, {
   ja: {
     title: '韓国のお金ガイド',
     billsSection: '紙幣の種類',
-    billHint: '色と肖像で見分けましょう',
+    billHint: '紙幣に書かれた数字がそのまま金額です',
     equals: '枚',
     converterSection: '為替換算機',
     rateLabel: '現在の為替レート',
@@ -212,12 +212,13 @@ export default function MoneyView() {
             <div key={bill.amount}
               className={`rounded-2xl border-2 ${bill.color} px-4 py-4 space-y-2`}>
 
-              {/* 상단: 색상 점 + KRW 표기 + 환산값 */}
+              {/* 상단: 색상 점 + 숫자(크게) + KRW(작게) + 환산값 */}
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <div className={`w-3 h-3 rounded-full shrink-0 ${bill.dot}`} />
-                  <p className={`text-xl font-black ${bill.numColor}`}>
-                    {bill.amount.toLocaleString()} KRW
+                  <p className={`font-black ${bill.numColor}`}>
+                    <span className="text-3xl">{bill.amount.toLocaleString()}</span>
+                    <span className={`text-sm font-semibold ml-1 ${bill.textColor} opacity-60`}>KRW</span>
                   </p>
                 </div>
                 <p className={`text-base font-bold ${bill.textColor} shrink-0`}>
