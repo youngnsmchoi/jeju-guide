@@ -34,8 +34,8 @@ const BILLS = [
   },
   {
     amount: 10000,
-    unitAmount: 1000,
-    unitCount: 10,
+    unitAmount: 5000,
+    unitCount: 2,
     color: 'bg-blue-50 border-blue-400',
     textColor: 'text-blue-700',
     numColor: 'text-blue-900',
