@@ -303,7 +303,6 @@ export default function MoneyView() {
           <div className="space-y-2">
             <label className="text-xs font-bold text-gray-700 block">{L.inputLabel}</label>
             <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-gray-400">₩</span>
               <input
                 type="number"
                 value={krwInput}
@@ -356,7 +355,7 @@ export default function MoneyView() {
             {COINS.map(coin => (
               <div key={coin.amount}
                 className={`rounded-full border px-4 py-2 flex items-center gap-1.5 ${coin.color}`}>
-                <span className="text-sm font-bold">₩{coin.amount}</span>
+                <span className="text-sm font-bold">{coin.amount} KRW</span>
                 <span className="text-xs opacity-60">{coin.hint[lang]}</span>
               </div>
             ))}

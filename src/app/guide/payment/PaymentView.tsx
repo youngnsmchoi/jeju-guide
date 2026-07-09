@@ -8,6 +8,24 @@ import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 import BottomNav from '@/components/BottomNav'
 
+// 만원/오천원/천원권으로 결제 금액을 채우는 그리디 계산 (백원 이하는 거스름돈 처리)
+function calcBills(total: number) {
+  const rounded = Math.floor(total / 100) * 100
+  const generous = Math.ceil(rounded / 10000) * 10000
+
+  const tenK = Math.floor(rounded / 10000)
+  const remainder = rounded - tenK * 10000
+  const fiveK = remainder >= 5000 ? 1 : 0
+  const afterFiveK = remainder - fiveK * 5000
+  const oneK = Math.ceil(afterFiveK / 1000)
+  const exact = tenK * 10000 + fiveK * 5000 + oneK * 1000
+
+  return {
+    generous: { tenK: generous / 10000, fiveK: 0, oneK: 0, paid: generous, change: generous - total },
+    exact: { tenK, fiveK, oneK, paid: exact, change: exact - total },
+  }
+}
+
 const LABEL: Record<Lang, {
   bagYes: string
   bagNo: string
@@ -17,13 +35,19 @@ const LABEL: Record<Lang, {
   cashLink: string
   cashPopup: {
     title: string
-    example: string
-    bills: string
+    inputLabel: string
+    inputPlaceholder: string
+    generousLabel: string
+    exactLabel: string
     give: string
     change: string
-    changeAmt: string
+    bill10k: string
+    bill5k: string
+    bill1k: string
     note: string
     close: string
+    empty: string
+    unit: string
   }
   steps: {
     emoji: string
@@ -45,13 +69,19 @@ const LABEL: Record<Lang, {
     cashLink: '💵 How to use Korean cash →',
     cashPopup: {
       title: '💵 Korean Cash Guide',
-      example: 'Example total: ₩23,600',
-      bills: 'Hand the cashier:',
-      give: '💴 ₩10,000 × 3 bills',
+      inputLabel: 'Enter the total on the register',
+      inputPlaceholder: 'e.g. 23600',
+      generousLabel: 'Pay with round bills',
+      exactLabel: 'Pay close to exact',
+      give: 'Hand the cashier:',
       change: 'You get back:',
-      changeAmt: '💰 ₩6,400',
+      bill10k: '10,000 KRW',
+      bill5k: '5,000 KRW',
+      bill1k: '1,000 KRW',
       note: 'Cashier will give you the change. Just hand over the bills and wait.',
       close: 'Close',
+      empty: 'Enter the amount shown on the register screen.',
+      unit: ' KRW',
     },
     steps: [
       {
@@ -91,13 +121,19 @@ const LABEL: Record<Lang, {
     cashLink: '💵 한국 현금 사용법 →',
     cashPopup: {
       title: '💵 한국 현금 안내',
-      example: '예시 금액: ₩23,600',
-      bills: '점원에게 건네기',
-      give: '💴 만원 × 3장',
+      inputLabel: 'POS 화면 금액을 입력하세요',
+      inputPlaceholder: '예) 23600',
+      generousLabel: '넉넉하게 내기',
+      exactLabel: '딱 맞게 내기',
+      give: '점원에게 건네기',
       change: '거스름돈 받기',
-      changeAmt: '💰 6,400원',
+      bill10k: '만원',
+      bill5k: '오천원',
+      bill1k: '천원',
       note: '점원이 거스름돈을 돌려줍니다. 지폐만 건네고 기다리면 됩니다.',
       close: '닫기',
+      empty: 'POS 화면에 표시된 금액을 입력하세요.',
+      unit: '원',
     },
     steps: [
       {
@@ -137,13 +173,19 @@ const LABEL: Record<Lang, {
     cashLink: '💵 韩元现金使用指南 →',
     cashPopup: {
       title: '💵 韩元现金指南',
-      example: '示例金额：₩23,600',
-      bills: '递给收银员：',
-      give: '💴 ₩10,000 × 3张',
+      inputLabel: '请输入收银台显示的金额',
+      inputPlaceholder: '例如 23600',
+      generousLabel: '整数支付',
+      exactLabel: '接近整数支付',
+      give: '递给收银员：',
       change: '找零：',
-      changeAmt: '💰 ₩6,400',
+      bill10k: '10,000 KRW',
+      bill5k: '5,000 KRW',
+      bill1k: '1,000 KRW',
       note: '收银员会找零给您。只需递上纸币等待即可。',
       close: '关闭',
+      empty: '请输入收银台屏幕上显示的金额。',
+      unit: ' KRW',
     },
     steps: [
       {
@@ -183,13 +225,19 @@ const LABEL: Record<Lang, {
     cashLink: '💵 韓国現金の使い方 →',
     cashPopup: {
       title: '💵 韓国現金ガイド',
-      example: '例：₩23,600',
-      bills: 'レジ係に渡す：',
-      give: '💴 ₩10,000 × 3枚',
+      inputLabel: 'レジ画面の金額を入力してください',
+      inputPlaceholder: '例）23600',
+      generousLabel: 'きりのいい金額で払う',
+      exactLabel: 'できるだけ近い金額で払う',
+      give: 'レジ係に渡す：',
       change: 'おつり：',
-      changeAmt: '💰 ₩6,400',
+      bill10k: '10,000 KRW',
+      bill5k: '5,000 KRW',
+      bill1k: '1,000 KRW',
       note: 'レジ係がおつりを返してくれます。お札を渡して待つだけ。',
       close: '閉じる',
+      empty: 'レジ画面に表示された金額を入力してください。',
+      unit: ' KRW',
     },
     steps: [
       {
@@ -228,6 +276,10 @@ export default function PaymentView() {
   const { lang } = useLang()
   const L = LABEL[lang]
   const [overlay, setOverlay] = useState<OverlayType>(null)
+  const [posInput, setPosInput] = useState('')
+
+  const posAmount = parseInt(posInput.replace(/,/g, ''), 10)
+  const bills = !isNaN(posAmount) && posAmount > 0 ? calcBills(posAmount) : null
 
   const bagYesText = L.bagYes
   const bagNoText = L.bagNo
@@ -335,40 +387,67 @@ export default function PaymentView() {
       {overlay === 'cash' && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center"
           onClick={() => setOverlay(null)}>
-          <div className="bg-white rounded-t-3xl w-full max-w-lg px-6 pt-6 pb-10 space-y-5"
+          <div className="bg-white rounded-t-3xl w-full max-w-lg px-6 pt-6 pb-10 space-y-5 max-h-[90vh] overflow-y-auto"
             onClick={e => e.stopPropagation()}>
 
             <div className="flex items-center justify-between">
               <p className="text-base font-bold text-gray-900">{L.cashPopup.title}</p>
               <button onClick={() => setOverlay(null)}
-                className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-sm hover:bg-gray-200">
+                className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 text-sm hover:bg-gray-300 transition-colors">
                 ✕
               </button>
             </div>
 
-            <div className="bg-gray-50 rounded-2xl px-5 py-4 space-y-4">
-              <p className="text-sm font-semibold text-gray-700">{L.cashPopup.example}</p>
-
-              <div className="space-y-1">
-                <p className="text-xs text-gray-500 font-medium">{L.cashPopup.bills}</p>
-                <p className="text-2xl font-bold text-gray-900">{L.cashPopup.give}</p>
-                <div className="flex gap-1 pt-1">
-                  {['💴', '💴', '💴'].map((bill, i) => (
-                    <span key={i} className="text-3xl">{bill}</span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="border-t border-gray-200 pt-3 space-y-1">
-                <p className="text-xs text-gray-500 font-medium">{L.cashPopup.change}</p>
-                <p className="text-2xl font-bold text-emerald-600">{L.cashPopup.changeAmt}</p>
-              </div>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-700 block">{L.cashPopup.inputLabel}</label>
+              <input
+                type="number"
+                value={posInput}
+                onChange={e => setPosInput(e.target.value)}
+                placeholder={L.cashPopup.inputPlaceholder}
+                className="w-full text-2xl font-bold text-gray-900 bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 outline-none focus:border-emerald-400"
+              />
             </div>
+
+            {bills ? (
+              <div className="space-y-3">
+                {([
+                  ['generous', L.cashPopup.generousLabel, bills.generous],
+                  ['exact', L.cashPopup.exactLabel, bills.exact],
+                ] as const).map(([key, label, b]) => (
+                  <div key={key} className="bg-gray-50 rounded-2xl px-5 py-4 space-y-3">
+                    <p className="text-sm font-bold text-emerald-700">{label}</p>
+
+                    <div className="space-y-1">
+                      <p className="text-xs text-gray-500 font-medium">{L.cashPopup.give}</p>
+                      <div className="flex flex-wrap gap-x-3 gap-y-1">
+                        {b.tenK > 0 && (
+                          <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill10k} × {b.tenK}</p>
+                        )}
+                        {b.fiveK > 0 && (
+                          <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill5k} × {b.fiveK}</p>
+                        )}
+                        {b.oneK > 0 && (
+                          <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill1k} × {b.oneK}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="border-t border-gray-200 pt-2 space-y-1">
+                      <p className="text-xs text-gray-500 font-medium">{L.cashPopup.change}</p>
+                      <p className="text-xl font-bold text-emerald-600">{b.change.toLocaleString()}{L.cashPopup.unit}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-400 text-center py-6">{L.cashPopup.empty}</p>
+            )}
 
             <p className="text-xs text-gray-400 leading-relaxed text-center">{L.cashPopup.note}</p>
 
             <button onClick={() => setOverlay(null)}
-              className="w-full bg-gray-100 text-gray-700 py-3 rounded-2xl font-semibold hover:bg-gray-200 transition-colors">
+              className="w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors">
               {L.cashPopup.close}
             </button>
           </div>
