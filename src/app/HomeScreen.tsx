@@ -213,6 +213,34 @@ const GROUPS: Group[] = [
       },
     ],
   },
+  {
+    label: { ko: '커뮤니티', en: 'Community', zh: '社区', ja: 'コミュニティ' },
+    color: 'text-violet-600',
+    sections: [
+      {
+        emoji: '✏️',
+        title: { ko: '꿀조합 레시피', en: 'Recipes', zh: '食谱', ja: 'レシピ' },
+        desc: {
+          ko: '이용자 레시피 · 좋아요 순',
+          en: 'User recipes · sorted by likes',
+          zh: '用户食谱 · 按点赞排序',
+          ja: 'ユーザーレシピ · いいね順',
+        },
+        href: '/recipes',
+      },
+      {
+        emoji: '💬',
+        title: { ko: '서비스 제안', en: 'Help Us Improve', zh: '服务反馈', ja: 'ご意見・ご提案' },
+        desc: {
+          ko: '기능 제안 · 오류 신고 · 아이디어',
+          en: 'Feature requests · bug reports · ideas',
+          zh: '功能建议 · 错误报告 · 创意',
+          ja: '機能提案 · バグ報告 · アイデア',
+        },
+        href: '/feedback',
+      },
+    ],
+  },
 ]
 
 export default function HomeScreen() {
