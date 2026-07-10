@@ -16,11 +16,13 @@ const LABEL: Record<Lang, {
   ingredients: string
   steps: string
   tip: string
+  viewOnYoutube: string
+  viewSource: string
 }> = {
-  ko: { empty: '아직 레시피가 없어요. 첫 번째로 올려보세요!', submit: '레시피 올리기', anonymous: '익명', likeBtn: '맛있겠다', ingredients: '재료', steps: '조리 순서', tip: '💡 Tip' },
-  en: { empty: 'No recipes yet. Be the first!', submit: 'Share a recipe', anonymous: 'Anonymous', likeBtn: 'Looks good!', ingredients: 'Ingredients', steps: 'Steps', tip: '💡 Tip' },
-  zh: { empty: '还没有食谱，来第一个分享吧！', submit: '分享食谱', anonymous: '匿名', likeBtn: '看起来好吃', ingredients: '食材', steps: '做法', tip: '💡 小贴士' },
-  ja: { empty: 'まだレシピがありません。最初に投稿しましょう！', submit: 'レシピを投稿', anonymous: '匿名', likeBtn: 'おいしそう！', ingredients: '材料', steps: '作り方', tip: '💡 ヒント' },
+  ko: { empty: '아직 레시피가 없어요. 첫 번째로 올려보세요!', submit: '레시피 올리기', anonymous: '익명', likeBtn: '맛있겠다', ingredients: '재료', steps: '조리 순서', tip: '💡 Tip', viewOnYoutube: 'YouTube에서 보기', viewSource: '출처 보기' },
+  en: { empty: 'No recipes yet. Be the first!', submit: 'Share a recipe', anonymous: 'Anonymous', likeBtn: 'Looks good!', ingredients: 'Ingredients', steps: 'Steps', tip: '💡 Tip', viewOnYoutube: 'Watch on YouTube', viewSource: 'View source' },
+  zh: { empty: '还没有食谱，来第一个分享吧！', submit: '分享食谱', anonymous: '匿名', likeBtn: '看起来好吃', ingredients: '食材', steps: '做法', tip: '💡 小贴士', viewOnYoutube: '在YouTube观看', viewSource: '查看来源' },
+  ja: { empty: 'まだレシピがありません。最初に投稿しましょう！', submit: 'レシピを投稿', anonymous: '匿名', likeBtn: 'おいしそう！', ingredients: '材料', steps: '作り方', tip: '💡 ヒント', viewOnYoutube: 'YouTubeで見る', viewSource: '出典を見る' },
 }
 
 const LIKED_KEY = 'liked_recipes'
@@ -136,7 +138,7 @@ export default function RecipesView() {
                   <a href={recipe.source_url} target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-xs text-red-500 hover:text-red-600 font-medium">
                     <span>▶</span>
-                    {recipe.source_url.includes('youtube') ? 'YouTube에서 보기' : '출처 보기'}
+                    {recipe.source_url.includes('youtube') ? L.viewOnYoutube : L.viewSource}
                   </a>
                 </div>
               )}

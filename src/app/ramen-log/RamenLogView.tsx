@@ -233,7 +233,7 @@ function StatsTab({ lang }: { lang: Lang }) {
       )}
 
       {/* 발자취 피드 */}
-      <p className="text-xs font-bold text-gray-400 pt-2">— 발자취</p>
+      <p className="text-xs font-bold text-gray-400 pt-2">— {L.tabStats}</p>
       {feed.length === 0 ? (
         <p className="text-center text-gray-400 py-8 text-sm">{L.noData}</p>
       ) : (

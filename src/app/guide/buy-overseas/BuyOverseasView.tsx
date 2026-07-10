@@ -13,6 +13,7 @@ const LABEL: Record<Lang, {
   offline: string
   tip: string
   tipText: string
+  goTo: string
 }> = {
   ko: {
     title: '해외에서 라면 사기',
@@ -21,6 +22,7 @@ const LABEL: Record<Lang, {
     offline: '🏪 오프라인 구매',
     tip: '💡 팁',
     tipText: '신라면, 불닭볶음면은 세계 어디서나 가장 쉽게 찾을 수 있어요. 처음 찾는다면 이 두 가지부터 검색해보세요.',
+    goTo: '바로 가기 →',
   },
   en: {
     title: 'Buy Ramen at Home',
@@ -29,6 +31,7 @@ const LABEL: Record<Lang, {
     offline: '🏪 In-store',
     tip: '💡 Tip',
     tipText: 'Shin Ramyun and Buldak (fire noodles) are the easiest to find worldwide. Start by searching for these two.',
+    goTo: 'Go →',
   },
   zh: {
     title: '回国后买拉面',
@@ -37,6 +40,7 @@ const LABEL: Record<Lang, {
     offline: '🏪 实体店',
     tip: '💡 小贴士',
     tipText: '辛拉面和火鸡面是全球最容易找到的韩国拉面。第一次找的话，先搜索这两款吧。',
+    goTo: '前往 →',
   },
   ja: {
     title: '海外でラーメンを買う',
@@ -45,6 +49,7 @@ const LABEL: Record<Lang, {
     offline: '🏪 実店舗',
     tip: '💡 ヒント',
     tipText: '辛ラーメンとブルダック（激辛麺）は世界中で一番見つけやすいです。まずこの2つから探してみましょう。',
+    goTo: '移動する →',
   },
 }
 
@@ -241,7 +246,7 @@ export default function BuyOverseasView() {
                   <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{shop.region[lang]}</span>
                 </div>
                 <p className="text-xs text-gray-500 leading-relaxed">{shop.desc[lang]}</p>
-                <p className="text-xs text-emerald-600 mt-2 font-medium">바로 가기 →</p>
+                <p className="text-xs text-emerald-600 mt-2 font-medium">{L.goTo}</p>
               </a>
             ))}
           </div>

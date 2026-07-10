@@ -9,11 +9,11 @@ import RamenList from '@/components/RamenList'
 import NavBar from '@/components/NavBar'
 import BottomNav from '@/components/BottomNav'
 
-const MAP_LABELS: Record<Lang, { kakao: string; naver: string; google: string }> = {
-  ko: { kakao: '카카오맵', naver: '네이버맵', google: '구글맵' },
-  en: { kakao: 'Kakao Map', naver: 'Naver Map', google: 'Google Map' },
-  zh: { kakao: 'Kakao地图', naver: 'Naver地图', google: '谷歌地图' },
-  ja: { kakao: 'カカオマップ', naver: 'ネイバーマップ', google: 'Googleマップ' },
+const MAP_LABELS: Record<Lang, { kakao: string; naver: string; google: string; findOnMap: string }> = {
+  ko: { kakao: '카카오맵', naver: '네이버맵', google: '구글맵', findOnMap: '지도에서 찾기' },
+  en: { kakao: 'Kakao Map', naver: 'Naver Map', google: 'Google Map', findOnMap: 'Find on Map' },
+  zh: { kakao: 'Kakao地图', naver: 'Naver地图', google: '谷歌地图', findOnMap: '在地图上查找' },
+  ja: { kakao: 'カカオマップ', naver: 'ネイバーマップ', google: 'Googleマップ', findOnMap: '地図で探す' },
 }
 
 function getYoutubeId(url: string): string | null {
@@ -80,7 +80,7 @@ export default function GuideView({ item, category, ramenItems }: { item: Item; 
         {/* 지도 버튼 */}
         {item.map_keyword && (
           <div className="px-4 pb-8">
-            <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">지도에서 찾기</p>
+            <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">{mapLabels.findOnMap}</p>
             <div className="flex gap-2">
               <a
                 href={`https://map.kakao.com/?q=${encodeURIComponent(item.map_keyword)}&panel=true`}
