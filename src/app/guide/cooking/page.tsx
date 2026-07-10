@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase'
 import type { Item } from '@/lib/types'
 import CookingView from './CookingView'
 
+export const revalidate = 60
+
 export default async function CookingPage() {
   const { data: items } = await supabase
     .from('jeju_items')

@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase'
 import type { RamenItem } from '@/lib/types'
 import VibeView from './VibeView'
 
+export const revalidate = 30
+
 export default async function VibePage() {
   const { data: ramenItems } = await supabase.from('ramen_items').select('*').order('order_num')
   return <VibeView items={(ramenItems ?? []) as RamenItem[]} />

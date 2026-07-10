@@ -4,6 +4,8 @@ import { supabase } from '@/lib/supabase'
 import type { Item, Category, RamenItem } from '@/lib/types'
 import GuideView from './GuideView'
 
+export const revalidate = 60
+
 export default async function GuidePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
 
