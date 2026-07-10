@@ -429,37 +429,34 @@ export default function PaymentView() {
             </div>
 
             {billOptions ? (
-              <div className="space-y-3">
-                <p className="text-xs font-bold text-gray-500">{L.cashPopup.chooseLabel}</p>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between px-1">
+                  <p className="text-xs font-bold text-gray-500">{L.cashPopup.chooseLabel}</p>
+                  <p className="text-xs font-bold text-gray-400">{L.cashPopup.change}</p>
+                </div>
 
                 {billOptions.map((b, i) => (
-                  <div key={i} className="bg-white rounded-2xl border-2 border-gray-200 px-5 py-4 space-y-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
-                        {i + 1}
-                      </div>
-                      <p className="text-xs text-gray-500 font-medium">{L.cashPopup.give}</p>
+                  <div key={i} className="bg-white rounded-xl border-2 border-gray-200 pl-3 pr-4 py-2.5 flex items-center gap-2.5">
+                    <div className="w-5 h-5 rounded-full bg-emerald-600 text-white text-[11px] font-bold flex items-center justify-center shrink-0">
+                      {i + 1}
                     </div>
 
-                    <div className="flex flex-wrap gap-x-3 gap-y-1 pl-8">
+                    <div className="flex-1 flex flex-wrap gap-x-2 gap-y-0.5 min-w-0">
                       {b.fiftyK > 0 && (
-                        <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill50k} × {b.fiftyK}</p>
+                        <p className="text-sm font-bold text-gray-900">{L.cashPopup.bill50k} × {b.fiftyK}</p>
                       )}
                       {b.tenK > 0 && (
-                        <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill10k} × {b.tenK}</p>
+                        <p className="text-sm font-bold text-gray-900">{L.cashPopup.bill10k} × {b.tenK}</p>
                       )}
                       {b.fiveK > 0 && (
-                        <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill5k} × {b.fiveK}</p>
+                        <p className="text-sm font-bold text-gray-900">{L.cashPopup.bill5k} × {b.fiveK}</p>
                       )}
                       {b.oneK > 0 && (
-                        <p className="text-xl font-bold text-gray-900">{L.cashPopup.bill1k} × {b.oneK}</p>
+                        <p className="text-sm font-bold text-gray-900">{L.cashPopup.bill1k} × {b.oneK}</p>
                       )}
                     </div>
 
-                    <div className="border-t border-gray-100 pt-2 pl-8 flex items-baseline gap-2">
-                      <p className="text-xs text-gray-500 font-medium">{L.cashPopup.change}</p>
-                      <p className="text-lg font-bold text-emerald-600">{b.change.toLocaleString()}{L.cashPopup.unit}</p>
-                    </div>
+                    <p className="text-sm font-bold text-emerald-600 shrink-0">{b.change.toLocaleString()}{L.cashPopup.unit}</p>
                   </div>
                 ))}
               </div>
