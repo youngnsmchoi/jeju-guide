@@ -8,17 +8,26 @@ import NavBar from '@/components/NavBar'
 import BottomNav from '@/components/BottomNav'
 
 // ramen-log 나라 목록 기반 통화 구성
+// unit: 암산 팁에서 기준으로 삼을 단위 (환율이 작은 통화는 100/1000 단위가 더 익숙함)
 const CURRENCIES = [
-  { code: 'USD', flag: '🇺🇸', label: 'USD',  symbol: '$',  defaultRate: 1513 },
-  { code: 'JPY', flag: '🇯🇵', label: 'JPY',  symbol: '¥',  defaultRate: 10.3 },
-  { code: 'CNY', flag: '🇨🇳', label: 'CNY',  symbol: '¥',  defaultRate: 209  },
-  { code: 'TWD', flag: '🇹🇼', label: 'TWD',  symbol: 'NT$', defaultRate: 46.5 },
-  { code: 'VND', flag: '🇻🇳', label: 'VND',  symbol: '₫',  defaultRate: 0.059 },
-  { code: 'THB', flag: '🇹🇭', label: 'THB',  symbol: '฿',  defaultRate: 42.5 },
-  { code: 'PHP', flag: '🇵🇭', label: 'PHP',  symbol: '₱',  defaultRate: 26.5 },
-  { code: 'EUR', flag: '🇪🇺', label: 'EUR',  symbol: '€',  defaultRate: 1680 },
+  { code: 'USD', flag: '🇺🇸', label: 'USD',  symbol: '$',  defaultRate: 1513, unit: 1 },
+  { code: 'JPY', flag: '🇯🇵', label: 'JPY',  symbol: '¥',  defaultRate: 10.3, unit: 100 },
+  { code: 'CNY', flag: '🇨🇳', label: 'CNY',  symbol: '¥',  defaultRate: 209,  unit: 1 },
+  { code: 'TWD', flag: '🇹🇼', label: 'TWD',  symbol: 'NT$', defaultRate: 46.5, unit: 1 },
+  { code: 'VND', flag: '🇻🇳', label: 'VND',  symbol: '₫',  defaultRate: 0.059, unit: 1000 },
+  { code: 'THB', flag: '🇹🇭', label: 'THB',  symbol: '฿',  defaultRate: 42.5, unit: 1 },
+  { code: 'PHP', flag: '🇵🇭', label: 'PHP',  symbol: '₱',  defaultRate: 26.5, unit: 1 },
+  { code: 'EUR', flag: '🇪🇺', label: 'EUR',  symbol: '€',  defaultRate: 1680, unit: 1 },
 ] as const
 type CurrencyCode = typeof CURRENCIES[number]['code']
+
+// 환율을 암산하기 좋은 값으로 반올림 (자릿수에 맞춰 유효숫자 1~2개로)
+function roundForMental(value: number): number {
+  if (value <= 0) return 0
+  const magnitude = Math.pow(10, Math.floor(Math.log10(value)))
+  const step = magnitude / 2
+  return Math.round(value / step) * step
+}
 
 const BILLS = [
   {
@@ -92,6 +101,8 @@ const LABEL: Record<Lang, {
   rateLabel: string
   rateEdit: string
   rateDone: string
+  rateFluctuates: string
+  mentalTip: (unitLabel: string, unitAmount: string, krwAmount: string) => string
   inputLabel: string
   inputPlaceholder: string
   currencyLabel: string
@@ -103,12 +114,14 @@ const LABEL: Record<Lang, {
   ko: {
     title: '한국 돈 안내',
     billsSection: '지폐 종류',
-    billHint: '숫자가 바로 금액입니다',
+    billHint: '한국 지폐에는 커다란 숫자가 적혀 있습니다. 그 숫자가 금액입니다.',
     equals: '장',
     converterSection: '환율 변환기',
     rateLabel: '현재 환율',
     rateEdit: '수정',
     rateDone: '완료',
+    rateFluctuates: '환율은 매일 변동됩니다.',
+    mentalTip: (unitLabel, unitAmount, krwAmount) => `대략 ${unitAmount} ${unitLabel} ≈ ${krwAmount}원`,
     inputLabel: '원화 금액을 입력하세요',
     inputPlaceholder: '예) 23600',
     currencyLabel: '통화',
@@ -120,12 +133,14 @@ const LABEL: Record<Lang, {
   en: {
     title: 'Korean Money Guide',
     billsSection: 'Banknotes',
-    billHint: 'The number on the bill is the amount',
+    billHint: 'Korean bills have a large number printed on them. That number is the amount.',
     equals: 'bills',
     converterSection: 'Currency Converter',
     rateLabel: 'Exchange rate',
     rateEdit: 'Edit',
     rateDone: 'Done',
+    rateFluctuates: 'Exchange rates change daily.',
+    mentalTip: (unitLabel, unitAmount, krwAmount) => `Roughly ${unitAmount} ${unitLabel} ≈ ${krwAmount} KRW`,
     inputLabel: 'Enter amount in Korean Won',
     inputPlaceholder: 'e.g. 23600',
     currencyLabel: 'Currency',
@@ -137,12 +152,14 @@ const LABEL: Record<Lang, {
   zh: {
     title: '韩国货币指南',
     billsSection: '纸币种类',
-    billHint: '纸币上的数字就是金额',
+    billHint: '韩国纸币上印有较大的数字，那个数字就是金额。',
     equals: '张',
     converterSection: '汇率换算器',
     rateLabel: '当前汇率',
     rateEdit: '修改',
     rateDone: '完成',
+    rateFluctuates: '汇率每天都会变动。',
+    mentalTip: (unitLabel, unitAmount, krwAmount) => `大约 ${unitAmount} ${unitLabel} ≈ ${krwAmount}韩元`,
     inputLabel: '输入韩元金额',
     inputPlaceholder: '例如 23600',
     currencyLabel: '货币',
@@ -154,12 +171,14 @@ const LABEL: Record<Lang, {
   ja: {
     title: '韓国のお金ガイド',
     billsSection: '紙幣の種類',
-    billHint: '紙幣に書かれた数字がそのまま金額です',
+    billHint: '韓国の紙幣には大きな数字が書かれています。その数字がそのまま金額です。',
     equals: '枚',
     converterSection: '為替換算機',
     rateLabel: '現在の為替レート',
     rateEdit: '編集',
     rateDone: '完了',
+    rateFluctuates: '為替レートは毎日変動します。',
+    mentalTip: (unitLabel, unitAmount, krwAmount) => `目安：${unitAmount} ${unitLabel} ≈ ${krwAmount}ウォン`,
     inputLabel: 'ウォン金額を入力',
     inputPlaceholder: '例）23600',
     currencyLabel: '通貨',
@@ -205,7 +224,7 @@ export default function MoneyView() {
         <section className="space-y-3">
           <div>
             <p className="text-base font-bold text-gray-900">{L.billsSection}</p>
-            <p className="text-xs text-gray-400 mt-0.5">{L.billHint}</p>
+            <p className="text-sm font-bold text-gray-600 mt-0.5">{L.billHint}</p>
           </div>
 
           {BILLS.map(bill => (
@@ -266,37 +285,42 @@ export default function MoneyView() {
           </div>
 
           {/* 환율 표시/수정 */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-xs text-gray-500">{L.rateLabel}</p>
-            {editingRate ? (
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500">1 {currency} =</span>
-                <input
-                  type="number"
-                  value={rateInput}
-                  onChange={e => setRateInput(e.target.value)}
-                  placeholder={String(cur.defaultRate)}
-                  className="w-24 text-xs border border-gray-300 rounded-lg px-2 py-1 text-right"
-                />
-                <span className="text-xs text-gray-500">KRW</span>
-                <button
-                  onClick={() => setEditingRate(false)}
-                  className="text-xs bg-emerald-600 text-white px-2 py-1 rounded-lg">
-                  {L.rateDone}
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <p className="text-xs font-semibold text-gray-700">
-                  1 {currency} = {rate.toLocaleString()} KRW
-                </p>
-                <button
-                  onClick={() => { setRateInput(String(rate)); setEditingRate(true) }}
-                  className="text-xs text-emerald-600 underline underline-offset-2">
-                  {L.rateEdit}
-                </button>
-              </div>
-            )}
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-xs text-gray-500">{L.rateLabel}</p>
+              {editingRate ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500">1 {currency} =</span>
+                  <input
+                    type="number"
+                    value={rateInput}
+                    onChange={e => setRateInput(e.target.value)}
+                    placeholder={String(cur.defaultRate)}
+                    className="w-24 text-xs border border-gray-300 rounded-lg px-2 py-1 text-right"
+                  />
+                  <span className="text-xs text-gray-500">KRW</span>
+                  <button
+                    onClick={() => setEditingRate(false)}
+                    className="text-xs bg-emerald-600 text-white px-2 py-1 rounded-lg">
+                    {L.rateDone}
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <p className="text-xs font-semibold text-gray-700">
+                    1 {currency} = {rate.toLocaleString()} KRW
+                  </p>
+                  <button
+                    onClick={() => { setRateInput(String(rate)); setEditingRate(true) }}
+                    className="text-xs text-emerald-600 underline underline-offset-2">
+                    {L.rateEdit}
+                  </button>
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-gray-400">
+              {L.rateFluctuates} {L.mentalTip(currency, cur.unit.toLocaleString(), roundForMental(rate * cur.unit).toLocaleString())}
+            </p>
           </div>
 
           {/* KRW 입력 → 변환 */}
