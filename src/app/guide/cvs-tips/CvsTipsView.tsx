@@ -2,14 +2,13 @@
 // 편의점 꿀팁 — 전자레인지·삼각김밥·T-money 외국인 실용 안내
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
-import PageFooter from '@/components/PageFooter'
+import NavBar from '@/components/NavBar'
+import BottomNav from '@/components/BottomNav'
 
 const LABEL: Record<Lang, {
   title: string
-  back: string
   microwave: {
     title: string
     steps: string[]
@@ -37,7 +36,6 @@ const LABEL: Record<Lang, {
 }> = {
   ko: {
     title: '편의점 꿀팁',
-    back: '← 뒤로',
     microwave: {
       title: '🔥 전자레인지 사용법',
       steps: [
@@ -78,7 +76,6 @@ const LABEL: Record<Lang, {
   },
   en: {
     title: 'CVS Tips',
-    back: '← Back',
     microwave: {
       title: '🔥 How to use the microwave',
       steps: [
@@ -119,7 +116,6 @@ const LABEL: Record<Lang, {
   },
   zh: {
     title: '便利店小贴士',
-    back: '← 返回',
     microwave: {
       title: '🔥 微波炉使用方法',
       steps: [
@@ -160,7 +156,6 @@ const LABEL: Record<Lang, {
   },
   ja: {
     title: 'コンビニお役立ち情報',
-    back: '← 戻る',
     microwave: {
       title: '🔥 電子レンジの使い方',
       steps: [
@@ -228,20 +223,14 @@ function PhraseButton({ phrase, expandLabel }: { phrase: string; expandLabel: st
 
 export default function CvsTipsView() {
   const { lang } = useLang()
-  const router = useRouter()
   const L = LABEL[lang]
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => router.push('/')} className="text-sm text-gray-500 hover:text-emerald-600">{L.back}</button>
-          <h1 className="text-sm font-bold text-gray-800">{L.title}</h1>
-          <div className="w-12" />
-        </div>
-      </header>
+      <NavBar />
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-5">
+        <h1 className="text-xl font-bold text-gray-900">{L.title}</h1>
 
         {/* 전자레인지 */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
@@ -302,7 +291,7 @@ export default function CvsTipsView() {
         </div>
 
       </main>
-      <PageFooter />
+      <BottomNav />
     </div>
   )
 }
