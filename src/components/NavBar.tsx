@@ -3,12 +3,10 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useLang } from '@/context/LangContext'
-import { LANGS } from '@/lib/langs'
+import LangSelector from './LangSelector'
 
 export default function NavBar() {
   const router = useRouter()
-  const { lang, setLang } = useLang()
   const [showTop, setShowTop] = useState(false)
 
   useEffect(() => {
@@ -41,13 +39,7 @@ export default function NavBar() {
         <div className="w-px h-4 bg-gray-200 shrink-0" />
 
         {/* 언어 선택 */}
-        {LANGS.map(l => (
-          <button key={l.code} onClick={() => setLang(l.code)}
-            className={`shrink-0 px-2 py-1.5 rounded-lg text-xs font-medium transition-colors
-              ${lang === l.code ? 'text-emerald-700 font-bold' : 'text-gray-400 hover:text-gray-600'}`}>
-            {l.code.toUpperCase()}
-          </button>
-        ))}
+        <LangSelector />
       </div>
     </header>
   )

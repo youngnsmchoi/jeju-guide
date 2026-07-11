@@ -280,7 +280,7 @@ export default function HomeScreen() {
       {/* 그룹별 섹션 카드 */}
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         {GROUPS.map((group, gi) => (
-          <div key={gi} className="bg-white rounded-2xl border border-gray-100 shadow-md p-4">
+          <div key={gi} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
             <p className={`text-xs font-bold mb-3 ${group.color}`}>{group.label[lang]}</p>
             <div className="grid grid-cols-2 gap-2">
               {group.sections.map((section, si) => {
@@ -290,7 +290,7 @@ export default function HomeScreen() {
                     key={si}
                     onClick={() => ready && router.push(section.href!)}
                     disabled={!ready}
-                    className={`rounded-xl border px-3 py-3 flex flex-col items-start gap-0.5 text-left transition-all
+                    className={`rounded-2xl border px-3 py-3 flex flex-col items-start gap-0.5 text-left transition-all
                       ${ready
                         ? 'bg-gray-50 border-gray-100 hover:border-emerald-300 hover:bg-emerald-50'
                         : 'bg-gray-50 border-gray-100 cursor-default opacity-50'}`}

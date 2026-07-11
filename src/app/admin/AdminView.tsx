@@ -105,7 +105,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
   if (!authed) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="bg-white rounded-2xl shadow p-8 w-full max-w-sm">
+        <div className="bg-white rounded-2xl shadow-sm p-8 w-full max-w-sm">
           <h1 className="text-xl font-bold text-center text-emerald-700 mb-6">관리자 로그인</h1>
           <input type="password" value={pw} onChange={e => setPw(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && login()} placeholder="비밀번호"
