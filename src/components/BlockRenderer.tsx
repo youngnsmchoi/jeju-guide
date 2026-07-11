@@ -1,6 +1,7 @@
 'use client'
 // 블록 배열을 화면에 렌더링하는 컴포넌트
 
+import Image from 'next/image'
 import type { Block, Lang, ImageSize, ImageAlign, ImagePosition, TextValign, TipVariant } from '@/lib/types'
 import { getBlockText, getBlockCaption } from '@/lib/types'
 
@@ -112,10 +113,13 @@ export default function BlockRenderer({ blocks, lang }: Props) {
           const align = block.align || 'left'
           return (
             <div key={i} className="space-y-1">
-              <img
+              <Image
                 src={block.url}
                 alt=""
-                className={`${imageSizeClass[size]} ${imageAlignClass[align]} block rounded-xl object-cover`}
+                width={800}
+                height={600}
+                sizes="(max-width: 640px) 100vw, 512px"
+                className={`${imageSizeClass[size]} ${imageAlignClass[align]} block rounded-xl object-cover h-auto`}
               />
               {getBlockCaption(block, lang) && (
                 <p className="text-xs text-gray-400 text-center">{getBlockCaption(block, lang)}</p>
@@ -130,10 +134,13 @@ export default function BlockRenderer({ blocks, lang }: Props) {
           const valign = block.valign || 'top'
           const text = getBlockText(block, lang)
           const img = (
-            <img
+            <Image
               src={block.url}
               alt=""
-              className={`${imageTextSizeClass[size]} object-cover rounded-xl flex-shrink-0 max-h-48`}
+              width={800}
+              height={600}
+              sizes="(max-width: 640px) 50vw, 340px"
+              className={`${imageTextSizeClass[size]} object-cover rounded-xl flex-shrink-0 max-h-48 h-auto`}
             />
           )
           const txt = (

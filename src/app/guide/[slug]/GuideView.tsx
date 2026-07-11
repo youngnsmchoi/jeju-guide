@@ -1,6 +1,7 @@
 'use client'
 // 상세 화면 렌더링 — 사진/영상 + 설명 + 지도 연동 버튼
 
+import Image from 'next/image'
 import { useLang } from '@/context/LangContext'
 import { getTitle, getContent } from '@/lib/types'
 import type { Item, Category, Lang, RamenItem } from '@/lib/types'
@@ -56,8 +57,8 @@ export default function GuideView({ item, category, ramenItems }: { item: Item; 
 
             {/* 이미지 (영상 없을 때) */}
             {!youtubeId && item.image_url && (
-              <div className="w-full aspect-video overflow-hidden">
-                <img src={item.image_url} alt={getTitle(item, lang)} className="w-full h-full object-cover" />
+              <div className="relative w-full aspect-video overflow-hidden">
+                <Image src={item.image_url} alt={getTitle(item, lang)} fill sizes="(max-width: 640px) 100vw, 512px" className="object-cover" priority />
               </div>
             )}
 
