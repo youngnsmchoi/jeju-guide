@@ -93,9 +93,10 @@ bg-white border-b border-gray-100 px-4 py-2
 언어 전환 버튼(텍스트 색으로 구분)과 달리, 탭 버튼은 배경색 채움으로 선택 상태를 표시합니다.
 
 ### 상단/하단 네비게이션
-- `NavBar`: `bg-white border-b border-gray-200 sticky top-0 z-20`
+- `NavBar`: `bg-white border-b border-gray-200 sticky top-0 z-20`, 내부 컨텐츠는 `max-w-lg mx-auto`로 감싸 데스크톱 넓은 화면에서도 모바일과 동일한 폭 유지 (없으면 언어 버튼이 화면 오른쪽 끝까지 밀려나 보임)
 - `BottomNav`: `fixed bottom-0 bg-white border-t border-gray-200`
 - 둘 다 "emerald = 활성/선택" 규칙 공유
+- 홈 이동은 텍스트 로고("K-Ramen Picks", 브랜드명이라 4개 언어 공통)를 클릭하는 방식. "홈"/"Home" 같은 텍스트 라벨이나 화살표 단독 버튼은 쓰지 않음.
 
 ### 언어 전환 버튼 (`LangSelector`)
 `KO / EN / ZH / JA` 형태 — 약어 텍스트 + 얇은 회색 슬래시(`/`) 구분자. 배경색 대신 텍스트 색으로 선택 상태를 표시합니다.

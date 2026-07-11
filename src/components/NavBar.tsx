@@ -17,12 +17,12 @@ export default function NavBar() {
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-20">
-      <div className="flex items-center px-3 py-2 gap-1">
-        {/* 홈 버튼 */}
+      <div className="max-w-lg mx-auto flex items-center px-3 py-2 gap-1">
+        {/* 로고 — 클릭하면 홈으로 이동 (브랜드명이라 언어 무관) */}
         <button
           onClick={() => router.push('/')}
-          className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-700 hover:bg-emerald-50 transition-colors">
-          ← 홈
+          className="shrink-0 text-sm font-bold text-gray-800 hover:text-emerald-700 transition-colors">
+          K-Ramen Picks
         </button>
 
         {/* 위로 버튼 — 스크롤 200px 이상일 때만 표시 */}
