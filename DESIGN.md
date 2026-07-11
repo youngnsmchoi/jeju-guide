@@ -67,7 +67,8 @@ jeju-guide(K-Ramen Picks)의 디자인 시스템 기준 문서입니다. 새 페
 ### 버튼
 - 풀폭 CTA: `bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors`
 - 보조 버튼: `text-sm px-4 py-2 rounded-xl`
-- 비활성 버튼: `bg-gray-100 text-gray-600 hover:bg-gray-200`
+- 비활성 버튼(항상 회색): `bg-gray-100 text-gray-600 hover:bg-gray-200`
+- 제출/CTA 버튼의 `disabled` 상태: `disabled:opacity-40 disabled:cursor-not-allowed` (사용자 페이지 기준. admin 페이지는 `disabled:opacity-50`로 별도 컨벤션)
 
 ### 팝업 / 모달
 하단 시트형이 표준입니다.

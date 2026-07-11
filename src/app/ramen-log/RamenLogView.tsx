@@ -423,7 +423,7 @@ export default function RamenLogView({ items }: { items: RamenItem[] }) {
             <div className="space-y-2 pt-2">
               {error && <p className="text-xs text-red-500 text-center">{L.error}</p>}
               <button onClick={submit} disabled={!canSubmit || submitting}
-                className="w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-40">
+                className="w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
                 {submitting ? '...' : L.submit}
               </button>
               <p className="text-xs text-gray-400 text-center leading-relaxed px-2">{L.privacy}</p>
