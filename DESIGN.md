@@ -80,6 +80,17 @@ fixed inset-0 z-50 bg-black/40 flex items-end justify-center
 ### 카드형 리스트 아이템
 `bg-white rounded-2xl border shadow-sm p-4` 안에 `flex items-center justify-between` (좌측 뱃지+제목 / 우측 점수 or 값) 구조.
 
+### 탭 버튼 (페이지 내 섹션 전환)
+`NavBar` 바로 아래, 페이지 상단에서 콘텐츠를 전환하는 탭입니다 (예: cooking의 컵라면/봉지라면/비벼먹기, ramen-log의 기록하기/발자취).
+```
+bg-white border-b border-gray-100 px-4 py-2
+  └─ max-w-lg mx-auto flex gap-2
+       └─ 각 버튼: flex-1 py-1.5 rounded-xl text-sm font-medium transition-colors
+            선택됨: bg-emerald-600 text-white
+            미선택: bg-gray-100 text-gray-500 hover:bg-gray-200
+```
+언어 전환 버튼(텍스트 색으로 구분)과 달리, 탭 버튼은 배경색 채움으로 선택 상태를 표시합니다.
+
 ### 상단/하단 네비게이션
 - `NavBar`: `bg-white border-b border-gray-200 sticky top-0 z-20`
 - `BottomNav`: `fixed bottom-0 bg-white border-t border-gray-200`
