@@ -16,7 +16,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   }
 
   const [{ data: category }, { data: ramenItems }] = await Promise.all([
-    supabase.from('jeju_categories').select('*').eq('id', item.category_id).single(),
+    supabase.from('jeju_categories').select('id').eq('id', item.category_id).single(),
     slug === 'ramen'
       ? supabase.from('ramen_items').select('*').order('order_num')
       : Promise.resolve({ data: null }),
