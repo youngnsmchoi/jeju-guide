@@ -1,0 +1,118 @@
+# DESIGN.md
+
+jeju-guide(K-Ramen Picks)의 디자인 시스템 기준 문서입니다. 새 페이지·컴포넌트를 만들 때 이 문서의 규칙을 따릅니다. 실제 코드에서 이미 쓰이고 있는 패턴을 정리한 것이라, 지금 화면에서 보이는 것과 이 문서는 일치합니다.
+
+## 디자인 아이덴티티
+
+제주를 찾는 외국인 여행자를 위한 모바일 퍼스트 실용 가이드 앱입니다. 흰 카드와 옅은 회색 배경 위에 에메랄드 그린 하나를 브랜드·CTA·활성 상태·긍정 신호 색으로 일관되게 사용하는 절제되고 신뢰감 있는 톤입니다. 화려함보다 "언어 장벽 없이 빠르게 읽히는 실용성"을 최우선 가치로 둡니다.
+
+## 색상
+
+### 브랜드 / CTA
+- `emerald-600` — 기본 CTA 버튼 배경, 강조 텍스트
+- `emerald-700` — hover, 진한 강조
+- `emerald-50` — CTA 배경의 옅은 버전(hover 배경, 성공/팁 박스)
+
+### 배경 계층
+| 계층 | 클래스 | 용도 |
+|---|---|---|
+| 페이지 최상위 | `bg-gray-50` | `<body>`, 전체 배경 |
+| 카드 / 시트 / 헤더 | `bg-white` | 카드, NavBar, BottomNav |
+| 비활성 요소 | `bg-gray-100` | 비활성 버튼, 뱃지, 원형 아이콘 배경 |
+
+### 상태색
+| 상태 | 배경 | 테두리 | 텍스트/아이콘 |
+|---|---|---|---|
+| 경고/에러 | `bg-red-50` | `border-red-200` | `text-red-700` / `text-red-500` |
+| 주의(tip warning) | `bg-amber-50` | `border-amber-300` | ⚠️ |
+| 정보(tip info) | `bg-blue-50` | `border-blue-300` | ℹ️ |
+| 성공/팁(tip) | `bg-emerald-50` | `border-emerald-200` | 💡 |
+
+### 텍스트 명도 (5단계)
+| 역할 | 클래스 |
+|---|---|
+| 제목 | `text-gray-900` |
+| 본문 | `text-gray-700` |
+| 부연 설명 | `text-gray-600` |
+| 보조 캡션 | `text-gray-500` |
+| 최하위 캡션 / 빈 상태 | `text-gray-400` |
+
+### 예외 허용
+서드파티 서비스 링크(카카오맵=노랑, 네이버맵=초록, 구글맵=파랑 등)는 각 서비스의 고유 브랜드색을 그대로 사용합니다. emerald 규칙의 예외로 취급하지 않습니다.
+
+## 타이포그래피
+
+| 크기 | 용도 |
+|---|---|
+| `text-xl` | 페이지/섹션 제목 |
+| `text-2xl` | 강조 숫자(가격, 환산값 등) |
+| `text-sm` | 본문 (가장 많이 쓰임) |
+| `text-xs` | 캡션, 라벨, 보조 텍스트 (가장 많이 쓰임) |
+
+폰트 굵기 규칙.
+- 제목: `font-bold`
+- 버튼: `font-semibold`
+- 라벨 / 뱃지 / 토글: `font-medium`
+
+## 레이아웃
+
+- 컨테이너 폭: `max-w-lg mx-auto` (사용자 페이지 전역 표준). admin 페이지만 예외로 `max-w-4xl` 사용.
+- 카드 표준: `bg-white rounded-2xl border border-gray-100 (또는 border-gray-200) shadow-sm p-4`
+  - 강조가 필요한 카드만 `border-2` 사용 (예: 결제 팝업 옵션 카드)
+  - `shadow-sm`이 기본. `shadow-md` 이상은 쓰지 않음.
+- 간격: 페이지 레벨은 `space-y-4`~`space-y-6`, 카드 내부는 `space-y-2`~`space-y-3` — 바깥 여백이 안쪽보다 넓게.
+
+## 컴포넌트 패턴
+
+### 버튼
+- 풀폭 CTA: `bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors`
+- 보조 버튼: `text-sm px-4 py-2 rounded-xl`
+- 비활성 버튼: `bg-gray-100 text-gray-600 hover:bg-gray-200`
+
+### 팝업 / 모달
+하단 시트형이 표준입니다.
+```
+fixed inset-0 z-50 bg-black/40 flex items-end justify-center
+  └─ bg-white rounded-t-3xl w-full max-w-lg px-6 pt-6 pb-10 max-h-[90vh] overflow-y-auto
+```
+닫기 버튼은 CTA 색(`bg-emerald-600`)으로 명확히 눈에 띄게 — 배경과 명도 차이가 없는 회색 버튼은 지양.
+
+### 카드형 리스트 아이템
+`bg-white rounded-2xl border shadow-sm p-4` 안에 `flex items-center justify-between` (좌측 뱃지+제목 / 우측 점수 or 값) 구조.
+
+### 상단/하단 네비게이션
+- `NavBar`: `bg-white border-b border-gray-200 sticky top-0 z-20`
+- `BottomNav`: `fixed bottom-0 bg-white border-t border-gray-200`
+- 둘 다 "emerald = 활성/선택" 규칙 공유
+
+### 언어 전환 버튼 (`LangSelector`)
+`KO / EN / ZH / JA` 형태 — 약어 텍스트 + 얇은 회색 슬래시(`/`) 구분자. 배경색 대신 텍스트 색으로 선택 상태를 표시합니다.
+```
+선택됨: text-emerald-700 font-bold
+미선택: text-gray-400 hover:text-gray-600
+구분자: text-xs text-gray-300 (버튼 사이, 클릭 불가)
+```
+전 페이지에서 `NavBar` 또는 `LangSelector` 컴포넌트를 통해서만 렌더링하고, 별도로 새로 구현하지 않습니다.
+
+## 아이콘
+
+이모지를 1급 아이콘 시스템으로 사용합니다 (🛒, 💵, 🍜 등). `lucide-react`는 설치되어 있지만 `RamenList.tsx`의 `Clock` 아이콘 한 곳만 예외적으로 사용— 새 아이콘이 필요하면 먼저 어울리는 이모지를 검토하고, 이모지로 표현하기 어려운 경우에만 lucide-react를 씁니다.
+
+## 다국어 (ko / en / zh / ja)
+
+모든 View 컴포넌트는 다음 패턴을 따릅니다.
+```ts
+const LABEL: Record<Lang, { ... }> = {
+  ko: { ... },
+  en: { ... },
+  zh: { ... },
+  ja: { ... },
+}
+const L = LABEL[lang]
+```
+언어 전환 UI는 위 "언어 전환 버튼" 절의 `LangSelector` 컴포넌트를 재사용합니다.
+
+## 알려진 예외 / 참고 사항
+
+- admin 페이지는 관리자 전용 도구 화면이라 사용자 페이지와 다른 컨테이너 폭(`max-w-4xl`)과 리스트 행 스타일(`rounded-xl`)을 씁니다. 이는 의도된 별도 컨벤션입니다.
+- `PaymentView.tsx`와 `CvsTipsView.tsx`에 있는 "문구를 화면 가득 확대해서 보여주는" 화면(`fixed inset-0 bg-white flex items-center justify-center`)은 팝업/모달이 아니라 "점원에게 보여주는 문구 확대 표시" 기능입니다. 하단 시트형 팝업 규칙과는 별개입니다.
