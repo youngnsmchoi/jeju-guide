@@ -320,24 +320,30 @@ export default function HomeScreen() {
           </div>
         )}
 
-        {GROUPS.map((group, gi) => (
-          <div key={gi} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <p className={`text-xs font-bold mb-3 ${group.color}`}>{group.label[lang]}</p>
-            <div className="grid grid-cols-2 gap-2">
-              {group.sections.map((section, si) => (
-                <SectionCard
-                  key={si}
-                  section={section}
-                  lang={lang}
-                  isFavorite={section.href !== null && (favorites ?? []).includes(section.href)}
-                  onNavigate={() => section.href && router.push(section.href)}
-                  onToggleFavorite={() => section.href && toggleFavorite(section.href)}
-                  comingSoonLabel={COMING_SOON[lang]}
-                />
-              ))}
+        {GROUPS.map((group, gi) => {
+          const visibleSections = group.sections.filter(
+            section => section.href === null || !(favorites ?? []).includes(section.href)
+          )
+          if (visibleSections.length === 0) return null
+          return (
+            <div key={gi} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+              <p className={`text-xs font-bold mb-3 ${group.color}`}>{group.label[lang]}</p>
+              <div className="grid grid-cols-2 gap-2">
+                {visibleSections.map((section, si) => (
+                  <SectionCard
+                    key={si}
+                    section={section}
+                    lang={lang}
+                    isFavorite={false}
+                    onNavigate={() => section.href && router.push(section.href)}
+                    onToggleFavorite={() => section.href && toggleFavorite(section.href)}
+                    comingSoonLabel={COMING_SOON[lang]}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </main>
     </div>
   )
