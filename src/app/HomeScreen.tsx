@@ -23,6 +23,15 @@ const MY_MENU_LABEL: Record<Lang, string> = {
   ja: '⭐ お気に入り',
 }
 
+const START_HERE_LABEL: Record<Lang, string> = {
+  ko: '처음이라면 이 순서로',
+  en: 'New here? Start with these',
+  zh: '第一次来？先看这些',
+  ja: '初めての方はこの順番で',
+}
+
+const START_HERE_HREFS = ['/guide/payment', '/guide/money', '/guide/cvs-tips']
+
 const HERO: Record<Lang, { title: string; sub: string }> = {
   ko: { title: 'Korea Convenience Store Guide', sub: '한국 편의점 이용, 막힐 때 바로 찾아보는 실전 가이드' },
   en: { title: 'Korea Convenience Store Guide', sub: "Real answers for when you're stuck at a Korean convenience store" },
@@ -281,6 +290,9 @@ export default function HomeScreen() {
   const myMenuSections = (favorites ?? [])
     .map(href => allSections.find(s => s.href === href))
     .filter((s): s is Section => s !== undefined)
+  const startHereSections = START_HERE_HREFS
+    .map(href => allSections.find(s => s.href === href))
+    .filter((s): s is Section => s !== undefined)
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -300,6 +312,29 @@ export default function HomeScreen() {
 
       {/* 그룹별 섹션 카드 */}
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
+        {startHereSections.length > 0 && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <p className="text-xs font-bold mb-3 text-gray-700">{START_HERE_LABEL[lang]}</p>
+            <div className="flex flex-col gap-2">
+              {startHereSections.map((section, i) => (
+                <div
+                  key={section.href}
+                  onClick={() => router.push(section.href!)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={e => { if (e.key === 'Enter') router.push(section.href!) }}
+                  className="rounded-xl border border-gray-100 bg-gray-50 hover:bg-emerald-50 hover:border-emerald-300 px-3 py-2.5 flex items-center gap-2 text-left transition-all cursor-pointer">
+                  <span className="shrink-0 w-5 h-5 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center">{i + 1}</span>
+                  <p className="flex-1 text-xs text-gray-900 leading-snug min-w-0 truncate">
+                    <span className="font-bold">{section.title[lang]}</span>
+                    <span className="text-gray-400"> · {section.desc[lang]}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {myMenuSections.length > 0 && (
           <div className="bg-emerald-50 rounded-2xl border border-emerald-200 shadow-sm p-4">
             <p className="text-xs font-bold mb-3 text-emerald-700">{MY_MENU_LABEL[lang]}</p>
