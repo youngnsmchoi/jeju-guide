@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Recipe, Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import BottomNav from '@/components/BottomNav'
 
 const LABEL: Record<Lang, {
   empty: string
@@ -78,7 +77,7 @@ export default function RecipesView() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 pb-20 space-y-4">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <button
           onClick={() => router.push('/recipes/new')}
           className="w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors">
@@ -182,7 +181,6 @@ export default function RecipesView() {
           )
         })}
       </main>
-      <BottomNav />
     </div>
   )
 }

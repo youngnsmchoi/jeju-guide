@@ -4,7 +4,6 @@
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import BottomNav from '@/components/BottomNav'
 
 const LABEL: Record<Lang, {
   title: string
@@ -93,7 +92,7 @@ export default function ToppingsView({ combos }: { combos: ToppingCombo[] }) {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 pb-20 space-y-4">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <p className="text-sm text-gray-600 leading-relaxed">{L.intro}</p>
 
         {combos.map((combo) => {
@@ -128,7 +127,6 @@ export default function ToppingsView({ combos }: { combos: ToppingCombo[] }) {
           <p className="text-xs text-amber-700 leading-relaxed">{L.whereDesc}</p>
         </div>
       </main>
-      <BottomNav />
     </div>
   )
 }

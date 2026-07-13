@@ -4,7 +4,6 @@
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import BottomNav from '@/components/BottomNav'
 
 const LABEL: Record<Lang, {
   title: string
@@ -120,7 +119,7 @@ export default function IngredientsView() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 pb-20 space-y-4">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         {/* 면책 문구 */}
         <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
           <p className="text-xs text-amber-700 leading-relaxed">{L.disclaimer}</p>
@@ -155,7 +154,6 @@ export default function IngredientsView() {
           {L.papago} →
         </a>
       </main>
-      <BottomNav />
     </div>
   )
 }

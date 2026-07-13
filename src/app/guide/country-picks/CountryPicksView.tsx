@@ -6,7 +6,6 @@ import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import type { CountryPick } from '@/app/admin/CountryPicksAdmin'
 import NavBar from '@/components/NavBar'
-import BottomNav from '@/components/BottomNav'
 
 const LABEL: Record<Lang, {
   title: string; intro: string; selectPrompt: string
@@ -70,7 +69,7 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 pb-20 space-y-5">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-5">
         <p className="text-sm text-gray-600 leading-relaxed">{L.intro}</p>
 
         {/* 나라 선택 */}
@@ -173,7 +172,6 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
           </div>
         )}
       </main>
-      <BottomNav />
     </div>
   )
 }

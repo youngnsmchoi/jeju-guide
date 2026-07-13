@@ -8,7 +8,6 @@ import type { Item, Category, Lang, RamenItem } from '@/lib/types'
 import BlockRenderer from '@/components/BlockRenderer'
 import RamenList from '@/components/RamenList'
 import NavBar from '@/components/NavBar'
-import BottomNav from '@/components/BottomNav'
 
 const MAP_LABELS: Record<Lang, { kakao: string; naver: string; google: string; findOnMap: string }> = {
   ko: { kakao: '카카오맵', naver: '네이버맵', google: '구글맵', findOnMap: '지도에서 찾기' },
@@ -33,7 +32,7 @@ export default function GuideView({ item, category, ramenItems }: { item: Item; 
     <div className="min-h-screen flex flex-col">
       <NavBar />
 
-      <main className="flex-1 max-w-lg mx-auto w-full pb-20">
+      <main className="flex-1 max-w-lg mx-auto w-full pb-6">
         {/* 제목 */}
         <div className="px-4 pt-6 pb-4">
           <h1 className="text-xl font-bold text-gray-900">{getTitle(item, lang)}</h1>
@@ -111,7 +110,6 @@ export default function GuideView({ item, category, ramenItems }: { item: Item; 
           </div>
         )}
       </main>
-      <BottomNav />
     </div>
   )
 }

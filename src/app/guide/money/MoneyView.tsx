@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import BottomNav from '@/components/BottomNav'
 
 // ramen-log 나라 목록 기반 통화 구성
 // defaultRate는 실시간 환율이 아니라 암산하기 좋도록 반올림한 참고용 고정값
@@ -206,7 +205,7 @@ export default function MoneyView() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 pb-20 space-y-6">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 space-y-6">
 
         {/* 지폐 카드 목록 */}
         <section className="space-y-3">
@@ -374,7 +373,6 @@ export default function MoneyView() {
 
       </main>
 
-      <BottomNav />
     </div>
   )
 }

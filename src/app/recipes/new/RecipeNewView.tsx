@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import BottomNav from '@/components/BottomNav'
 
 type RamenOption = { id: number; name_ko: string; name_en: string | null; name_zh: string | null; name_ja: string | null }
 
@@ -158,7 +157,7 @@ export default function RecipeNewView({ ramenList }: { ramenList: RamenOption[] 
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 pb-20 space-y-4">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
 
         {/* 라면 선택 */}
         <div>
@@ -269,7 +268,6 @@ export default function RecipeNewView({ ramenList }: { ramenList: RamenOption[] 
         </button>
 
       </main>
-      <BottomNav />
     </div>
   )
 }

@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import BottomNav from '@/components/BottomNav'
 
 const LABEL: Record<Lang, {
   title: string
@@ -291,7 +290,6 @@ export default function CvsTipsView() {
         </div>
 
       </main>
-      <BottomNav />
     </div>
   )
 }

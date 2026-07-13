@@ -4,7 +4,6 @@
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import BottomNav from '@/components/BottomNav'
 
 const LABEL: Record<Lang, {
   title: string
@@ -67,7 +66,7 @@ export default function Best5View({ picks }: { picks: Best5Pick[] }) {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 pb-20 space-y-4">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <div className="flex items-center gap-2">
           <p className="text-sm text-gray-600 leading-relaxed flex-1">{L.intro}</p>
           <span className="shrink-0 text-xs font-medium bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">{L.badge}</span>
@@ -95,7 +94,6 @@ export default function Best5View({ picks }: { picks: Best5Pick[] }) {
           </div>
         ))}
       </main>
-      <BottomNav />
     </div>
   )
 }

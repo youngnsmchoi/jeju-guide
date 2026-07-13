@@ -4,7 +4,6 @@
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import BottomNav from '@/components/BottomNav'
 
 const LABEL: Record<Lang, {
   title: string
@@ -164,7 +163,7 @@ export default function CvsBrandsView() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 pb-20 space-y-4">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         {/* 브랜드 카드 */}
         {BRANDS.map((brand) => (
           <div key={brand.name} className={`rounded-2xl border ${brand.borderColor} ${brand.cardBg} p-4 flex gap-4 items-start`}>
@@ -194,7 +193,6 @@ export default function CvsBrandsView() {
           </ul>
         </div>
       </main>
-      <BottomNav />
     </div>
   )
 }

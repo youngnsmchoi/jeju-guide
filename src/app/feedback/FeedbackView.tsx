@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import BottomNav from '@/components/BottomNav'
 
 type FeedbackItem = {
   id: number
@@ -244,7 +243,6 @@ export default function FeedbackView() {
             {L.backToList}
           </button>
         </main>
-        <BottomNav />
       </div>
     )
   }
@@ -253,7 +251,7 @@ export default function FeedbackView() {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <NavBar />
-        <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 pb-20 space-y-4">
+        <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
           <button onClick={() => setView('list')} className="text-sm text-gray-400 hover:text-gray-600">← {L.backToList}</button>
           <p className="text-base font-bold text-gray-900">{L.formTitle}</p>
 
@@ -310,7 +308,6 @@ export default function FeedbackView() {
             {submitting ? L.submitting : L.submit}
           </button>
         </main>
-        <BottomNav />
       </div>
     )
   }
@@ -319,7 +316,7 @@ export default function FeedbackView() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 pb-20 space-y-4">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         {/* 헤더 */}
         <div className="space-y-1">
           <p className="text-base font-bold text-gray-900">{L.pageTitle}</p>
@@ -414,7 +411,6 @@ export default function FeedbackView() {
         })}
       </main>
 
-      <BottomNav />
     </div>
   )
 }

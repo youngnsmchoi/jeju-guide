@@ -6,7 +6,6 @@ import { useState } from 'react'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import BottomNav from '@/components/BottomNav'
 
 type BillBreakdown = { fiftyK: number; tenK: number; fiveK: number; oneK: number; paid: number; change: number }
 
@@ -307,7 +306,7 @@ export default function PaymentView() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 pb-20 space-y-3">
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 space-y-3">
 
         {L.steps.map((step, i) => (
           <div key={i} className={`bg-white rounded-2xl border p-4 space-y-3
@@ -474,7 +473,6 @@ export default function PaymentView() {
         </div>
       )}
 
-      <BottomNav />
     </div>
   )
 }
