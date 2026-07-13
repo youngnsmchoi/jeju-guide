@@ -100,6 +100,13 @@ On: ⭐   Off: ☆
 ```
 카드 전체가 클릭 영역(페이지 이동)이므로, 별 버튼은 `onClick`에서 `e.stopPropagation()`으로 카드 클릭과 분리합니다. 아무것도 선택하지 않은 첫 방문 상태에서는 운영자가 정한 기본값을 보여주고, 한 번이라도 조작하면 그 순간부터 이용자의 선택이 저장됩니다.
 
+**즐겨찾기 모음 섹션은 일반 목록과 형태·색을 모두 다르게 해서 한눈에 구분되게 합니다** (텍스트 라벨만으로는 스크롤 중 구분이 잘 안 됨).
+```
+바깥 컨테이너: bg-emerald-50 border border-emerald-200 (일반 그룹은 bg-white border-gray-100)
+내부 레이아웃: flex flex-col gap-2 — 1열 리스트 (일반 그룹은 grid grid-cols-2 — 2열 그리드)
+카드 자체: bg-white border-emerald-200 hover:bg-emerald-50 (일반 카드는 bg-gray-50 border-gray-100)
+```
+
 ### 상단/하단 네비게이션
 - `NavBar`: `bg-white border-b border-gray-200 sticky top-0 z-20`, 내부 컨텐츠는 `max-w-lg mx-auto`로 감싸 데스크톱 넓은 화면에서도 모바일과 동일한 폭 유지 (없으면 언어 버튼이 화면 오른쪽 끝까지 밀려나 보임)
 - `BottomNav`: `fixed bottom-0 bg-white border-t border-gray-200`

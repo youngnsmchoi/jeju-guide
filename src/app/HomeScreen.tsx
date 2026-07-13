@@ -17,10 +17,10 @@ const DEFAULT_FAVORITES = [
 ]
 
 const MY_MENU_LABEL: Record<Lang, string> = {
-  ko: '내 메뉴',
-  en: 'My Menu',
-  zh: '我的菜单',
-  ja: 'マイメニュー',
+  ko: '⭐ 즐겨찾기',
+  en: '⭐ Favorites',
+  zh: '⭐ 收藏',
+  ja: '⭐ お気に入り',
 }
 
 const HERO: Record<Lang, { title: string; sub: string }> = {
@@ -321,15 +321,16 @@ export default function HomeScreen() {
       {/* 그룹별 섹션 카드 */}
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         {myMenuSections.length > 0 && (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <p className="text-xs font-bold mb-3 text-emerald-600">{MY_MENU_LABEL[lang]}</p>
-            <div className="grid grid-cols-2 gap-2">
+          <div className="bg-emerald-50 rounded-2xl border border-emerald-200 shadow-sm p-4">
+            <p className="text-xs font-bold mb-3 text-emerald-700">{MY_MENU_LABEL[lang]}</p>
+            <div className="flex flex-col gap-2">
               {myMenuSections.map(section => (
                 <SectionCard
                   key={section.href}
                   section={section}
                   lang={lang}
                   isFavorite
+                  variant="list"
                   onNavigate={() => router.push(section.href!)}
                   onToggleFavorite={() => toggleFavorite(section.href!)}
                   comingSoonLabel={COMING_SOON[lang]}
@@ -362,15 +363,17 @@ export default function HomeScreen() {
   )
 }
 
-function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, comingSoonLabel }: {
+function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, comingSoonLabel, variant = 'grid' }: {
   section: Section
   lang: Lang
   isFavorite: boolean
   onNavigate: () => void
   onToggleFavorite: () => void
   comingSoonLabel: string
+  variant?: 'grid' | 'list'
 }) {
   const ready = section.href !== null
+  const isList = variant === 'list'
   return (
     <div
       onClick={ready ? onNavigate : undefined}
@@ -378,9 +381,11 @@ function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, 
       tabIndex={ready ? 0 : undefined}
       onKeyDown={ready ? (e => { if (e.key === 'Enter') onNavigate() }) : undefined}
       className={`relative rounded-2xl border px-3 py-3 flex flex-col items-start gap-0.5 text-left transition-all
-        ${ready
-          ? 'bg-gray-50 border-gray-100 hover:border-emerald-300 hover:bg-emerald-50 cursor-pointer'
-          : 'bg-gray-50 border-gray-100 cursor-default opacity-50'}`}
+        ${isList
+          ? 'bg-white border-emerald-200 hover:bg-emerald-50 cursor-pointer'
+          : ready
+            ? 'bg-gray-50 border-gray-100 hover:border-emerald-300 hover:bg-emerald-50 cursor-pointer'
+            : 'bg-gray-50 border-gray-100 cursor-default opacity-50'}`}
     >
       {ready && (
         <button
