@@ -6,8 +6,14 @@ import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 
+type Tab = 'microwave' | 'onigiri' | 'tmoney'
+const TABS: Tab[] = ['microwave', 'onigiri', 'tmoney']
+
 const LABEL: Record<Lang, {
   title: string
+  tabMicrowave: string
+  tabOnigiri: string
+  tabTmoney: string
   microwave: {
     title: string
     steps: string[]
@@ -35,6 +41,9 @@ const LABEL: Record<Lang, {
 }> = {
   ko: {
     title: '편의점 꿀팁',
+    tabMicrowave: '🔥 전자레인지',
+    tabOnigiri: '🍙 삼각김밥',
+    tabTmoney: '🚇 T-money',
     microwave: {
       title: '🔥 전자레인지 사용법',
       steps: [
@@ -75,6 +84,9 @@ const LABEL: Record<Lang, {
   },
   en: {
     title: 'CVS Tips',
+    tabMicrowave: '🔥 Microwave',
+    tabOnigiri: '🍙 Onigiri',
+    tabTmoney: '🚇 T-money',
     microwave: {
       title: '🔥 How to use the microwave',
       steps: [
@@ -115,6 +127,9 @@ const LABEL: Record<Lang, {
   },
   zh: {
     title: '便利店小贴士',
+    tabMicrowave: '🔥 微波炉',
+    tabOnigiri: '🍙 三角饭团',
+    tabTmoney: '🚇 T-money',
     microwave: {
       title: '🔥 微波炉使用方法',
       steps: [
@@ -155,6 +170,9 @@ const LABEL: Record<Lang, {
   },
   ja: {
     title: 'コンビニお役立ち情報',
+    tabMicrowave: '🔥 電子レンジ',
+    tabOnigiri: '🍙 おにぎり',
+    tabTmoney: '🚇 T-money',
     microwave: {
       title: '🔥 電子レンジの使い方',
       steps: [
@@ -223,72 +241,86 @@ function PhraseButton({ phrase, expandLabel }: { phrase: string; expandLabel: st
 export default function CvsTipsView() {
   const { lang } = useLang()
   const L = LABEL[lang]
+  const [tab, setTab] = useState<Tab>('microwave')
+
+  const tabLabel = (t: Tab) => t === 'microwave' ? L.tabMicrowave : t === 'onigiri' ? L.tabOnigiri : L.tabTmoney
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
+      <div className="bg-white border-b border-gray-100 px-4 py-2">
+        <div className="max-w-lg mx-auto flex gap-2">
+          {TABS.map(t => (
+            <button key={t} onClick={() => setTab(t)}
+              className={`flex-1 py-1.5 rounded-xl text-sm font-medium transition-colors
+                ${tab === t ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
+              {tabLabel(t)}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-5">
-        <h1 className="text-xl font-bold text-gray-900">{L.title}</h1>
-
-        {/* 전자레인지 */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
-          <p className="text-sm font-bold text-gray-800">{L.microwave.title}</p>
-          <ol className="space-y-2">
-            {L.microwave.steps.map((step, i) => (
-              <li key={i} className="flex gap-2 text-xs text-gray-700">
-                <span className="shrink-0 w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold">{i + 1}</span>
-                <span>{step}</span>
-              </li>
-            ))}
-          </ol>
-          <div className="bg-red-50 border border-red-200 rounded-xl px-3 py-2">
-            <p className="text-xs text-red-700">{L.microwave.warning}</p>
-          </div>
-          <p className="text-xs text-gray-500 font-medium">{L.microwave.phraseLabel}</p>
-          <PhraseButton phrase={L.microwave.phrase} expandLabel={L.expand} />
-        </div>
-
-        {/* 삼각김밥 */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
-          <p className="text-sm font-bold text-gray-800">{L.onigiri.title}</p>
-          <p className="text-xs text-gray-600 leading-relaxed">{L.onigiri.intro}</p>
-          <ol className="space-y-2">
-            {L.onigiri.steps.map((step, i) => (
-              <li key={i} className="flex gap-2 text-xs text-gray-700">
-                <span className="shrink-0 w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">{i + 1}</span>
-                <span>{step}</span>
-              </li>
-            ))}
-          </ol>
-          <p className="text-xs text-emerald-700 bg-emerald-50 rounded-xl px-3 py-2">{L.onigiri.tip}</p>
-          <div>
-            <p className="text-xs text-gray-500 font-medium mb-2">{L.onigiri.flavors}</p>
-            <div className="flex flex-wrap gap-2">
-              {L.onigiri.flavorList.map((f, i) => (
-                <span key={i} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-lg">{f}</span>
+        {tab === 'microwave' && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
+            <p className="text-sm font-bold text-gray-800">{L.microwave.title}</p>
+            <ol className="space-y-2">
+              {L.microwave.steps.map((step, i) => (
+                <li key={i} className="flex gap-2 text-xs text-gray-700">
+                  <span className="shrink-0 w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold">{i + 1}</span>
+                  <span>{step}</span>
+                </li>
               ))}
+            </ol>
+            <div className="bg-red-50 border border-red-200 rounded-xl px-3 py-2">
+              <p className="text-xs text-red-700">{L.microwave.warning}</p>
+            </div>
+            <p className="text-xs text-gray-500 font-medium">{L.microwave.phraseLabel}</p>
+            <PhraseButton phrase={L.microwave.phrase} expandLabel={L.expand} />
+          </div>
+        )}
+
+        {tab === 'onigiri' && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
+            <p className="text-sm font-bold text-gray-800">{L.onigiri.title}</p>
+            <p className="text-xs text-gray-600 leading-relaxed">{L.onigiri.intro}</p>
+            <ol className="space-y-2">
+              {L.onigiri.steps.map((step, i) => (
+                <li key={i} className="flex gap-2 text-xs text-gray-700">
+                  <span className="shrink-0 w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">{i + 1}</span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="text-xs text-emerald-700 bg-emerald-50 rounded-xl px-3 py-2">{L.onigiri.tip}</p>
+            <div>
+              <p className="text-xs text-gray-500 font-medium mb-2">{L.onigiri.flavors}</p>
+              <div className="flex flex-wrap gap-2">
+                {L.onigiri.flavorList.map((f, i) => (
+                  <span key={i} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-lg">{f}</span>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* T-money */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
-          <p className="text-sm font-bold text-gray-800">{L.tmoney.title}</p>
-          <p className="text-xs text-gray-600 leading-relaxed">{L.tmoney.intro}</p>
-          <ol className="space-y-2">
-            {L.tmoney.steps.map((step, i) => (
-              <li key={i} className="flex gap-2 text-xs text-gray-700">
-                <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold">{i + 1}</span>
-                <span>{step}</span>
-              </li>
-            ))}
-          </ol>
-          <p className="text-xs text-gray-500 font-medium">{L.tmoney.phraseLabel}</p>
-          <PhraseButton phrase={L.tmoney.phrase} expandLabel={L.expand} />
-          <p className="text-xs text-blue-600 bg-blue-50 rounded-xl px-3 py-2">{L.tmoney.tip}</p>
-        </div>
-
+        {tab === 'tmoney' && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
+            <p className="text-sm font-bold text-gray-800">{L.tmoney.title}</p>
+            <p className="text-xs text-gray-600 leading-relaxed">{L.tmoney.intro}</p>
+            <ol className="space-y-2">
+              {L.tmoney.steps.map((step, i) => (
+                <li key={i} className="flex gap-2 text-xs text-gray-700">
+                  <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold">{i + 1}</span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="text-xs text-gray-500 font-medium">{L.tmoney.phraseLabel}</p>
+            <PhraseButton phrase={L.tmoney.phrase} expandLabel={L.expand} />
+            <p className="text-xs text-blue-600 bg-blue-50 rounded-xl px-3 py-2">{L.tmoney.tip}</p>
+          </div>
+        )}
       </main>
     </div>
   )
