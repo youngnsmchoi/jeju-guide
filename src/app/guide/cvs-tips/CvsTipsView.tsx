@@ -413,11 +413,11 @@ export default function CvsTipsView() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
-      <div className="bg-white border-b border-gray-100 px-4 py-2 overflow-x-auto">
-        <div className="max-w-lg mx-auto flex gap-2 w-max min-w-full">
+      <div className="bg-white border-b border-gray-100 px-4 py-2">
+        <div className="max-w-lg mx-auto grid grid-cols-3 gap-2">
           {TABS.map(t => (
             <button key={t} onClick={() => setTab(t)}
-              className={`shrink-0 px-3 py-1.5 rounded-xl text-sm font-medium transition-colors whitespace-nowrap
+              className={`px-2 py-1.5 rounded-xl text-sm font-medium transition-colors truncate
                 ${tab === t ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
               {tabLabel(t)}
             </button>
