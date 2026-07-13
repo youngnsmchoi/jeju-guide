@@ -317,29 +317,6 @@ export default function HomeScreen() {
 
       {/* 그룹별 섹션 카드 */}
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
-        {startHereSections.length > 0 && (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <p className="text-xs font-bold mb-3 text-gray-700">{START_HERE_LABEL[lang]}</p>
-            <div className="flex flex-col gap-2">
-              {startHereSections.map((section, i) => (
-                <div
-                  key={section.href}
-                  onClick={() => router.push(section.href!)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={e => { if (e.key === 'Enter') router.push(section.href!) }}
-                  className="rounded-xl border border-gray-100 bg-gray-50 hover:bg-emerald-50 hover:border-emerald-300 px-3 py-2.5 flex items-center gap-2 text-left transition-all cursor-pointer">
-                  <span className="shrink-0 w-5 h-5 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center">{i + 1}</span>
-                  <p className="flex-1 text-xs text-gray-900 leading-snug min-w-0 truncate">
-                    <span className="font-bold">{section.title[lang]}</span>
-                    <span className="text-gray-400"> · {section.desc[lang]}</span>
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {myMenuSections.length > 0 && (
           <div className="bg-emerald-50 rounded-2xl border border-emerald-200 shadow-sm p-4">
             <p className="text-xs font-bold mb-3 text-emerald-700">{MY_MENU_LABEL[lang]}</p>
@@ -355,6 +332,29 @@ export default function HomeScreen() {
                   onToggleFavorite={() => toggleFavorite(section.href!)}
                   comingSoonLabel={COMING_SOON[lang]}
                 />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {startHereSections.length > 0 && (
+          <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm p-4">
+            <p className="text-xs font-bold mb-3 text-slate-600">{START_HERE_LABEL[lang]}</p>
+            <div className="flex flex-col gap-2">
+              {startHereSections.map((section, i) => (
+                <div
+                  key={section.href}
+                  onClick={() => router.push(section.href!)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={e => { if (e.key === 'Enter') router.push(section.href!) }}
+                  className="rounded-xl border border-slate-200 bg-white active:opacity-70 px-3 py-2.5 flex items-center gap-2 text-left transition-all cursor-pointer">
+                  <span className="shrink-0 w-5 h-5 rounded-full bg-slate-500 text-white text-xs font-bold flex items-center justify-center">{i + 1}</span>
+                  <p className="flex-1 text-xs text-gray-900 leading-snug min-w-0 truncate">
+                    <span className="font-bold">{section.title[lang]}</span>
+                    <span className="text-gray-400"> · {section.desc[lang]}</span>
+                  </p>
+                </div>
               ))}
             </div>
           </div>
