@@ -294,8 +294,8 @@ export default function HomeScreen() {
 
       {/* 히어로 */}
       <div className="bg-emerald-700 text-white text-center py-6 px-4 space-y-2">
-        <p className="text-xs text-emerald-200">{HERO[lang].sub}</p>
         <h2 className="text-lg font-bold leading-snug">{HERO[lang].title}</h2>
+        <p className="text-xs text-emerald-200">{HERO[lang].sub}</p>
       </div>
 
       {/* 그룹별 섹션 카드 */}
