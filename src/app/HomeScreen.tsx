@@ -374,6 +374,28 @@ function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, 
 }) {
   const ready = section.href !== null
   const isList = variant === 'list'
+
+  if (isList) {
+    return (
+      <div
+        onClick={onNavigate}
+        role="button"
+        tabIndex={0}
+        onKeyDown={e => { if (e.key === 'Enter') onNavigate() }}
+        className="rounded-xl border border-emerald-200 bg-white hover:bg-emerald-50 pl-3 py-2.5 flex items-center gap-2 text-left transition-all cursor-pointer">
+        <p className="flex-1 text-xs text-gray-900 leading-snug min-w-0 truncate">
+          <span className="font-bold">{section.title[lang]}</span>
+          <span className="text-gray-400"> · {section.desc[lang]}</span>
+        </p>
+        <button
+          onClick={e => { e.stopPropagation(); onToggleFavorite() }}
+          className="shrink-0 flex items-center justify-center self-stretch px-3 text-xs text-gray-300 hover:text-amber-400 transition-colors">
+          ⭐
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div
       onClick={ready ? onNavigate : undefined}
@@ -381,11 +403,9 @@ function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, 
       tabIndex={ready ? 0 : undefined}
       onKeyDown={ready ? (e => { if (e.key === 'Enter') onNavigate() }) : undefined}
       className={`relative rounded-2xl border px-3 py-3 flex flex-col items-start gap-0.5 text-left transition-all
-        ${isList
-          ? 'bg-white border-emerald-200 hover:bg-emerald-50 cursor-pointer'
-          : ready
-            ? 'bg-gray-50 border-gray-100 hover:border-emerald-300 hover:bg-emerald-50 cursor-pointer'
-            : 'bg-gray-50 border-gray-100 cursor-default opacity-50'}`}
+        ${ready
+          ? 'bg-gray-50 border-gray-100 hover:border-emerald-300 hover:bg-emerald-50 cursor-pointer'
+          : 'bg-gray-50 border-gray-100 cursor-default opacity-50'}`}
     >
       {ready && (
         <button

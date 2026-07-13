@@ -106,6 +106,9 @@ On: ⭐   Off: ☆
 내부 레이아웃: flex flex-col gap-2 — 1열 리스트 (일반 그룹은 grid grid-cols-2 — 2열 그리드)
 카드 자체: bg-white border-emerald-200 hover:bg-emerald-50 (일반 카드는 bg-gray-50 border-gray-100)
 ```
+1열 리스트에서는 제목과 설명을 `제목 · 설명` 한 줄로 압축(`truncate`)하고, 별 버튼은 `text-gray-300`으로 옅게 낮춰 카드를 짧고 조용하게 유지합니다. 이미 즐겨찾기된 항목만 모아둔 구역이라 별 색을 강조할 필요가 없기 때문입니다.
+
+별 버튼의 클릭 가능 영역은 카드 높이 전체(`self-stretch`)와 좌우 여백(`px-3`)까지 넉넉히 잡습니다. 별 아이콘 자체가 작아도(`text-xs`) 클릭 영역만 크면 오클릭이 나지 않습니다.
 
 ### 상단/하단 네비게이션
 - `NavBar`: `bg-white border-b border-gray-200 sticky top-0 z-20`, 내부 컨텐츠는 `max-w-lg mx-auto`로 감싸 데스크톱 넓은 화면에서도 모바일과 동일한 폭 유지 (없으면 언어 버튼이 화면 오른쪽 끝까지 밀려나 보임)
