@@ -51,7 +51,7 @@ const LABEL: Record<Lang, {
   backToList: string
 }> = {
   ko: {
-    pageTitle: 'Help Us Shape K-Ramen Picks',
+    pageTitle: 'Help Us Improve This Guide',
     pageDesc: '불편한 점, 원하는 기능, 아이디어를 자유롭게 남겨주세요.',
     newBtn: '✏️ 의견 남기기',
     filterAll: '전체',
@@ -76,7 +76,7 @@ const LABEL: Record<Lang, {
     backToList: '목록으로 돌아가기',
   },
   en: {
-    pageTitle: 'Help Us Shape K-Ramen Picks',
+    pageTitle: 'Help Us Improve This Guide',
     pageDesc: 'Share your ideas, report issues, or suggest improvements.',
     newBtn: '✏️ Share your idea',
     filterAll: 'All',
@@ -101,7 +101,7 @@ const LABEL: Record<Lang, {
     backToList: 'Back to list',
   },
   zh: {
-    pageTitle: 'Help Us Shape K-Ramen Picks',
+    pageTitle: 'Help Us Improve This Guide',
     pageDesc: '请分享您的想法、报告问题或提出改进建议。',
     newBtn: '✏️ 提交意见',
     filterAll: '全部',
@@ -126,7 +126,7 @@ const LABEL: Record<Lang, {
     backToList: '返回列表',
   },
   ja: {
-    pageTitle: 'Help Us Shape K-Ramen Picks',
+    pageTitle: 'Help Us Improve This Guide',
     pageDesc: 'アイデア、不具合報告、改善提案などをお気軽にどうぞ。',
     newBtn: '✏️ 意見を送る',
     filterAll: 'すべて',

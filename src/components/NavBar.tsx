@@ -21,8 +21,8 @@ export default function NavBar() {
         {/* 로고 — 클릭하면 홈으로 이동 (브랜드명이라 언어 무관) */}
         <button
           onClick={() => router.push('/')}
-          className="shrink-0 text-sm font-bold text-gray-800 hover:text-emerald-700 transition-colors">
-          K-Ramen Picks
+          className="shrink-0 min-w-0 truncate text-xs font-bold text-gray-800 hover:text-emerald-700 transition-colors">
+          Korea Convenience Store Guide
         </button>
 
         {/* 위로 버튼 — 스크롤 200px 이상일 때만 표시 */}

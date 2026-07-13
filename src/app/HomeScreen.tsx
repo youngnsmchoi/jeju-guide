@@ -24,10 +24,10 @@ const MY_MENU_LABEL: Record<Lang, string> = {
 }
 
 const HERO: Record<Lang, { title: string; sub: string }> = {
-  ko: { title: 'K-Ramen Picks', sub: '여행자를 위한 K-Ramen 완전 가이드' },
-  en: { title: 'K-Ramen Picks', sub: 'The Complete K-Ramen Guide for Travelers' },
-  zh: { title: 'K-Ramen Picks', sub: '旅行者的韩国拉面完全指南' },
-  ja: { title: 'K-Ramen Picks', sub: '旅行者のためのK-Ramen完全ガイド' },
+  ko: { title: 'Korea Convenience Store Guide', sub: '한국 편의점 이용, 막힐 때 바로 찾아보는 실전 가이드' },
+  en: { title: 'Korea Convenience Store Guide', sub: "Real answers for when you're stuck at a Korean convenience store" },
+  zh: { title: 'Korea Convenience Store Guide', sub: '在韩国便利店遇到问题时，随时查看的实用指南' },
+  ja: { title: 'Korea Convenience Store Guide', sub: '韓国のコンビニで困ったとき、すぐに使える実践ガイド' },
 }
 
 const COMING_SOON: Record<Lang, string> = {
@@ -38,10 +38,10 @@ const COMING_SOON: Record<Lang, string> = {
 }
 
 const SHARE: Record<Lang, { label: string; title: string; text: string }> = {
-  ko: { label: '공유', title: 'K-Ramen Picks', text: '제주 편의점 라면 가이드 — 외국인 여행자용' },
-  en: { label: 'Share', title: 'K-Ramen Picks', text: 'Jeju convenience store ramen guide for travelers' },
-  zh: { label: '分享', title: 'K-Ramen Picks', text: '济州便利店拉面指南 — 外国游客专用' },
-  ja: { label: 'シェア', title: 'K-Ramen Picks', text: '済州コンビニラーメンガイド — 外国人旅行者向け' },
+  ko: { label: '공유', title: 'Korea Convenience Store Guide', text: '한국 편의점 실전 가이드 — 외국인 여행자용' },
+  en: { label: 'Share', title: 'Korea Convenience Store Guide', text: 'A practical guide to Korean convenience stores for travelers' },
+  zh: { label: '分享', title: 'Korea Convenience Store Guide', text: '韩国便利店实用指南 — 外国游客专用' },
+  ja: { label: 'シェア', title: 'Korea Convenience Store Guide', text: '韓国コンビニ実践ガイド — 外国人旅行者向け' },
 }
 
 type Section = {
@@ -308,12 +308,12 @@ export default function HomeScreen() {
       </header>
 
       {/* 히어로 */}
-      <div className="bg-emerald-700 text-white text-center py-6 px-4 relative">
-        <p className="text-xs text-emerald-200 mb-1">{HERO[lang].sub}</p>
-        <h2 className="text-xl font-bold">{HERO[lang].title}</h2>
+      <div className="bg-emerald-700 text-white text-center py-6 px-4 space-y-2">
+        <p className="text-xs text-emerald-200">{HERO[lang].sub}</p>
+        <h2 className="text-lg font-bold leading-snug">{HERO[lang].title}</h2>
         <button
           onClick={handleShare}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-full border border-emerald-500 transition-colors">
+          className="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-full border border-emerald-500 transition-colors">
           {SHARE[lang].label} ↗
         </button>
       </div>

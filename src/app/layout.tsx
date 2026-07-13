@@ -7,21 +7,21 @@ import { LangProvider } from '@/context/LangContext'
 const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'K-Ramen Picks',
-  description: 'Find the best Korean instant ramen at Jeju convenience stores. Spice levels, prices, cooking tips, and where to buy overseas.',
+  title: 'Korea Convenience Store Guide',
+  description: "Real answers for when you're stuck at a Korean convenience store. Payment, ramen cooking, T-money and more.",
   openGraph: {
-    title: 'K-Ramen Picks',
-    description: 'Jeju convenience store ramen guide for travelers — spice levels, prices & tips.',
+    title: 'Korea Convenience Store Guide',
+    description: "Real answers for when you're stuck at a Korean convenience store.",
     url: 'https://jeju-guide-two.vercel.app',
-    siteName: 'K-Ramen Picks',
+    siteName: 'Korea Convenience Store Guide',
     images: [{ url: 'https://jeju-guide-two.vercel.app/og-image.png', width: 1200, height: 630 }],
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'K-Ramen Picks',
-    description: 'Jeju convenience store ramen guide for travelers — spice levels, prices & tips.',
+    title: 'Korea Convenience Store Guide',
+    description: "Real answers for when you're stuck at a Korean convenience store.",
     images: ['https://jeju-guide-two.vercel.app/og-image.png'],
   },
 }
