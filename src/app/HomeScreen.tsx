@@ -57,7 +57,7 @@ type Section = {
 type Group = {
   label: Record<Lang, string>
   color: string
-  hoverClass: string
+  cardClass: string
   sections: Section[]
 }
 
@@ -65,7 +65,7 @@ const GROUPS: Group[] = [
   {
     label: { ko: '편의점 가이드', en: 'Convenience Store Guide', zh: '便利店指南', ja: 'コンビニガイド' },
     color: 'text-emerald-600',
-    hoverClass: 'hover:border-emerald-300 hover:bg-emerald-50',
+    cardClass: 'bg-emerald-50 border-emerald-100',
     sections: [
       {
         emoji: '💳',
@@ -127,7 +127,7 @@ const GROUPS: Group[] = [
   {
     label: { ko: '라면 탐색', en: 'Explore Ramen', zh: '探索拉面', ja: 'ラーメンを探す' },
     color: 'text-orange-500',
-    hoverClass: 'hover:border-orange-300 hover:bg-orange-50',
+    cardClass: 'bg-orange-50 border-orange-100',
     sections: [
       {
         emoji: '🌏',
@@ -189,7 +189,7 @@ const GROUPS: Group[] = [
   {
     label: { ko: '라면 정보', en: 'Ramen Info', zh: '拉面信息', ja: 'ラーメン情報' },
     color: 'text-blue-500',
-    hoverClass: 'hover:border-blue-300 hover:bg-blue-50',
+    cardClass: 'bg-blue-50 border-blue-100',
     sections: [
       {
         emoji: '🔥',
@@ -240,7 +240,7 @@ const GROUPS: Group[] = [
   {
     label: { ko: '커뮤니티', en: 'Community', zh: '社区', ja: 'コミュニティ' },
     color: 'text-violet-600',
-    hoverClass: 'hover:border-violet-300 hover:bg-violet-50',
+    cardClass: 'bg-violet-50 border-violet-100',
     sections: [
       {
         emoji: '✏️',
@@ -378,7 +378,7 @@ export default function HomeScreen() {
                     onNavigate={() => section.href && router.push(section.href)}
                     onToggleFavorite={() => section.href && toggleFavorite(section.href)}
                     comingSoonLabel={COMING_SOON[lang]}
-                    hoverClass={group.hoverClass}
+                    cardClass={group.cardClass}
                   />
                 ))}
               </div>
@@ -390,7 +390,7 @@ export default function HomeScreen() {
   )
 }
 
-function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, comingSoonLabel, variant = 'grid', hoverClass = 'hover:border-emerald-300 hover:bg-emerald-50' }: {
+function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, comingSoonLabel, variant = 'grid', cardClass = 'bg-emerald-50 border-emerald-100' }: {
   section: Section
   lang: Lang
   isFavorite: boolean
@@ -398,7 +398,7 @@ function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, 
   onToggleFavorite: () => void
   comingSoonLabel: string
   variant?: 'grid' | 'list'
-  hoverClass?: string
+  cardClass?: string
 }) {
   const ready = section.href !== null
   const isList = variant === 'list'
@@ -430,9 +430,9 @@ function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, 
       role={ready ? 'button' : undefined}
       tabIndex={ready ? 0 : undefined}
       onKeyDown={ready ? (e => { if (e.key === 'Enter') onNavigate() }) : undefined}
-      className={`relative rounded-2xl border px-3 py-3 flex flex-col items-start gap-0.5 text-left transition-all
+      className={`relative rounded-2xl border px-3 py-3 flex flex-col items-start gap-0.5 text-left transition-all active:opacity-70
         ${ready
-          ? `bg-gray-50 border-gray-100 ${hoverClass} cursor-pointer`
+          ? `${cardClass} cursor-pointer`
           : 'bg-gray-50 border-gray-100 cursor-default opacity-50'}`}
     >
       {ready && (
