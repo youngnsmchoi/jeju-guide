@@ -92,6 +92,14 @@ bg-white border-b border-gray-100 px-4 py-2
 ```
 언어 전환 버튼(텍스트 색으로 구분)과 달리, 탭 버튼은 배경색 채움으로 선택 상태를 표시합니다.
 
+### 즐겨찾기 별 아이콘 (콘텐츠 On/Off)
+홈 화면 메뉴 카드처럼 이용자가 특정 항목을 골라서 모아보게 할 때 씁니다. 채워진 별(⭐)/빈 별(☆)로 On/Off를 표시하고, 클릭 시 localStorage에 저장해 재방문 시에도 유지합니다.
+```
+카드 우상단에 절대 위치: absolute top-2 right-2 text-sm
+On: ⭐   Off: ☆
+```
+카드 전체가 클릭 영역(페이지 이동)이므로, 별 버튼은 `onClick`에서 `e.stopPropagation()`으로 카드 클릭과 분리합니다. 아무것도 선택하지 않은 첫 방문 상태에서는 운영자가 정한 기본값을 보여주고, 한 번이라도 조작하면 그 순간부터 이용자의 선택이 저장됩니다.
+
 ### 상단/하단 네비게이션
 - `NavBar`: `bg-white border-b border-gray-200 sticky top-0 z-20`, 내부 컨텐츠는 `max-w-lg mx-auto`로 감싸 데스크톱 넓은 화면에서도 모바일과 동일한 폭 유지 (없으면 언어 버튼이 화면 오른쪽 끝까지 밀려나 보임)
 - `BottomNav`: `fixed bottom-0 bg-white border-t border-gray-200`

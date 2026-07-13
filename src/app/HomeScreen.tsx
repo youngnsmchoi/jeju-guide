@@ -1,10 +1,27 @@
 'use client'
-// 홈 화면 — 그룹별 섹션 카드 (2열 그리드)
+// 홈 화면 — 내 메뉴(즐겨찾기) + 그룹별 섹션 카드 (2열 그리드)
 
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import LangSelector from '@/components/LangSelector'
+
+const FAVORITES_KEY = 'home_favorites'
+const DEFAULT_FAVORITES = [
+  '/guide/payment',
+  '/guide/money',
+  '/guide/cvs-tips',
+  '/guide/cooking',
+  '/guide/country-picks',
+]
+
+const MY_MENU_LABEL: Record<Lang, string> = {
+  ko: '내 메뉴',
+  en: 'My Menu',
+  zh: '我的菜单',
+  ja: 'マイメニュー',
+}
 
 const HERO: Record<Lang, { title: string; sub: string }> = {
   ko: { title: 'K-Ramen Picks', sub: '여행자를 위한 K-Ramen 완전 가이드' },
@@ -246,6 +263,30 @@ const GROUPS: Group[] = [
 export default function HomeScreen() {
   const { lang } = useLang()
   const router = useRouter()
+  const [favorites, setFavorites] = useState<string[] | null>(null)
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(FAVORITES_KEY)
+      setFavorites(raw ? JSON.parse(raw) : DEFAULT_FAVORITES)
+    } catch {
+      setFavorites(DEFAULT_FAVORITES)
+    }
+  }, [])
+
+  const toggleFavorite = (href: string) => {
+    const current = favorites ?? DEFAULT_FAVORITES
+    const next = current.includes(href)
+      ? current.filter(h => h !== href)
+      : [...current, href]
+    setFavorites(next)
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(next))
+  }
+
+  const allSections = GROUPS.flatMap(g => g.sections).filter(s => s.href !== null)
+  const myMenuSections = (favorites ?? [])
+    .map(href => allSections.find(s => s.href === href))
+    .filter((s): s is Section => s !== undefined)
 
   const handleShare = () => {
     const s = SHARE[lang]
@@ -279,34 +320,80 @@ export default function HomeScreen() {
 
       {/* 그룹별 섹션 카드 */}
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
+        {myMenuSections.length > 0 && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <p className="text-xs font-bold mb-3 text-emerald-600">{MY_MENU_LABEL[lang]}</p>
+            <div className="grid grid-cols-2 gap-2">
+              {myMenuSections.map(section => (
+                <SectionCard
+                  key={section.href}
+                  section={section}
+                  lang={lang}
+                  isFavorite
+                  onNavigate={() => router.push(section.href!)}
+                  onToggleFavorite={() => toggleFavorite(section.href!)}
+                  comingSoonLabel={COMING_SOON[lang]}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
         {GROUPS.map((group, gi) => (
           <div key={gi} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
             <p className={`text-xs font-bold mb-3 ${group.color}`}>{group.label[lang]}</p>
             <div className="grid grid-cols-2 gap-2">
-              {group.sections.map((section, si) => {
-                const ready = section.href !== null
-                return (
-                  <button
-                    key={si}
-                    onClick={() => ready && router.push(section.href!)}
-                    disabled={!ready}
-                    className={`rounded-2xl border px-3 py-3 flex flex-col items-start gap-0.5 text-left transition-all
-                      ${ready
-                        ? 'bg-gray-50 border-gray-100 hover:border-emerald-300 hover:bg-emerald-50'
-                        : 'bg-gray-50 border-gray-100 cursor-default opacity-50'}`}
-                  >
-                    <p className="text-xs font-bold text-gray-900 leading-snug">{section.title[lang]}</p>
-                    <p className="text-xs text-gray-400 leading-relaxed">{section.desc[lang]}</p>
-                    {!ready && (
-                      <span className="text-xs text-gray-300">{COMING_SOON[lang]}</span>
-                    )}
-                  </button>
-                )
-              })}
+              {group.sections.map((section, si) => (
+                <SectionCard
+                  key={si}
+                  section={section}
+                  lang={lang}
+                  isFavorite={section.href !== null && (favorites ?? []).includes(section.href)}
+                  onNavigate={() => section.href && router.push(section.href)}
+                  onToggleFavorite={() => section.href && toggleFavorite(section.href)}
+                  comingSoonLabel={COMING_SOON[lang]}
+                />
+              ))}
             </div>
           </div>
         ))}
       </main>
+    </div>
+  )
+}
+
+function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, comingSoonLabel }: {
+  section: Section
+  lang: Lang
+  isFavorite: boolean
+  onNavigate: () => void
+  onToggleFavorite: () => void
+  comingSoonLabel: string
+}) {
+  const ready = section.href !== null
+  return (
+    <div
+      onClick={ready ? onNavigate : undefined}
+      role={ready ? 'button' : undefined}
+      tabIndex={ready ? 0 : undefined}
+      onKeyDown={ready ? (e => { if (e.key === 'Enter') onNavigate() }) : undefined}
+      className={`relative rounded-2xl border px-3 py-3 flex flex-col items-start gap-0.5 text-left transition-all
+        ${ready
+          ? 'bg-gray-50 border-gray-100 hover:border-emerald-300 hover:bg-emerald-50 cursor-pointer'
+          : 'bg-gray-50 border-gray-100 cursor-default opacity-50'}`}
+    >
+      {ready && (
+        <button
+          onClick={e => { e.stopPropagation(); onToggleFavorite() }}
+          className="absolute top-2 right-2 text-sm leading-none p-0.5">
+          {isFavorite ? '⭐' : '☆'}
+        </button>
+      )}
+      <p className="text-xs font-bold text-gray-900 leading-snug pr-4">{section.title[lang]}</p>
+      <p className="text-xs text-gray-400 leading-relaxed pr-4">{section.desc[lang]}</p>
+      {!ready && (
+        <span className="text-xs text-gray-300">{comingSoonLabel}</span>
+      )}
     </div>
   )
 }
