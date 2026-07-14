@@ -83,7 +83,7 @@ const LABEL: Record<Lang, {
     bagNo: '봉투 필요 없어요 (No bag, thanks)',
     expand: 'Show',
     warning: '⚠️ Do not eat before paying',
-    warningDesc: 'All items must be paid for before consuming.',
+    warningDesc: 'All items must be paid for before consuming — including pouring hot water into your cup ramen.',
     cashLink: '💵 How to use Korean cash →',
     cashPopup: {
       title: '💵 Korean Cash Guide',
@@ -103,12 +103,8 @@ const LABEL: Record<Lang, {
     },
     steps: [
       {
-        emoji: '🛒', title: 'Pick your items',
-        desc: 'Choose what you want from the shelves.',
-      },
-      {
-        emoji: '🧾', title: 'Bring to the counter',
-        desc: 'Hand your items to the cashier.',
+        emoji: '🛒', title: 'Pick items & bring to the counter',
+        desc: 'Choose what you want and hand it to the cashier.',
       },
       {
         emoji: '🛍️', title: 'Bag question — say this first',
@@ -123,8 +119,8 @@ const LABEL: Record<Lang, {
       {
         emoji: '💳', title: 'Pay',
         desc: 'Card or cash — both accepted.',
-        detail: '🇰🇷 Korean card — no signature needed under ₩50,000.',
-        tip: 'When the signature pad appears, sign it. Foreign cards almost always require a signature.',
+        detail: '🌍 Foreign cards — Visa·Mastercard usually work, signature required.\n(Korean cards: no signature needed under ₩50,000)',
+        tip: 'When the signature pad appears, sign it.',
         signBox: true,
         cashGuide: true,
       },
@@ -135,7 +131,7 @@ const LABEL: Record<Lang, {
     bagNo: '봉투 필요 없어요',
     expand: '확대',
     warning: '⚠️ 결제 전 섭취 금지',
-    warningDesc: '모든 상품은 결제 후에만 섭취 가능합니다.',
+    warningDesc: '모든 상품은 결제 후에만 섭취 가능합니다. 컵라면에 물 붓기 전에도 반드시 계산부터 하세요.',
     cashLink: '💵 한국 현금 사용법 →',
     cashPopup: {
       title: '💵 한국 현금 안내',
@@ -155,16 +151,12 @@ const LABEL: Record<Lang, {
     },
     steps: [
       {
-        emoji: '🛒', title: '상품 고르기',
-        desc: '진열대에서 원하는 상품을 고르세요.',
-      },
-      {
-        emoji: '🧾', title: '계산대로 이동',
-        desc: '점원에게 물건을 건네세요.',
+        emoji: '🛒', title: '상품 고르고 계산대로',
+        desc: '진열대에서 원하는 상품을 고른 뒤 점원에게 건네세요.',
       },
       {
         emoji: '🛍️', title: '봉투 여부 먼저 말하기',
-        desc: '바코드 찍기 전에 봉투 필요 여부를 말하세요. 봉투는 별도 상품으로 먼저 스캔합니다. (1개 100원)',
+        desc: '바코드 찍기 전에 봉투 필요 여부를 말하세요. 점원이 봉투도 바코드를 찍어서 같이 계산해드립니다. (1개 100원)',
         tip: '화면 문구를 보여주면 말 안 해도 됩니다.',
         bagButtons: true,
       },
@@ -175,8 +167,8 @@ const LABEL: Record<Lang, {
       {
         emoji: '💳', title: '결제',
         desc: '카드 또는 현금 모두 가능합니다.',
-        detail: '🇰🇷 한국 카드 — 5만원 이하 서명 생략',
-        tip: '서명 패드가 나오면 바로 서명하세요. 외국 카드는 거의 항상 서명을 요청합니다.',
+        detail: '🌍 외국 카드 — Visa·Mastercard 대부분 가능, 서명 필요\n(한국 카드는 5만원 이하 서명 생략)',
+        tip: '서명 패드가 나오면 바로 서명하세요.',
         signBox: true,
         cashGuide: true,
       },
@@ -187,7 +179,7 @@ const LABEL: Record<Lang, {
     bagNo: '봉투 필요 없어요（不需要袋子）',
     expand: '放大',
     warning: '⚠️ 付款前请勿食用',
-    warningDesc: '所有商品必须付款后才能食用。',
+    warningDesc: '所有商品必须付款后才能食用。往杯面里倒热水前也一定要先结账。',
     cashLink: '💵 韩元现金使用指南 →',
     cashPopup: {
       title: '💵 韩元现金指南',
@@ -207,16 +199,12 @@ const LABEL: Record<Lang, {
     },
     steps: [
       {
-        emoji: '🛒', title: '选择商品',
-        desc: '从货架上挑选您想要的商品。',
-      },
-      {
-        emoji: '🧾', title: '拿到收银台',
-        desc: '将商品递给收银员。',
+        emoji: '🛒', title: '选好商品，拿到收银台',
+        desc: '从货架上挑选您想要的商品并递给收银员。',
       },
       {
         emoji: '🛍️', title: '先说袋子问题',
-        desc: '在扫描商品前，告知是否需要袋子。袋子作为商品单独扫描。(每个100韩元)',
+        desc: '在扫描商品前，告知是否需要袋子。收银员会把袋子也一起扫码计入总价。(每个100韩元)',
         tip: '出示屏幕上的短语即可，无需开口说话。',
         bagButtons: true,
       },
@@ -227,8 +215,8 @@ const LABEL: Record<Lang, {
       {
         emoji: '💳', title: '付款',
         desc: '支持刷卡和现金付款。',
-        detail: '🇰🇷 韩国卡 — 5万韩元以下免签名',
-        tip: '签名板出现时请直接签名。外国卡几乎都需要签名。',
+        detail: '🌍 外国卡 — Visa·Mastercard 大多可用，需要签名\n（韩国卡5万韩元以下免签名）',
+        tip: '签名板出现时请直接签名。',
         signBox: true,
         cashGuide: true,
       },
@@ -239,7 +227,7 @@ const LABEL: Record<Lang, {
     bagNo: '봉투 필요 없어요（袋は不要です）',
     expand: '拡大',
     warning: '⚠️ 会計前の飲食禁止',
-    warningDesc: 'すべての商品はお会計後にのみお召し上がりください。',
+    warningDesc: 'すべての商品はお会計後にのみお召し上がりください。カップ麺にお湯を注ぐ前も必ずお会計を。',
     cashLink: '💵 韓国現金の使い方 →',
     cashPopup: {
       title: '💵 韓国現金ガイド',
@@ -259,16 +247,12 @@ const LABEL: Record<Lang, {
     },
     steps: [
       {
-        emoji: '🛒', title: '商品を選ぶ',
-        desc: '棚から欲しい商品を選んでください。',
-      },
-      {
-        emoji: '🧾', title: 'レジへ持っていく',
-        desc: '店員に商品を渡してください。',
+        emoji: '🛒', title: '商品を選んでレジへ',
+        desc: '棚から欲しい商品を選び、店員に渡してください。',
       },
       {
         emoji: '🛍️', title: '先に袋の有無を伝える',
-        desc: 'スキャン前に袋が必要かどうかを伝えてください。袋は商品として先にスキャンします。(1枚100ウォン)',
+        desc: 'スキャン前に袋が必要かどうかを伝えてください。店員が袋もスキャンして一緒に会計します。(1枚100ウォン)',
         tip: '画面のフレーズを見せるだけでOKです。',
         bagButtons: true,
       },
@@ -279,8 +263,8 @@ const LABEL: Record<Lang, {
       {
         emoji: '💳', title: 'お支払い',
         desc: 'カードも現金も使えます。',
-        detail: '🇰🇷 韓国カード — 5万ウォン以下はサイン不要',
-        tip: 'サインパッドが出たらすぐにサインを。海外カードはほぼ必ずサインが求められます。',
+        detail: '🌍 海外カード — Visa・Mastercardはほぼ使用可、サイン必要\n（韓国カードは5万ウォン以下サイン不要）',
+        tip: 'サインパッドが出たらすぐにサインを。',
         signBox: true,
         cashGuide: true,
       },
