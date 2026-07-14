@@ -50,6 +50,11 @@ const LABEL: Record<Lang, {
   expand: string
   warning: string
   warningDesc: string
+  receiptLabel: string
+  receiptYes: string
+  receiptSampleTitle: string
+  receiptSampleDesc: string
+  cashOnlyNote: string
   cashLink: string
   cashPopup: {
     title: string
@@ -75,6 +80,8 @@ const LABEL: Record<Lang, {
     tip?: string
     bagButtons?: boolean
     signBox?: boolean
+    receiptButton?: boolean
+    receiptSample?: boolean
     cashGuide?: boolean
   }[]
 }> = {
@@ -84,6 +91,11 @@ const LABEL: Record<Lang, {
     expand: 'Show',
     warning: '⚠️ Do not eat before paying',
     warningDesc: 'All items must be paid for before consuming — including pouring hot water into your cup ramen.',
+    receiptLabel: 'Ask for a receipt and check it',
+    receiptYes: 'Receipt, please',
+    receiptSampleTitle: '🧾 How to read a Korean receipt',
+    receiptSampleDesc: '(Sample coming soon)',
+    cashOnlyNote: '💵 Paid in cash? Use the calculator below to check your change.',
     cashLink: '💵 How to use Korean cash →',
     cashPopup: {
       title: '💵 Korean Cash Guide',
@@ -122,6 +134,8 @@ const LABEL: Record<Lang, {
         detail: '🌍 Foreign cards — Visa·Mastercard usually work, signature required.\n(Korean cards: no signature needed under ₩50,000)',
         tip: 'When the signature pad appears, sign it.',
         signBox: true,
+        receiptButton: true,
+        receiptSample: true,
         cashGuide: true,
       },
     ],
@@ -132,6 +146,11 @@ const LABEL: Record<Lang, {
     expand: '확대',
     warning: '⚠️ 결제 전 섭취 금지',
     warningDesc: '모든 상품은 결제 후에만 섭취 가능합니다. 컵라면에 물 붓기 전에도 반드시 계산부터 하세요.',
+    receiptLabel: '영수증을 받아서 확인하세요',
+    receiptYes: '영수증 주세요',
+    receiptSampleTitle: '🧾 한국 영수증 읽는 법',
+    receiptSampleDesc: '(샘플 준비 중)',
+    cashOnlyNote: '💵 현금으로 내셨다면, 아래 계산기로 거스름돈이 맞는지 확인해보세요.',
     cashLink: '💵 한국 현금 사용법 →',
     cashPopup: {
       title: '💵 한국 현금 안내',
@@ -170,6 +189,8 @@ const LABEL: Record<Lang, {
         detail: '🌍 외국 카드 — Visa·Mastercard 대부분 가능, 서명 필요\n(한국 카드는 5만원 이하 서명 생략)',
         tip: '서명 패드가 나오면 바로 서명하세요.',
         signBox: true,
+        receiptButton: true,
+        receiptSample: true,
         cashGuide: true,
       },
     ],
@@ -180,6 +201,11 @@ const LABEL: Record<Lang, {
     expand: '放大',
     warning: '⚠️ 付款前请勿食用',
     warningDesc: '所有商品必须付款后才能食用。往杯面里倒热水前也一定要先结账。',
+    receiptLabel: '请索要收据并确认',
+    receiptYes: '请给我收据',
+    receiptSampleTitle: '🧾 韩国收据阅读方法',
+    receiptSampleDesc: '（示例准备中）',
+    cashOnlyNote: '💵 如果用现金支付，请用下方计算器确认找零是否正确。',
     cashLink: '💵 韩元现金使用指南 →',
     cashPopup: {
       title: '💵 韩元现金指南',
@@ -218,6 +244,8 @@ const LABEL: Record<Lang, {
         detail: '🌍 外国卡 — Visa·Mastercard 大多可用，需要签名\n（韩国卡5万韩元以下免签名）',
         tip: '签名板出现时请直接签名。',
         signBox: true,
+        receiptButton: true,
+        receiptSample: true,
         cashGuide: true,
       },
     ],
@@ -228,6 +256,11 @@ const LABEL: Record<Lang, {
     expand: '拡大',
     warning: '⚠️ 会計前の飲食禁止',
     warningDesc: 'すべての商品はお会計後にのみお召し上がりください。カップ麺にお湯を注ぐ前も必ずお会計を。',
+    receiptLabel: 'レシートをもらって確認しましょう',
+    receiptYes: 'レシートください',
+    receiptSampleTitle: '🧾 韓国のレシートの読み方',
+    receiptSampleDesc: '（サンプル準備中）',
+    cashOnlyNote: '💵 現金で支払った場合は、下の計算機でおつりが合っているか確認してください。',
     cashLink: '💵 韓国現金の使い方 →',
     cashPopup: {
       title: '💵 韓国現金ガイド',
@@ -266,13 +299,15 @@ const LABEL: Record<Lang, {
         detail: '🌍 海外カード — Visa・Mastercardはほぼ使用可、サイン必要\n（韓国カードは5万ウォン以下サイン不要）',
         tip: 'サインパッドが出たらすぐにサインを。',
         signBox: true,
+        receiptButton: true,
+        receiptSample: true,
         cashGuide: true,
       },
     ],
   },
 }
 
-type OverlayType = 'bag-yes' | 'bag-no' | 'cash' | null
+type OverlayType = 'bag-yes' | 'bag-no' | 'receipt' | 'cash' | null
 
 export default function PaymentView() {
   const { lang } = useLang()
@@ -332,17 +367,6 @@ export default function PaymentView() {
               </div>
             )}
 
-            {/* 현금 안내 링크 */}
-            {step.cashGuide && (
-              <div className="pl-10">
-                <button
-                  onClick={() => setOverlay('cash')}
-                  className="text-xs text-emerald-700 font-semibold underline underline-offset-2 hover:text-emerald-800 transition-colors">
-                  {L.cashLink}
-                </button>
-              </div>
-            )}
-
             {/* 팁 */}
             {step.tip && (
               <div className="pl-10">
@@ -358,6 +382,42 @@ export default function PaymentView() {
                 ) : (
                   <p className="text-xs text-emerald-600 font-medium">💡 {step.tip}</p>
                 )}
+              </div>
+            )}
+
+            {/* 영수증 요청 버튼 */}
+            {step.receiptButton && (
+              <div className="pl-10 space-y-2">
+                <p className="text-xs text-gray-500 font-medium">{L.receiptLabel}</p>
+                <div className="bg-emerald-50 rounded-xl border border-emerald-200 px-4 py-3 flex items-center justify-between gap-3">
+                  <p className="text-sm font-semibold text-gray-900">{L.receiptYes}</p>
+                  <button onClick={() => setOverlay('receipt')}
+                    className="shrink-0 text-xs bg-emerald-600 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-700 transition-colors">
+                    {L.expand}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* 샘플 영수증 */}
+            {step.receiptSample && (
+              <div className="pl-10 space-y-2">
+                <p className="text-xs font-bold text-gray-700">{L.receiptSampleTitle}</p>
+                <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 flex items-center justify-center py-8">
+                  <p className="text-xs text-gray-400">{L.receiptSampleDesc}</p>
+                </div>
+              </div>
+            )}
+
+            {/* 현금 안내 링크 (현금 결제자 전용) */}
+            {step.cashGuide && (
+              <div className="pl-10 space-y-1.5">
+                <p className="text-xs text-gray-500 leading-relaxed">{L.cashOnlyNote}</p>
+                <button
+                  onClick={() => setOverlay('cash')}
+                  className="text-xs text-emerald-700 font-semibold underline underline-offset-2 hover:text-emerald-800 transition-colors">
+                  {L.cashLink}
+                </button>
               </div>
             )}
           </div>
@@ -377,6 +437,20 @@ export default function PaymentView() {
           onClick={() => setOverlay(null)}>
           <p className="text-5xl font-bold text-gray-900 text-center leading-tight">
             {overlay === 'bag-yes' ? bagYesText : bagNoText}
+          </p>
+          <button onClick={() => setOverlay(null)}
+            className="absolute top-6 right-6 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-xl hover:bg-gray-200">
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* 영수증 문구 오버레이 */}
+      {overlay === 'receipt' && (
+        <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center px-8"
+          onClick={() => setOverlay(null)}>
+          <p className="text-5xl font-bold text-gray-900 text-center leading-tight">
+            {L.receiptYes}
           </p>
           <button onClick={() => setOverlay(null)}
             className="absolute top-6 right-6 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-xl hover:bg-gray-200">
