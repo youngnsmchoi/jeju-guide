@@ -15,15 +15,75 @@ type FeedbackItem = {
   country: string | null
   likes: number
   status: 'open' | 'in_progress' | 'done'
+  answer: string | null
   created_at: string
 }
 
 const CATEGORIES = [
-  { value: 'feature', emoji: '🆕', label: { ko: '기능 추가', en: 'Add a Feature', zh: '新增功能', ja: '機能追加' } },
+  { value: 'ask',     emoji: '🔍', label: { ko: '정보 문의', en: 'Ask a Question', zh: '信息咨询', ja: '情報問い合わせ' } },
   { value: 'bug',     emoji: '🐛', label: { ko: '오류 신고', en: 'Report a Bug',  zh: '错误报告', ja: 'バグ報告' } },
-  { value: 'ui',      emoji: '🎨', label: { ko: '화면 개선', en: 'Improve UI',    zh: '界面改进', ja: 'UI改善' } },
+  { value: 'feature', emoji: '🆕', label: { ko: '기능 추가', en: 'Add a Feature', zh: '新增功能', ja: '機能追加' } },
   { value: 'other',   emoji: '💡', label: { ko: '기타 의견', en: 'Other Ideas',   zh: '其他想法', ja: 'その他' } },
 ]
+
+const PLACEHOLDER_BY_CATEGORY: Record<string, { title: Record<Lang, string>; body: Record<Lang, string> }> = {
+  ask: {
+    title: {
+      ko: '예) 교통카드 충전 방법이 이해가 안 돼요',
+      en: 'e.g. I don\'t understand how to top up T-money',
+      zh: '例如：不太明白交通卡充值方法',
+      ja: '例）交通カードのチャージ方法が分かりません',
+    },
+    body: {
+      ko: '예) 회오리라면이라는 신상품이 나왔는데, 이 사이트에 정보가 없어요. 알아봐 주세요.',
+      en: 'e.g. There\'s a new product called "Tornado Ramen" not listed here. Could you look into it?',
+      zh: '例如：出了一款新的"旋风拉面"，这个网站上没有相关信息，请帮忙了解一下。',
+      ja: '例）新商品の「トルネードラーメン」がこのサイトに載っていません。調べてもらえますか？',
+    },
+  },
+  bug: {
+    title: {
+      ko: '예) 환율 변환기가 계산이 안 돼요',
+      en: 'e.g. The currency converter doesn\'t calculate',
+      zh: '例如：汇率换算器无法计算',
+      ja: '例）為替換算機が計算されません',
+    },
+    body: {
+      ko: '예) 숫자를 입력해도 결과가 안 나와요.',
+      en: 'e.g. Nothing shows up even after entering a number.',
+      zh: '例如：输入数字后没有出现结果。',
+      ja: '例）数字を入力しても結果が出ません。',
+    },
+  },
+  feature: {
+    title: {
+      ko: '예) 라면 필터에 컵/봉지 구분 추가해주세요',
+      en: 'e.g. Add cup/bag filter to ramen list',
+      zh: '例如：请在拉面列表中添加杯/袋筛选',
+      ja: '例）ラーメンリストにカップ/袋フィルターを追加して',
+    },
+    body: {
+      ko: '자세히 설명해주세요.',
+      en: 'Please describe in detail.',
+      zh: '请详细描述。',
+      ja: '詳しく教えてください。',
+    },
+  },
+  other: {
+    title: {
+      ko: '예) 화면 글씨가 너무 작아요',
+      en: 'e.g. The text is too small',
+      zh: '例如：文字太小了',
+      ja: '例）文字が小さすぎます',
+    },
+    body: {
+      ko: '자세히 설명해주세요.',
+      en: 'Please describe in detail.',
+      zh: '请详细描述。',
+      ja: '詳しく教えてください。',
+    },
+  },
+}
 
 const LABEL: Record<Lang, {
   pageTitle: string
@@ -36,6 +96,7 @@ const LABEL: Record<Lang, {
   statusOpen: string
   statusInProgress: string
   statusDone: string
+  answerLabel: string
   formTitle: string
   categoryLabel: string
   titleLabel: string
@@ -63,6 +124,7 @@ const LABEL: Record<Lang, {
     statusOpen: '접수',
     statusInProgress: '진행 중',
     statusDone: '✅ 완료',
+    answerLabel: '💬 답변',
     formTitle: '의견 남기기',
     categoryLabel: '카테고리 *',
     titleLabel: '제목 *',
@@ -90,6 +152,7 @@ const LABEL: Record<Lang, {
     statusOpen: 'Received',
     statusInProgress: 'In Progress',
     statusDone: '✅ Done',
+    answerLabel: '💬 Answer',
     formTitle: 'Share Your Idea',
     categoryLabel: 'Category *',
     titleLabel: 'Title *',
@@ -117,6 +180,7 @@ const LABEL: Record<Lang, {
     statusOpen: '已受理',
     statusInProgress: '处理中',
     statusDone: '✅ 已完成',
+    answerLabel: '💬 回复',
     formTitle: '提交意见',
     categoryLabel: '类别 *',
     titleLabel: '标题 *',
@@ -144,6 +208,7 @@ const LABEL: Record<Lang, {
     statusOpen: '受付済み',
     statusInProgress: '対応中',
     statusDone: '✅ 完了',
+    answerLabel: '💬 回答',
     formTitle: '意見を送る',
     categoryLabel: 'カテゴリ *',
     titleLabel: 'タイトル *',
@@ -290,7 +355,7 @@ export default function FeedbackView() {
           <div>
             <label className="text-xs font-bold text-gray-700 mb-1 block">{L.titleLabel}</label>
             <input value={title} onChange={e => setTitle(e.target.value)}
-              placeholder={L.titlePlaceholder}
+              placeholder={category ? PLACEHOLDER_BY_CATEGORY[category].title[lang] : L.titlePlaceholder}
               className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300" />
           </div>
 
@@ -298,7 +363,7 @@ export default function FeedbackView() {
           <div>
             <label className="text-xs font-bold text-gray-700 mb-1 block">{L.bodyLabel}</label>
             <textarea value={body} onChange={e => setBody(e.target.value)}
-              placeholder={L.bodyPlaceholder} rows={4}
+              placeholder={category ? PLACEHOLDER_BY_CATEGORY[category].body[lang] : L.bodyPlaceholder} rows={4}
               className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300 resize-none" />
           </div>
 
@@ -413,8 +478,14 @@ export default function FeedbackView() {
                   <span className="shrink-0 text-gray-400">{isExpanded ? '▲' : '▼'}</span>
                 </button>
                 {isExpanded && (
-                  <div className="px-4 pb-3">
+                  <div className="px-4 pb-3 space-y-3">
                     <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{item.body}</p>
+                    {item.answer && (
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2.5 space-y-1">
+                        <p className="text-xs font-bold text-emerald-700">{L.answerLabel}</p>
+                        <p className="text-sm text-emerald-900 leading-relaxed whitespace-pre-line">{item.answer}</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
