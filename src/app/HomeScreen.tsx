@@ -32,6 +32,13 @@ const START_HERE_LABEL: Record<Lang, string> = {
 
 const START_HERE_HREFS = ['/guide/payment', '/guide/money', '/guide/cvs-tips']
 
+const ASK_BANNER_LABEL: Record<Lang, { text: string; arrow: string }> = {
+  ko: { text: '찾는 정보가 없나요? 알려주세요', arrow: '→' },
+  en: { text: "Can't find what you need? Let us know", arrow: '→' },
+  zh: { text: '没找到您需要的信息？告诉我们', arrow: '→' },
+  ja: { text: '探している情報がない？教えてください', arrow: '→' },
+}
+
 const HERO: Record<Lang, { title: string; sub: string }> = {
   ko: { title: 'Korea Convenience Store Guide', sub: '한국 편의점 이용, 막힐 때 바로 찾아보는 실전 가이드' },
   en: { title: 'Korea Convenience Store Guide', sub: "Real answers for when you're stuck at a Korean convenience store" },
@@ -253,17 +260,6 @@ const GROUPS: Group[] = [
         },
         href: '/recipes',
       },
-      {
-        emoji: '💬',
-        title: { ko: '서비스 제안', en: 'Help Us Improve', zh: '服务反馈', ja: 'ご意見・ご提案' },
-        desc: {
-          ko: '기능 제안 · 오류 신고 · 아이디어',
-          en: 'Feature requests · bug reports · ideas',
-          zh: '功能建议 · 错误报告 · 创意',
-          ja: '機能提案 · バグ報告 · アイデア',
-        },
-        href: '/feedback',
-      },
     ],
   },
 ]
@@ -359,6 +355,16 @@ export default function HomeScreen() {
             </div>
           </div>
         )}
+
+        <div
+          onClick={() => router.push('/feedback')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={e => { if (e.key === 'Enter') router.push('/feedback') }}
+          className="rounded-2xl border border-amber-300 bg-amber-50 active:opacity-70 px-4 py-3 flex items-center justify-between gap-2 text-left transition-all cursor-pointer">
+          <p className="text-sm font-bold text-amber-800">{ASK_BANNER_LABEL[lang].text}</p>
+          <span className="shrink-0 text-amber-700 text-lg">{ASK_BANNER_LABEL[lang].arrow}</span>
+        </div>
 
         {GROUPS.map((group, gi) => {
           const visibleSections = group.sections.filter(
