@@ -17,11 +17,11 @@ export async function GET() {
 export async function PATCH(req: Request) {
   const authError = await requireAdmin()
   if (authError) return authError
-  const { id, hidden, implemented } = await req.json()
+  const { id, hidden, status } = await req.json()
   if (id === undefined) return NextResponse.json({ error: 'id 필요' }, { status: 400 })
-  const update: Record<string, boolean> = {}
+  const update: Record<string, boolean | string> = {}
   if (hidden !== undefined) update.hidden = hidden
-  if (implemented !== undefined) update.implemented = implemented
+  if (status !== undefined) update.status = status
   const { error } = await supabase.from('feedback').update(update).eq('id', id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ ok: true })

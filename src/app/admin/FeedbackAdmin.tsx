@@ -12,7 +12,7 @@ type FeedbackItem = {
   country: string | null
   likes: number
   hidden: boolean
-  implemented: boolean
+  status: 'open' | 'in_progress' | 'done'
   created_at: string
 }
 
@@ -22,6 +22,12 @@ const CATEGORIES: Record<string, string> = {
   ui: '🎨 화면 개선',
   other: '💡 기타 의견',
 }
+
+const STATUSES: { value: FeedbackItem['status']; label: string; badgeClass: string }[] = [
+  { value: 'open', label: '접수', badgeClass: 'bg-gray-100 text-gray-600' },
+  { value: 'in_progress', label: '진행', badgeClass: 'bg-amber-100 text-amber-700' },
+  { value: 'done', label: '완료', badgeClass: 'bg-emerald-100 text-emerald-700' },
+]
 
 export default function FeedbackAdmin() {
   const [items, setItems] = useState<FeedbackItem[]>([])
@@ -38,11 +44,20 @@ export default function FeedbackAdmin() {
 
   useEffect(() => { load() }, [])
 
-  const toggle = async (id: number, field: 'hidden' | 'implemented', current: boolean) => {
+  const toggleHidden = async (id: number, current: boolean) => {
     await fetch('/api/admin/feedback', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, [field]: !current }),
+      body: JSON.stringify({ id, hidden: !current }),
+    })
+    load()
+  }
+
+  const setStatus = async (id: number, status: FeedbackItem['status']) => {
+    await fetch('/api/admin/feedback', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status }),
     })
     load()
   }
@@ -78,9 +93,12 @@ export default function FeedbackAdmin() {
                 <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
                   {CATEGORIES[item.category] ?? item.category}
                 </span>
-                {item.implemented && (
-                  <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">✅ 반영됨</span>
-                )}
+                {(() => {
+                  const s = STATUSES.find(s => s.value === item.status)
+                  return s && (
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${s.badgeClass}`}>{s.label}</span>
+                  )
+                })()}
                 {item.hidden && (
                   <span className="text-xs bg-red-100 text-red-500 px-2 py-0.5 rounded-full">숨김</span>
                 )}
@@ -95,20 +113,22 @@ export default function FeedbackAdmin() {
           </div>
 
           <div className="flex gap-2 flex-wrap">
-            <button onClick={() => toggle(item.id, 'hidden', item.hidden)}
+            <button onClick={() => toggleHidden(item.id, item.hidden)}
               className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors
                 ${item.hidden
                   ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
               {item.hidden ? '👁 표시하기' : '🙈 숨기기'}
             </button>
-            <button onClick={() => toggle(item.id, 'implemented', item.implemented)}
-              className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors
-                ${item.implemented
-                  ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-              {item.implemented ? '✅ 반영됨' : '반영됨으로 표시'}
-            </button>
+            {STATUSES.map(s => (
+              <button key={s.value} onClick={() => setStatus(item.id, s.value)}
+                className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors
+                  ${item.status === s.value
+                    ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                {s.label}로 변경
+              </button>
+            ))}
           </div>
         </div>
       ))}

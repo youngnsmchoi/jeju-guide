@@ -14,7 +14,7 @@ type FeedbackItem = {
   nickname: string | null
   country: string | null
   likes: number
-  implemented: boolean
+  status: 'open' | 'in_progress' | 'done'
   created_at: string
 }
 
@@ -33,7 +33,9 @@ const LABEL: Record<Lang, {
   empty: string
   anonymous: string
   likeBtn: string
-  implemented: string
+  statusOpen: string
+  statusInProgress: string
+  statusDone: string
   formTitle: string
   categoryLabel: string
   titleLabel: string
@@ -58,7 +60,9 @@ const LABEL: Record<Lang, {
     empty: '아직 의견이 없어요. 첫 번째로 남겨보세요!',
     anonymous: '익명',
     likeBtn: '좋아요',
-    implemented: '✅ 반영됨',
+    statusOpen: '접수',
+    statusInProgress: '진행 중',
+    statusDone: '✅ 완료',
     formTitle: '의견 남기기',
     categoryLabel: '카테고리 *',
     titleLabel: '제목 *',
@@ -83,7 +87,9 @@ const LABEL: Record<Lang, {
     empty: 'No feedback yet. Be the first!',
     anonymous: 'Anonymous',
     likeBtn: 'Like',
-    implemented: '✅ Implemented',
+    statusOpen: 'Received',
+    statusInProgress: 'In Progress',
+    statusDone: '✅ Done',
     formTitle: 'Share Your Idea',
     categoryLabel: 'Category *',
     titleLabel: 'Title *',
@@ -108,7 +114,9 @@ const LABEL: Record<Lang, {
     empty: '还没有反馈，来第一个分享吧！',
     anonymous: '匿名',
     likeBtn: '点赞',
-    implemented: '✅ 已采纳',
+    statusOpen: '已受理',
+    statusInProgress: '处理中',
+    statusDone: '✅ 已完成',
     formTitle: '提交意见',
     categoryLabel: '类别 *',
     titleLabel: '标题 *',
@@ -133,7 +141,9 @@ const LABEL: Record<Lang, {
     empty: 'まだ意見がありません。最初に投稿しましょう！',
     anonymous: '匿名',
     likeBtn: 'いいね',
-    implemented: '✅ 反映済み',
+    statusOpen: '受付済み',
+    statusInProgress: '対応中',
+    statusDone: '✅ 完了',
     formTitle: '意見を送る',
     categoryLabel: 'カテゴリ *',
     titleLabel: 'タイトル *',
@@ -229,6 +239,12 @@ export default function FeedbackView() {
 
   const catOf = (value: string) => CATEGORIES.find(c => c.value === value)
   const filtered = filter === 'all' ? items : items.filter(f => f.category === filter)
+
+  const statusBadge = (status: FeedbackItem['status']) => {
+    if (status === 'done') return { text: L.statusDone, className: 'bg-emerald-100 text-emerald-700' }
+    if (status === 'in_progress') return { text: L.statusInProgress, className: 'bg-amber-100 text-amber-700' }
+    return { text: L.statusOpen, className: 'bg-gray-100 text-gray-500' }
+  }
 
   if (view === 'done') {
     return (
@@ -368,11 +384,14 @@ export default function FeedbackView() {
                           {cat.emoji} {cat.label[lang]}
                         </span>
                       )}
-                      {item.implemented && (
-                        <span className="text-xs font-medium bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
-                          {L.implemented}
-                        </span>
-                      )}
+                      {(() => {
+                        const badge = statusBadge(item.status)
+                        return (
+                          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${badge.className}`}>
+                            {badge.text}
+                          </span>
+                        )
+                      })()}
                     </div>
                     <p className="text-sm font-bold text-gray-900">{item.title}</p>
                   </div>
