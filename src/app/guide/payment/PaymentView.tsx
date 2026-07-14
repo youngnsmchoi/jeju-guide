@@ -2,6 +2,7 @@
 // 편의점 결제 순서 가이드 — 외국인 여행자용
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
@@ -54,6 +55,8 @@ const LABEL: Record<Lang, {
   receiptYes: string
   receiptSampleTitle: string
   receiptSampleDesc: string
+  onePlusOneLink: string
+  moneyGuideLink: string
   cashOnlyNote: string
   cashLink: string
   cashPopup: {
@@ -83,6 +86,8 @@ const LABEL: Record<Lang, {
     receiptButton?: boolean
     receiptSample?: boolean
     cashGuide?: boolean
+    onePlusOne?: boolean
+    moneyGuide?: boolean
   }[]
 }> = {
   en: {
@@ -96,6 +101,8 @@ const LABEL: Record<Lang, {
     receiptSampleTitle: '🧾 How to read a Korean receipt',
     receiptSampleDesc: '(Sample coming soon)',
     cashOnlyNote: '💵 Paid in cash? Use the calculator below to check your change.',
+    onePlusOneLink: '🏷️ How to Save (1+1 / 2+1 deals) →',
+    moneyGuideLink: '💵 Korean Money Guide →',
     cashLink: '💵 How to use Korean cash →',
     cashPopup: {
       title: '💵 Korean Cash Guide',
@@ -117,6 +124,7 @@ const LABEL: Record<Lang, {
       {
         emoji: '🛒', title: 'Pick items & bring to the counter',
         desc: 'Choose what you want and hand it to the cashier.',
+        onePlusOne: true,
       },
       {
         emoji: '🛍️', title: 'Bag question — say this first',
@@ -137,6 +145,7 @@ const LABEL: Record<Lang, {
         receiptButton: true,
         receiptSample: true,
         cashGuide: true,
+        moneyGuide: true,
       },
     ],
   },
@@ -151,6 +160,8 @@ const LABEL: Record<Lang, {
     receiptSampleTitle: '🧾 한국 영수증 읽는 법',
     receiptSampleDesc: '(샘플 준비 중)',
     cashOnlyNote: '💵 현금으로 내셨다면, 아래 계산기로 거스름돈이 맞는지 확인해보세요.',
+    onePlusOneLink: '🏷️ 할인 득템법 (1+1·2+1) →',
+    moneyGuideLink: '💵 한국 돈 안내 →',
     cashLink: '💵 한국 현금 사용법 →',
     cashPopup: {
       title: '💵 한국 현금 안내',
@@ -172,6 +183,7 @@ const LABEL: Record<Lang, {
       {
         emoji: '🛒', title: '상품 고르고 계산대로',
         desc: '진열대에서 원하는 상품을 고른 뒤 점원에게 건네세요.',
+        onePlusOne: true,
       },
       {
         emoji: '🛍️', title: '봉투 여부 먼저 말하기',
@@ -192,6 +204,7 @@ const LABEL: Record<Lang, {
         receiptButton: true,
         receiptSample: true,
         cashGuide: true,
+        moneyGuide: true,
       },
     ],
   },
@@ -206,6 +219,8 @@ const LABEL: Record<Lang, {
     receiptSampleTitle: '🧾 韩国收据阅读方法',
     receiptSampleDesc: '（示例准备中）',
     cashOnlyNote: '💵 如果用现金支付，请用下方计算器确认找零是否正确。',
+    onePlusOneLink: '🏷️ 优惠攻略 (1+1·2+1) →',
+    moneyGuideLink: '💵 韩元指南 →',
     cashLink: '💵 韩元现金使用指南 →',
     cashPopup: {
       title: '💵 韩元现金指南',
@@ -227,6 +242,7 @@ const LABEL: Record<Lang, {
       {
         emoji: '🛒', title: '选好商品，拿到收银台',
         desc: '从货架上挑选您想要的商品并递给收银员。',
+        onePlusOne: true,
       },
       {
         emoji: '🛍️', title: '先说袋子问题',
@@ -247,6 +263,7 @@ const LABEL: Record<Lang, {
         receiptButton: true,
         receiptSample: true,
         cashGuide: true,
+        moneyGuide: true,
       },
     ],
   },
@@ -261,6 +278,8 @@ const LABEL: Record<Lang, {
     receiptSampleTitle: '🧾 韓国のレシートの読み方',
     receiptSampleDesc: '（サンプル準備中）',
     cashOnlyNote: '💵 現金で支払った場合は、下の計算機でおつりが合っているか確認してください。',
+    onePlusOneLink: '🏷️ お得な買い方 (1+1・2+1) →',
+    moneyGuideLink: '💵 韓国のお金ガイド →',
     cashLink: '💵 韓国現金の使い方 →',
     cashPopup: {
       title: '💵 韓国現金ガイド',
@@ -282,6 +301,7 @@ const LABEL: Record<Lang, {
       {
         emoji: '🛒', title: '商品を選んでレジへ',
         desc: '棚から欲しい商品を選び、店員に渡してください。',
+        onePlusOne: true,
       },
       {
         emoji: '🛍️', title: '先に袋の有無を伝える',
@@ -302,6 +322,7 @@ const LABEL: Record<Lang, {
         receiptButton: true,
         receiptSample: true,
         cashGuide: true,
+        moneyGuide: true,
       },
     ],
   },
@@ -343,6 +364,16 @@ export default function PaymentView() {
               </div>
             </div>
 
+            {/* 할인 득템법 링크 */}
+            {step.onePlusOne && (
+              <div className="pl-10">
+                <Link href="/guide/convenience-store-1plus1"
+                  className="text-xs text-emerald-700 font-semibold underline underline-offset-2 hover:text-emerald-800 transition-colors">
+                  {L.onePlusOneLink}
+                </Link>
+              </div>
+            )}
+
             {/* 봉투 버튼 */}
             {step.bagButtons && (
               <div className="space-y-2 pl-10">
@@ -364,6 +395,16 @@ export default function PaymentView() {
                 {step.detail.split('\n').map((line, li) => (
                   <p key={li} className="text-xs text-blue-700 leading-relaxed">{line}</p>
                 ))}
+              </div>
+            )}
+
+            {/* 한국 돈 안내 링크 */}
+            {step.moneyGuide && (
+              <div className="pl-10">
+                <Link href="/guide/money"
+                  className="text-xs text-emerald-700 font-semibold underline underline-offset-2 hover:text-emerald-800 transition-colors">
+                  {L.moneyGuideLink}
+                </Link>
               </div>
             )}
 
