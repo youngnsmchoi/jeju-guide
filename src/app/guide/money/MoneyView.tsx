@@ -98,8 +98,13 @@ const LABEL: Record<Lang, {
   rateEdit: string
   rateDone: string
   rateFluctuates: string
+  rateEditHint: string
   inputLabel: string
   inputPlaceholder: string
+  reverseInputLabel: string
+  reverseInputPlaceholder: string
+  directionKrwToForeign: string
+  directionForeignToKrw: string
   currencyLabel: string
   cvsSection: string
   cvsNote: string
@@ -119,8 +124,13 @@ const LABEL: Record<Lang, {
     rateEdit: '수정',
     rateDone: '완료',
     rateFluctuates: '환율은 매일 변동되니, 실제 결제 시점의 환율과 다를 수 있습니다.',
+    rateEditHint: '이 사이트는 실시간 환율과 연동되어 있지 않습니다. 오늘 환율을 검색해서 입력하면 더 정확합니다.',
     inputLabel: '원화 금액을 입력하세요',
     inputPlaceholder: '예) 23600',
+    reverseInputLabel: '가진 외화 금액을 입력하세요',
+    reverseInputPlaceholder: '예) 20',
+    directionKrwToForeign: '원화 → 외화',
+    directionForeignToKrw: '외화 → 원화',
     currencyLabel: '통화',
     cvsSection: '편의점 가격 감각',
     cvsNote: '대략적인 가격대입니다. 브랜드·지점마다 다를 수 있습니다.',
@@ -140,8 +150,13 @@ const LABEL: Record<Lang, {
     rateEdit: 'Edit',
     rateDone: 'Done',
     rateFluctuates: 'Exchange rates change daily, so the actual rate may differ when you pay.',
+    rateEditHint: "This site isn't connected to live exchange rates. Search today's rate and enter it for more accuracy.",
     inputLabel: 'Enter amount in Korean Won',
     inputPlaceholder: 'e.g. 23600',
+    reverseInputLabel: 'Enter the amount you have',
+    reverseInputPlaceholder: 'e.g. 20',
+    directionKrwToForeign: 'KRW → Foreign',
+    directionForeignToKrw: 'Foreign → KRW',
     currencyLabel: 'Currency',
     cvsSection: 'Convenience Store Price Guide',
     cvsNote: 'Approximate prices. May vary by brand and location.',
@@ -161,8 +176,13 @@ const LABEL: Record<Lang, {
     rateEdit: '修改',
     rateDone: '完成',
     rateFluctuates: '汇率每天都会变动，实际支付时可能会有所不同。',
+    rateEditHint: '本网站未连接实时汇率。搜索今天的汇率并输入会更准确。',
     inputLabel: '输入韩元金额',
     inputPlaceholder: '例如 23600',
+    reverseInputLabel: '请输入您持有的外币金额',
+    reverseInputPlaceholder: '例如 20',
+    directionKrwToForeign: '韩元 → 外币',
+    directionForeignToKrw: '外币 → 韩元',
     currencyLabel: '货币',
     cvsSection: '便利店价格参考',
     cvsNote: '价格仅供参考，可能因品牌和门店而异。',
@@ -182,8 +202,13 @@ const LABEL: Record<Lang, {
     rateEdit: '編集',
     rateDone: '完了',
     rateFluctuates: '為替レートは毎日変動するため、実際の決済時のレートと異なる場合があります。',
+    rateEditHint: 'このサイトはリアルタイムの為替レートと連動していません。今日のレートを検索して入力すると、より正確になります。',
     inputLabel: 'ウォン金額を入力',
     inputPlaceholder: '例）23600',
+    reverseInputLabel: 'お持ちの外貨金額を入力してください',
+    reverseInputPlaceholder: '例）20',
+    directionKrwToForeign: 'ウォン → 外貨',
+    directionForeignToKrw: '外貨 → ウォン',
     currencyLabel: '通貨',
     cvsSection: 'コンビニ価格の目安',
     cvsNote: '目安価格です。ブランドや店舗によって異なります。',
@@ -204,6 +229,10 @@ function convertFromKRW(krw: number, rate: number, symbol: string): string {
   return symbol + Math.round(result).toLocaleString()
 }
 
+function convertToKRW(foreign: number, rate: number): string {
+  return Math.round(foreign * rate).toLocaleString() + ' KRW'
+}
+
 export default function MoneyView() {
   const { lang } = useLang()
   const L = LABEL[lang]
@@ -212,6 +241,8 @@ export default function MoneyView() {
   const [rateInput, setRateInput] = useState('')
   const [editingRate, setEditingRate] = useState(false)
   const [krwInput, setKrwInput] = useState('')
+  const [foreignInput, setForeignInput] = useState('')
+  const [direction, setDirection] = useState<'krw-to-foreign' | 'foreign-to-krw'>('krw-to-foreign')
 
   const cur = CURRENCIES.find(c => c.code === currency)!
   const rate = parseFloat(rateInput) || cur.defaultRate
@@ -219,6 +250,11 @@ export default function MoneyView() {
   const krwValue = parseInt(krwInput.replace(/,/g, ''), 10)
   const converted = !isNaN(krwValue) && krwValue > 0
     ? convertFromKRW(krwValue, rate, cur.symbol)
+    : null
+
+  const foreignValue = parseFloat(foreignInput.replace(/,/g, ''))
+  const convertedToKrw = !isNaN(foreignValue) && foreignValue > 0
+    ? convertToKRW(foreignValue, rate)
     : null
 
   return (
@@ -320,26 +356,61 @@ export default function MoneyView() {
               )}
             </div>
             <p className="text-xs text-gray-400">{L.rateFluctuates}</p>
+            <p className="text-xs text-gray-400">{L.rateEditHint}</p>
           </div>
 
-          {/* KRW 입력 → 변환 */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-gray-700 block">{L.inputLabel}</label>
-            <div className="flex items-center gap-2">
-              <input
-                type="number"
-                value={krwInput}
-                onChange={e => setKrwInput(e.target.value)}
-                placeholder={L.inputPlaceholder}
-                className="flex-1 text-2xl font-bold text-gray-900 bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 outline-none focus:border-emerald-400"
-              />
-            </div>
-            {converted && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-center">
-                <p className="text-2xl font-black text-emerald-700">{converted}</p>
-              </div>
-            )}
+          {/* 변환 방향 탭 */}
+          <div className="flex gap-2">
+            {([['krw-to-foreign', L.directionKrwToForeign], ['foreign-to-krw', L.directionForeignToKrw]] as const).map(([key, label]) => (
+              <button key={key} onClick={() => setDirection(key)}
+                className={`flex-1 py-1.5 rounded-xl text-sm font-medium transition-colors
+                  ${direction === key ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
+                {label}
+              </button>
+            ))}
           </div>
+
+          {/* 원화 → 외화 */}
+          {direction === 'krw-to-foreign' && (
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-700 block">{L.inputLabel}</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  value={krwInput}
+                  onChange={e => setKrwInput(e.target.value)}
+                  placeholder={L.inputPlaceholder}
+                  className="flex-1 text-2xl font-bold text-gray-900 bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 outline-none focus:border-emerald-400"
+                />
+              </div>
+              {converted && (
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-center">
+                  <p className="text-2xl font-black text-emerald-700">{converted}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 외화 → 원화 */}
+          {direction === 'foreign-to-krw' && (
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-700 block">{L.reverseInputLabel}</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  value={foreignInput}
+                  onChange={e => setForeignInput(e.target.value)}
+                  placeholder={L.reverseInputPlaceholder}
+                  className="flex-1 text-2xl font-bold text-gray-900 bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 outline-none focus:border-emerald-400"
+                />
+              </div>
+              {convertedToKrw && (
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-center">
+                  <p className="text-2xl font-black text-emerald-700">{convertedToKrw}</p>
+                </div>
+              )}
+            </div>
+          )}
         </section>
 
         {/* 편의점 가격 감각 */}
