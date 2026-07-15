@@ -72,12 +72,14 @@ const BILLS = [
 ]
 
 const CVS_ITEMS = [
-  { emoji: '🍜', name: { ko: '컵라면', en: 'Cup ramen', zh: '杯面', ja: 'カップ麺' }, price: 1500 },
-  { emoji: '🔺', name: { ko: '삼각김밥', en: 'Triangle kimbap', zh: '三角饭团', ja: 'おにぎり' }, price: 1200 },
-  { emoji: '🥤', name: { ko: '음료 (캔)', en: 'Canned drink', zh: '罐装饮料', ja: '缶ジュース' }, price: 1500 },
-  { emoji: '🍫', name: { ko: '과자/초콜릿', en: 'Snack/chocolate', zh: '零食/巧克力', ja: 'お菓子' }, price: 1800 },
   { emoji: '🥚', name: { ko: '계란 (1개)', en: 'Egg (1pc)', zh: '鸡蛋(1个)', ja: '卵(1個)' }, price: 500 },
+  { emoji: '💧', name: { ko: '생수 (500ml)', en: 'Water (500ml)', zh: '矿泉水 (500ml)', ja: 'ミネラルウォーター (500ml)' }, price: 700 },
+  { emoji: '🔺', name: { ko: '삼각김밥', en: 'Triangle kimbap', zh: '三角饭团', ja: 'おにぎり' }, price: 1200 },
+  { emoji: '🍜', name: { ko: '컵라면', en: 'Cup ramen', zh: '杯面', ja: 'カップ麺' }, price: 1500 },
+  { emoji: '🥤', name: { ko: '음료 (캔)', en: 'Canned drink', zh: '罐装饮料', ja: '缶ジュース' }, price: 1500 },
   { emoji: '🧃', name: { ko: '봉지 과자', en: 'Bag snack', zh: '袋装零食', ja: '袋菓子' }, price: 1500 },
+  { emoji: '🍫', name: { ko: '과자/초콜릿', en: 'Snack/chocolate', zh: '零食/巧克力', ja: 'お菓子' }, price: 1800 },
+  { emoji: '🍱', name: { ko: '도시락', en: 'Lunch box', zh: '便当', ja: '弁当' }, price: 5500 },
 ]
 
 const COINS = [
