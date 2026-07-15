@@ -39,47 +39,35 @@ type CurrencyCode = typeof CURRENCIES[number]['code']
 const BILLS = [
   {
     amount: 50000,
-    unitAmount: 10000,
-    unitCount: 5,
     color: 'bg-yellow-50 border-yellow-400',
     textColor: 'text-yellow-700',
     numColor: 'text-yellow-900',
     dot: 'bg-yellow-400',
-    person: { ko: '신사임당', en: 'Shin Saimdang', zh: '申师任堂', ja: '申師任堂' },
-    hint: { ko: '노란색 · 여성 초상', en: 'Yellow · Woman portrait', zh: '黄色 · 女性肖像', ja: '黄色 · 女性の肖像' },
+    hint: { ko: '노란색', en: 'Yellow', zh: '黄色', ja: '黄色' },
   },
   {
     amount: 10000,
-    unitAmount: 5000,
-    unitCount: 2,
     color: 'bg-blue-50 border-blue-400',
     textColor: 'text-blue-700',
     numColor: 'text-blue-900',
     dot: 'bg-blue-400',
-    person: { ko: '세종대왕', en: 'King Sejong', zh: '世宗大王', ja: '世宗大王' },
-    hint: { ko: '파란색 · 왕 초상', en: 'Blue · King portrait', zh: '蓝色 · 国王肖像', ja: '青色 · 王の肖像' },
+    hint: { ko: '파란색', en: 'Blue', zh: '蓝色', ja: '青色' },
   },
   {
     amount: 5000,
-    unitAmount: 1000,
-    unitCount: 5,
     color: 'bg-green-50 border-green-400',
     textColor: 'text-green-700',
     numColor: 'text-green-900',
     dot: 'bg-green-400',
-    person: { ko: '율곡 이이', en: 'Yulgok Yi I', zh: '栗谷李珥', ja: '栗谷李珥' },
-    hint: { ko: '초록색 · 남성 초상', en: 'Green · Man portrait', zh: '绿色 · 男性肖像', ja: '緑色 · 男性の肖像' },
+    hint: { ko: '초록색', en: 'Green', zh: '绿色', ja: '緑色' },
   },
   {
     amount: 1000,
-    unitAmount: null,
-    unitCount: null,
     color: 'bg-red-50 border-red-300',
     textColor: 'text-red-600',
     numColor: 'text-red-800',
     dot: 'bg-red-400',
-    person: { ko: '이황', en: 'Yi Hwang', zh: '李滉', ja: '李滉' },
-    hint: { ko: '붉은색 · 남성 초상', en: 'Red · Man portrait', zh: '红色 · 男性肖像', ja: '赤色 · 男性の肖像' },
+    hint: { ko: '붉은색', en: 'Red', zh: '红色', ja: '赤色' },
   },
 ]
 
@@ -103,7 +91,6 @@ const LABEL: Record<Lang, {
   title: string
   billsSection: string
   billHint: string
-  equals: string
   converterSection: string
   rateLabel: string
   rateEdit: string
@@ -125,7 +112,6 @@ const LABEL: Record<Lang, {
     title: '한국 돈 안내',
     billsSection: '지폐 종류',
     billHint: '한국 지폐에는 커다란 숫자가 적혀 있습니다. 그 숫자가 금액입니다.',
-    equals: '장',
     converterSection: '환율 변환기',
     rateLabel: '참고 환율',
     rateEdit: '수정',
@@ -147,7 +133,6 @@ const LABEL: Record<Lang, {
     title: 'Korean Money Guide',
     billsSection: 'Banknotes',
     billHint: 'Korean bills have a large number printed on them. That number is the amount.',
-    equals: 'bills',
     converterSection: 'Currency Converter',
     rateLabel: 'Reference rate',
     rateEdit: 'Edit',
@@ -169,7 +154,6 @@ const LABEL: Record<Lang, {
     title: '韩国货币指南',
     billsSection: '纸币种类',
     billHint: '韩国纸币上印有较大的数字，那个数字就是金额。',
-    equals: '张',
     converterSection: '汇率换算器',
     rateLabel: '参考汇率',
     rateEdit: '修改',
@@ -191,7 +175,6 @@ const LABEL: Record<Lang, {
     title: '韓国のお金ガイド',
     billsSection: '紙幣の種類',
     billHint: '韓国の紙幣には大きな数字が書かれています。その数字がそのまま金額です。',
-    equals: '枚',
     converterSection: '為替換算機',
     rateLabel: '参考為替レート',
     rateEdit: '編集',
@@ -267,19 +250,8 @@ export default function MoneyView() {
                 </p>
               </div>
 
-              {/* 중단: 단위 지폐 관계 */}
-              {bill.unitAmount && bill.unitCount && (
-                <p className={`text-xs font-semibold ${bill.textColor} pl-5`}>
-                  = {bill.unitAmount.toLocaleString()} KRW × {bill.unitCount}{L.equals}
-                </p>
-              )}
-
-              {/* 하단: 인물 + 색상 힌트 */}
-              <div className={`pl-5 flex items-center gap-2 text-xs ${bill.textColor} opacity-80`}>
-                <span className="font-semibold">{bill.person[lang]}</span>
-                <span>·</span>
-                <span>{bill.hint[lang]}</span>
-              </div>
+              {/* 하단: 색상 힌트 */}
+              <p className={`pl-5 text-xs ${bill.textColor} opacity-80`}>{bill.hint[lang]}</p>
             </div>
           ))}
 
