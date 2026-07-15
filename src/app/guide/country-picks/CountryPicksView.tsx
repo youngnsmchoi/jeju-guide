@@ -147,11 +147,6 @@ export default function CountryPicksView({ picks }: { picks: CountryPick[] }) {
 
             {/* 하단 출처 영역 */}
             <div className="pt-3 border-t border-gray-100 space-y-2">
-              {/* 데이터 기준 설명 */}
-              {sourceLabel && (
-                <p className="text-xs text-gray-400">{L.source}: {sourceLabel}</p>
-              )}
-
               {/* 참고 사이트 링크 목록 */}
               {refSites.length > 0 && (
                 <div>
