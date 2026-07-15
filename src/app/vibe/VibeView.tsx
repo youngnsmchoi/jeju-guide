@@ -38,12 +38,12 @@ const VIBE_OPTIONS: { tag: VibeTag; emoji: string; label: Record<Lang, string>; 
   },
 ]
 
-const SPICE_OPTIONS: { level: number; label: Record<Lang, string> }[] = [
-  { level: 1, label: { ko: '안 매운 것만', en: 'Not spicy at all', zh: '完全不辣', ja: '辛くないもの' } },
-  { level: 2, label: { ko: '살짝 매운 정도', en: 'Just a little spicy', zh: '微微辣', ja: 'ちょっと辛め' } },
-  { level: 3, label: { ko: '신라면 정도', en: 'Like Shin Ramyun', zh: '辛拉面程度', ja: '辛ラーメンくらい' } },
-  { level: 4, label: { ko: '꽤 매운 것도 OK', en: 'Fairly spicy is fine', zh: '比较辣也OK', ja: 'かなり辛くてもOK' } },
-  { level: 5, label: { ko: '극한의 매운맛', en: 'Maximum spice!', zh: '极辣！', ja: '激辛！' } },
+const SPICE_OPTIONS: { level: number; shu: string | null; label: Record<Lang, string> }[] = [
+  { level: 1, shu: null, label: { ko: '안 매운 것만', en: 'Not spicy at all', zh: '完全不辣', ja: '辛くないもの' } },
+  { level: 2, shu: '2,000 SHU', label: { ko: '살짝 매운 정도 (진라면 정도)', en: 'Just a little spicy (like Jin Ramen)', zh: '微微辣（真拉面程度）', ja: 'ちょっと辛め（真ラーメンくらい）' } },
+  { level: 3, shu: '3,400 SHU', label: { ko: '신라면 정도', en: 'Like Shin Ramyun', zh: '辛拉面程度', ja: '辛ラーメンくらい' } },
+  { level: 4, shu: '4,400 SHU', label: { ko: '꽤 매운 것도 OK (불닭볶음면 정도)', en: 'Fairly spicy is fine (like Buldak)', zh: '比较辣也OK（火鸡面程度）', ja: 'かなり辛くてもOK（ブルダックくらい）' } },
+  { level: 5, shu: '5,000+ SHU', label: { ko: '극한의 매운맛 (열라면 이상)', en: 'Maximum spice! (Yeul Ramen+)', zh: '极辣！（热拉面以上）', ja: '激辛！（ヨルラーメン以上）' } },
 ]
 
 const INGREDIENT_OPTIONS: { key: Ingredient; emoji: string; label: Record<Lang, string> }[] = [
@@ -54,12 +54,21 @@ const INGREDIENT_OPTIONS: { key: Ingredient; emoji: string; label: Record<Lang, 
 
 const LABEL: Record<Lang, {
   title: string; q1: string; q2: string; q3: string;
-  q3skip: string; recommend: string; noResult: string; retry: string; viewAll: string
+  q3skip: string; recommend: string; noResult: string; retry: string; viewAll: string;
+  spiceNote: string; spiceSource: string
 }> = {
-  ko: { title: 'K-Ramen Vibe', q1: '지금 기분이 어때요?', q2: '매운맛은 얼마나 괜찮아요?', q3: '같이 먹고 싶은 것이 있나요?', q3skip: '그냥 라면만', recommend: '추천 라면', noResult: '조건에 맞는 라면이 없어요. 다시 선택해 보세요.', retry: '다시 하기', viewAll: '전체 목록 보기' },
-  en: { title: 'K-Ramen Vibe', q1: "What's your vibe right now?", q2: 'How spicy can you handle?', q3: 'Want to add anything?', q3skip: 'Just ramen', recommend: 'Recommended', noResult: 'No match found. Try again!', retry: 'Try again', viewAll: 'View all' },
-  zh: { title: 'K-Ramen Vibe', q1: '你现在的心情？', q2: '能接受多辣？', q3: '想搭配什么？', q3skip: '只要泡面', recommend: '推荐拉面', noResult: '没有符合的拉面，请重试。', retry: '重新选择', viewAll: '查看全部' },
-  ja: { title: 'K-Ramen Vibe', q1: '今の気分は？', q2: '辛さはどのくらいOK？', q3: '一緒に食べたいものは？', q3skip: 'ラーメンだけ', recommend: 'おすすめラーメン', noResult: '条件に合うラーメンがありません。', retry: 'もう一度', viewAll: '全部見る' },
+  ko: { title: 'K-Ramen Vibe', q1: '지금 기분이 어때요?', q2: '매운맛은 얼마나 괜찮아요?', q3: '같이 먹고 싶은 것이 있나요?', q3skip: '그냥 라면만', recommend: '추천 라면', noResult: '조건에 맞는 라면이 없어요. 다시 선택해 보세요.', retry: '다시 하기', viewAll: '전체 목록 보기',
+    spiceNote: '💡 SHU(스코빌 지수)는 소스 자체의 매운맛 기준입니다. 비벼먹는 라면(불닭 계열)은 국물 라면보다 실제로 더 맵게 느껴질 수 있습니다.',
+    spiceSource: '출처: 농심 공식 발표, 뉴스톱 팩트체크, 뉴스스페이스 랭킹연구소' },
+  en: { title: 'K-Ramen Vibe', q1: "What's your vibe right now?", q2: 'How spicy can you handle?', q3: 'Want to add anything?', q3skip: 'Just ramen', recommend: 'Recommended', noResult: 'No match found. Try again!', retry: 'Try again', viewAll: 'View all',
+    spiceNote: '💡 SHU (Scoville Heat Units) measures the sauce itself. Dry/mixed noodles (like Buldak) can taste spicier than soup-based ramen even at the same SHU, since the sauce isn\'t diluted.',
+    spiceSource: 'Sources: Nongshim official statement, Newstop fact-check, Newsspace ranking research' },
+  zh: { title: 'K-Ramen Vibe', q1: '你现在的心情？', q2: '能接受多辣？', q3: '想搭配什么？', q3skip: '只要泡面', recommend: '推荐拉面', noResult: '没有符合的拉面，请重试。', retry: '重新选择', viewAll: '查看全部',
+    spiceNote: '💡 SHU（史高维尔指数）是酱料本身的辣度标准。拌面类（如火鸡面）比汤面类实际吃起来更辣，因为酱料没有被汤稀释。',
+    spiceSource: '来源：农心官方公布、Newstop事实查核、Newsspace排名研究' },
+  ja: { title: 'K-Ramen Vibe', q1: '今の気分は？', q2: '辛さはどのくらいOK？', q3: '一緒に食べたいものは？', q3skip: 'ラーメンだけ', recommend: 'おすすめラーメン', noResult: '条件に合うラーメンがありません。', retry: 'もう一度', viewAll: '全部見る',
+    spiceNote: '💡 SHU（スコヴィル値）はソース自体の辛さの基準です。混ぜ麺（プルダック系）はスープで薄まらないため、同じSHUでもスープ麺より辛く感じることがあります。',
+    spiceSource: '出典：農心公式発表、Newstopファクトチェック、Newsspaceランキング研究' },
 }
 
 function recommend(items: RamenItem[], vibe: VibeTag, spice: number, ingredients: Ingredient[]): RamenItem[] {
@@ -172,10 +181,15 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
                   className={`w-full bg-white rounded-2xl border px-4 py-3 text-left transition-all flex items-center gap-3
                     ${selectedSpice === opt.level ? 'border-emerald-500 bg-emerald-50 shadow-sm' : 'border-gray-200 hover:border-emerald-300'}`}>
                   <span className="text-sm w-20 shrink-0">{'🌶️'.repeat(opt.level)}</span>
-                  <span className="text-sm font-medium text-gray-800">{opt.label[lang]}</span>
+                  <span className="flex-1">
+                    <span className="block text-sm font-medium text-gray-800">{opt.label[lang]}</span>
+                    {opt.shu && <span className="block text-xs text-gray-400 mt-0.5">{opt.shu}</span>}
+                  </span>
                 </button>
               ))}
             </div>
+            <p className="text-xs text-gray-500 leading-relaxed mt-3">{L.spiceNote}</p>
+            <p className="text-xs text-gray-300 mt-1">{L.spiceSource}</p>
           </div>
         )}
 
