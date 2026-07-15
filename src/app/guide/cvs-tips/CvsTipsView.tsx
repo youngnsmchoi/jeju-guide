@@ -6,8 +6,8 @@ import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 
-type Tab = 'microwave' | 'onigiri' | 'tmoney' | 'toilet' | 'trash' | 'wifi'
-const TABS: Tab[] = ['microwave', 'onigiri', 'tmoney', 'toilet', 'trash', 'wifi']
+type Tab = 'microwave' | 'onigiri' | 'tmoney' | 'toilet' | 'trash' | 'wifi' | 'common'
+const TABS: Tab[] = ['microwave', 'onigiri', 'tmoney', 'toilet', 'trash', 'wifi', 'common']
 
 const LABEL: Record<Lang, {
   title: string
@@ -17,6 +17,7 @@ const LABEL: Record<Lang, {
   tabToilet: string
   tabTrash: string
   tabWifi: string
+  tabCommon: string
   microwave: {
     title: string
     steps: string[]
@@ -59,6 +60,10 @@ const LABEL: Record<Lang, {
     points: string[]
     tip: string
   }
+  common: {
+    title: string
+    points: string[]
+  }
   expand: string
 }> = {
   ko: {
@@ -69,6 +74,7 @@ const LABEL: Record<Lang, {
     tabToilet: '🚻 화장실',
     tabTrash: '🗑️ 쓰레기',
     tabWifi: '📶 와이파이',
+    tabCommon: '🏪 공통 정보',
     microwave: {
       title: '🔥 전자레인지 사용법',
       steps: [
@@ -136,6 +142,16 @@ const LABEL: Record<Lang, {
       ],
       tip: '💡 확실하지 않은 정보라 매장에서 직접 확인하는 걸 권장합니다.',
     },
+    common: {
+      title: '🏪 모든 편의점 공통 특징',
+      points: [
+        '24시간 운영 (일부 매장 제외)',
+        '라면 취식 공간(이트인) 대부분 보유',
+        '컵라면용 온수기 비치',
+        '카드·현금 모두 결제 가능',
+        '냉장·냉동 식품, 음료, 간식 판매',
+      ],
+    },
     expand: '확대',
   },
   en: {
@@ -146,6 +162,7 @@ const LABEL: Record<Lang, {
     tabToilet: '🚻 Toilet',
     tabTrash: '🗑️ Trash',
     tabWifi: '📶 Wi-Fi',
+    tabCommon: '🏪 General Info',
     microwave: {
       title: '🔥 How to use the microwave',
       steps: [
@@ -213,6 +230,16 @@ const LABEL: Record<Lang, {
       ],
       tip: '💡 This varies a lot by location — best to check with staff on the spot.',
     },
+    common: {
+      title: '🏪 What All Convenience Stores Have',
+      points: [
+        'Open 24 hours (most locations)',
+        'Eat-in seating area in most stores',
+        'Hot water dispenser for cup ramen',
+        'Card and cash both accepted',
+        'Chilled drinks, snacks, and frozen foods',
+      ],
+    },
     expand: 'Show',
   },
   zh: {
@@ -223,6 +250,7 @@ const LABEL: Record<Lang, {
     tabToilet: '🚻 洗手间',
     tabTrash: '🗑️ 垃圾分类',
     tabWifi: '📶 WiFi',
+    tabCommon: '🏪 通用信息',
     microwave: {
       title: '🔥 微波炉使用方法',
       steps: [
@@ -290,6 +318,16 @@ const LABEL: Record<Lang, {
       ],
       tip: '💡 这个信息因店而异，建议到店后直接确认。',
     },
+    common: {
+      title: '🏪 所有便利店共同特点',
+      points: [
+        '24小时营业（部分门店除外）',
+        '大多数门店设有堂食区',
+        '配备杯面专用热水机',
+        '支持刷卡和现金付款',
+        '销售冷藏饮料、零食及冷冻食品',
+      ],
+    },
     expand: '放大',
   },
   ja: {
@@ -300,6 +338,7 @@ const LABEL: Record<Lang, {
     tabToilet: '🚻 トイレ',
     tabTrash: '🗑️ ゴミ分別',
     tabWifi: '📶 Wi-Fi',
+    tabCommon: '🏪 共通情報',
     microwave: {
       title: '🔥 電子レンジの使い方',
       steps: [
@@ -367,6 +406,16 @@ const LABEL: Record<Lang, {
       ],
       tip: '💡 店舗によって差が大きいので、現地で直接確認することをおすすめします。',
     },
+    common: {
+      title: '🏪 全コンビニ共通の特徴',
+      points: [
+        '24時間営業（一部店舗を除く）',
+        'ほとんどの店舗にイートインスペースあり',
+        'カップ麺用お湯サーバー設置',
+        'カード・現金どちらも利用可能',
+        '冷蔵飲料・スナック・冷凍食品販売',
+      ],
+    },
     expand: '拡大',
   },
 }
@@ -408,6 +457,7 @@ export default function CvsTipsView() {
     toilet: L.tabToilet,
     trash: L.tabTrash,
     wifi: L.tabWifi,
+    common: L.tabCommon,
   })[t]
 
   return (
@@ -533,6 +583,20 @@ export default function CvsTipsView() {
               ))}
             </ul>
             <p className="text-xs text-amber-700 bg-amber-50 border border-amber-300 rounded-xl px-3 py-2">{L.wifi.tip}</p>
+          </div>
+        )}
+
+        {tab === 'common' && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
+            <p className="text-sm font-bold text-gray-800">{L.common.title}</p>
+            <ul className="space-y-2">
+              {L.common.points.map((point, i) => (
+                <li key={i} className="flex gap-2 text-xs text-gray-700">
+                  <span className="text-emerald-500 shrink-0">✓</span>
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </main>
