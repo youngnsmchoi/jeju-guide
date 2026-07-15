@@ -6,6 +6,21 @@ import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 
+// 한국은행 공식 페이지 — 실물 화폐 이미지는 저작권 보호 대상이라 직접 게재하지 않고 공식 출처로 연결
+// 한국은행 사이트는 한국어(ko)·영어(en)만 지원. zh/ja 이용자는 영어 페이지로 연결
+const BOK_BILLS_URL: Record<Lang, string> = {
+  ko: 'https://www.bok.or.kr/portal/main/contents.do?menuNo=200017',
+  en: 'https://www.bok.or.kr/eng/main/contents.do?menuNo=400112',
+  zh: 'https://www.bok.or.kr/eng/main/contents.do?menuNo=400112',
+  ja: 'https://www.bok.or.kr/eng/main/contents.do?menuNo=400112',
+}
+const BOK_COINS_URL: Record<Lang, string> = {
+  ko: 'https://www.bok.or.kr/portal/main/contents.do?menuNo=200367',
+  en: 'https://www.bok.or.kr/eng/main/contents.do?menuNo=400113',
+  zh: 'https://www.bok.or.kr/eng/main/contents.do?menuNo=400113',
+  ja: 'https://www.bok.or.kr/eng/main/contents.do?menuNo=400113',
+}
+
 // ramen-log 나라 목록 기반 통화 구성
 // defaultRate는 실시간 환율이 아니라 암산하기 좋도록 반올림한 참고용 고정값
 // unit: 표시 기준 단위 (환율이 작은 통화는 100/1000 단위가 더 익숙함)
@@ -103,6 +118,8 @@ const LABEL: Record<Lang, {
   coinsNote: string
   coinsHint: string
   coinsWarning: string
+  bokBillsLink: string
+  bokCoinsLink: string
 }> = {
   ko: {
     title: '한국 돈 안내',
@@ -123,6 +140,8 @@ const LABEL: Record<Lang, {
     coinsNote: '거스름돈으로 받을 수 있습니다.',
     coinsHint: '동전에도 숫자가 적혀 있습니다. 지폐와 마찬가지로 그 숫자가 금액입니다.',
     coinsWarning: '⚠️ 500원과 100원은 크기가 비슷해 보이니 숫자를 꼭 확인하세요.',
+    bokBillsLink: '🏦 한국은행에서 실제 지폐 이미지 보기 →',
+    bokCoinsLink: '🏦 한국은행에서 실제 동전 이미지 보기 →',
   },
   en: {
     title: 'Korean Money Guide',
@@ -143,6 +162,8 @@ const LABEL: Record<Lang, {
     coinsNote: 'You may receive coins as change.',
     coinsHint: 'Coins have numbers too. Just like bills, that number is the amount.',
     coinsWarning: '⚠️ 500 and 100 won coins look similar in size — check the number carefully.',
+    bokBillsLink: '🏦 See real banknote images on the Bank of Korea site →',
+    bokCoinsLink: '🏦 See real coin images on the Bank of Korea site →',
   },
   zh: {
     title: '韩国货币指南',
@@ -163,6 +184,8 @@ const LABEL: Record<Lang, {
     coinsNote: '可能作为找零收到。',
     coinsHint: '硬币上也印有数字，和纸币一样，那个数字就是金额。',
     coinsWarning: '⚠️ 500韩元和100韩元硬币大小相似，请仔细确认数字。',
+    bokBillsLink: '🏦 在韩国银行官网查看真实纸币图片 →',
+    bokCoinsLink: '🏦 在韩国银行官网查看真实硬币图片 →',
   },
   ja: {
     title: '韓国のお金ガイド',
@@ -183,6 +206,8 @@ const LABEL: Record<Lang, {
     coinsNote: 'お釣りとして受け取る場合があります。',
     coinsHint: 'コインにも数字が書かれています。紙幣と同じく、その数字が金額です。',
     coinsWarning: '⚠️ 500ウォンと100ウォンは大きさが似ているので、数字をよく確認してください。',
+    bokBillsLink: '🏦 韓国銀行サイトで実際の紙幣画像を見る →',
+    bokCoinsLink: '🏦 韓国銀行サイトで実際のコイン画像を見る →',
   },
 }
 
@@ -257,6 +282,11 @@ export default function MoneyView() {
               </div>
             </div>
           ))}
+
+          <a href={BOK_BILLS_URL[lang]} target="_blank" rel="noopener noreferrer"
+            className="block text-xs text-emerald-700 font-semibold underline underline-offset-2 hover:text-emerald-800 transition-colors">
+            {L.bokBillsLink}
+          </a>
         </section>
 
         {/* 환율 변환기 */}
@@ -384,6 +414,11 @@ export default function MoneyView() {
           <div className="bg-amber-50 border border-amber-300 rounded-xl px-4 py-3">
             <p className="text-xs font-semibold text-amber-800">{L.coinsWarning}</p>
           </div>
+
+          <a href={BOK_COINS_URL[lang]} target="_blank" rel="noopener noreferrer"
+            className="block text-xs text-emerald-700 font-semibold underline underline-offset-2 hover:text-emerald-800 transition-colors">
+            {L.bokCoinsLink}
+          </a>
         </section>
 
       </main>
