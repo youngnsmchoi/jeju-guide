@@ -101,6 +101,8 @@ const LABEL: Record<Lang, {
   cvsNote: string
   coinsSection: string
   coinsNote: string
+  coinsHint: string
+  coinsWarning: string
 }> = {
   ko: {
     title: '한국 돈 안내',
@@ -119,6 +121,8 @@ const LABEL: Record<Lang, {
     cvsNote: '대략적인 가격대입니다. 브랜드·지점마다 다를 수 있습니다.',
     coinsSection: '동전',
     coinsNote: '거스름돈으로 받을 수 있습니다.',
+    coinsHint: '동전에도 숫자가 적혀 있습니다. 지폐와 마찬가지로 그 숫자가 금액입니다.',
+    coinsWarning: '⚠️ 500원과 100원은 크기가 비슷해 보이니 숫자를 꼭 확인하세요.',
   },
   en: {
     title: 'Korean Money Guide',
@@ -137,6 +141,8 @@ const LABEL: Record<Lang, {
     cvsNote: 'Approximate prices. May vary by brand and location.',
     coinsSection: 'Coins',
     coinsNote: 'You may receive coins as change.',
+    coinsHint: 'Coins have numbers too. Just like bills, that number is the amount.',
+    coinsWarning: '⚠️ 500 and 100 won coins look similar in size — check the number carefully.',
   },
   zh: {
     title: '韩国货币指南',
@@ -155,6 +161,8 @@ const LABEL: Record<Lang, {
     cvsNote: '价格仅供参考，可能因品牌和门店而异。',
     coinsSection: '硬币',
     coinsNote: '可能作为找零收到。',
+    coinsHint: '硬币上也印有数字，和纸币一样，那个数字就是金额。',
+    coinsWarning: '⚠️ 500韩元和100韩元硬币大小相似，请仔细确认数字。',
   },
   ja: {
     title: '韓国のお金ガイド',
@@ -173,6 +181,8 @@ const LABEL: Record<Lang, {
     cvsNote: '目安価格です。ブランドや店舗によって異なります。',
     coinsSection: 'コイン',
     coinsNote: 'お釣りとして受け取る場合があります。',
+    coinsHint: 'コインにも数字が書かれています。紙幣と同じく、その数字が金額です。',
+    coinsWarning: '⚠️ 500ウォンと100ウォンは大きさが似ているので、数字をよく確認してください。',
   },
 }
 
@@ -357,6 +367,7 @@ export default function MoneyView() {
         <section className="space-y-3">
           <div>
             <p className="text-base font-bold text-gray-900">{L.coinsSection}</p>
+            <p className="text-sm font-bold text-gray-600 mt-0.5">{L.coinsHint}</p>
             <p className="text-xs text-gray-400 mt-0.5">{L.coinsNote}</p>
           </div>
 
@@ -368,6 +379,10 @@ export default function MoneyView() {
                 <span className="text-xs opacity-60">{coin.hint[lang]}</span>
               </div>
             ))}
+          </div>
+
+          <div className="bg-amber-50 border border-amber-300 rounded-xl px-4 py-3">
+            <p className="text-xs font-semibold text-amber-800">{L.coinsWarning}</p>
           </div>
         </section>
 
