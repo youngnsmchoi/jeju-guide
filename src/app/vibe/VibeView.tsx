@@ -21,6 +21,10 @@ const SHU_BY_ID: Record<number, string> = {
   27: '8,706 SHU',   // 핵불닭볶음면
 }
 
+// 용기(컵) 형태 라면 — 편의점에서 뜨거운 물만 부으면 바로 먹을 수 있음
+// 왕뚜껑·팔도 도시락은 이름에 '용기' 표기가 없지만 실제로는 컵 형태 제품
+const CUP_TYPE_IDS = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
+
 type VibeTag = 'hangover' | 'hot_challenge' | 'comfort_savory'
 
 const VIBE_OPTIONS: { tag: VibeTag; emoji: string; label: Record<Lang, string>; desc: Record<Lang, string> }[] = [
@@ -63,7 +67,8 @@ const LABEL: Record<Lang, {
   title: string; q1: string; recommend: string; noResult: string; retry: string; viewAll: string;
   tagSource: string;
   rouletteTitle: string; rouletteSubtitle: string; rouletteCountHint: string;
-  rouletteRun: string; rouletteRunning: string; rouletteResult: string; rouletteAgain: string
+  rouletteRun: string; rouletteRunning: string; rouletteResult: string; rouletteAgain: string;
+  cupType: string; bagType: string
 }> = {
   ko: {
     title: 'K-Ramen Vibe', q1: '어떤 라면을 찾고 있나요?', recommend: '추천 라면',
@@ -73,6 +78,7 @@ const LABEL: Record<Lang, {
     rouletteCountHint: '2~7개를 체크하세요',
     rouletteRun: '라면 선택 🎲', rouletteRunning: '고르는 중...', rouletteResult: '오늘의 선택은',
     rouletteAgain: '다시 돌리기',
+    cupType: '컵 (바로 먹기)', bagType: '봉지 (끓여야 함)',
   },
   en: {
     title: 'K-Ramen Vibe', q1: 'What kind of ramen are you looking for?', recommend: 'Recommended',
@@ -82,6 +88,7 @@ const LABEL: Record<Lang, {
     rouletteCountHint: 'Check 2 to 7 ramens',
     rouletteRun: 'Pick for me 🎲', rouletteRunning: 'Picking...', rouletteResult: "Today's pick",
     rouletteAgain: 'Spin again',
+    cupType: 'Cup (ready to eat)', bagType: 'Bag (needs cooking)',
   },
   zh: {
     title: 'K-Ramen Vibe', q1: '你在找什么样的拉面？', recommend: '推荐拉面',
@@ -91,6 +98,7 @@ const LABEL: Record<Lang, {
     rouletteCountHint: '请勾选2~7款拉面',
     rouletteRun: '帮我选 🎲', rouletteRunning: '选择中...', rouletteResult: '今天选中的是',
     rouletteAgain: '再抽一次',
+    cupType: '杯面（可直接吃）', bagType: '袋装（需要煮）',
   },
   ja: {
     title: 'K-Ramen Vibe', q1: 'どんなラーメンをお探しですか？', recommend: 'おすすめラーメン',
@@ -100,6 +108,7 @@ const LABEL: Record<Lang, {
     rouletteCountHint: '2〜7個チェックしてください',
     rouletteRun: '選んで 🎲', rouletteRunning: '選択中...', rouletteResult: '今日のピック',
     rouletteAgain: 'もう一回',
+    cupType: 'カップ（そのまま食べられる）', bagType: '袋麺（調理が必要）',
   },
 }
 
@@ -192,6 +201,10 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
                           ${checked ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200'}
                           ${disabled ? 'opacity-40 cursor-not-allowed' : ''}`}>
                         <span className="min-w-0">
+                          <span className={`inline-block text-[10px] font-medium px-1.5 py-0.5 rounded mb-1
+                            ${CUP_TYPE_IDS.has(item.id) ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'}`}>
+                            {CUP_TYPE_IDS.has(item.id) ? L.cupType : L.bagType}
+                          </span>
                           <span className="block text-xs font-bold text-gray-900 leading-snug">{getRamenField(item, 'name', lang)}</span>
                           {item.price_krw && <span className="block text-xs text-gray-400 mt-1">₩{item.price_krw.toLocaleString()}</span>}
                           {selectedVibe === 'hot_challenge' && SHU_BY_ID[item.id] && (
