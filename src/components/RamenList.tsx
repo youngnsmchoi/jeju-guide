@@ -107,6 +107,13 @@ const HEAT_SOURCE_LABEL: Record<string, Record<Lang, string>> = {
   stovetop: { ko: '냄비 필요', en: 'Stovetop required', zh: '需要锅', ja: '鍋が必要' },
 }
 
+const STOVETOP_WARNING: Record<Lang, string> = {
+  ko: '⚠️ 편의점엔 냄비가 없어요 — 숙소에서 조리하세요',
+  en: '⚠️ Convenience stores have no stovetop — cook this at your accommodation',
+  zh: '⚠️ 便利店没有锅 — 请在住宿处烹饪',
+  ja: '⚠️ コンビニには鍋がありません — 宿泊先で調理してください',
+}
+
 const OFFICIAL_PAGE_LABEL: Record<Lang, string> = {
   ko: '📋 제품 상세 정보',
   en: '📋 Product Details',
@@ -431,6 +438,11 @@ export default function RamenList({ items, lang, initialQuery }: { items: RamenI
                 {item.heat_source && (
                   <span className="text-emerald-600 font-normal">· {HEAT_SOURCE_LABEL[item.heat_source][lang]}</span>
                 )}
+              </p>
+            )}
+            {item.heat_source === 'stovetop' && (
+              <p className="text-xs text-amber-700 bg-amber-50 rounded-lg px-2.5 py-1.5 -mt-1">
+                {STOVETOP_WARNING[lang]}
               </p>
             )}
             {item.manufacturer_url && (

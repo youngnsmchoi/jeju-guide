@@ -50,7 +50,7 @@ export type Best5Pick = {
   reason_en: string | null
   reason_zh: string | null
   reason_ja: string | null
-  ramen_items?: { manufacturer_url: string | null; price_krw: number | null; name_ko: string | null } | null
+  ramen_items?: { manufacturer_url: string | null; price_krw: number | null; name_ko: string | null; heat_source: string | null } | null
 }
 
 const OFFICIAL_PAGE_LABEL: Record<Lang, string> = {
@@ -65,6 +65,13 @@ const RAMEN_LIST_LABEL: Record<Lang, string> = {
   en: '📜 View in ramen list',
   zh: '📜 在拉面列表中查看',
   ja: '📜 ラーメン一覧で見る',
+}
+
+const STOVETOP_WARNING: Record<Lang, string> = {
+  ko: '⚠️ 편의점엔 냄비가 없어요 — 숙소에서 조리하세요',
+  en: '⚠️ Convenience stores have no stovetop — cook this at your accommodation',
+  zh: '⚠️ 便利店没有锅 — 请在住宿处烹饪',
+  ja: '⚠️ コンビニには鍋がありません — 宿泊先で調理してください',
 }
 
 const USD_RATE = 1380
@@ -116,6 +123,12 @@ export default function Best5View({ picks }: { picks: Best5Pick[] }) {
             </div>
 
             <p className="text-sm text-gray-600 leading-relaxed">{pick[`reason_${lang}`] || pick.reason_ko}</p>
+
+            {pick.ramen_items?.heat_source === 'stovetop' && (
+              <p className="text-xs text-amber-700 bg-amber-50 rounded-lg px-2.5 py-1.5">
+                {STOVETOP_WARNING[lang]}
+              </p>
+            )}
 
             {pick.ramen_items?.price_krw != null && (
               <div className="flex items-center gap-2">
