@@ -7,7 +7,7 @@ export const revalidate = 60
 export default async function Best5Page() {
   const { data } = await supabase
     .from('best5_picks')
-    .select('*, ramen_items(manufacturer_url)')
+    .select('*, ramen_items(manufacturer_url, price_krw)')
     .order('rank_num')
   return <Best5View picks={data ?? []} />
 }

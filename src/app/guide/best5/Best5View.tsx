@@ -49,7 +49,7 @@ export type Best5Pick = {
   reason_en: string | null
   reason_zh: string | null
   reason_ja: string | null
-  ramen_items?: { manufacturer_url: string | null } | null
+  ramen_items?: { manufacturer_url: string | null; price_krw: number | null } | null
 }
 
 const OFFICIAL_PAGE_LABEL: Record<Lang, string> = {
@@ -57,6 +57,15 @@ const OFFICIAL_PAGE_LABEL: Record<Lang, string> = {
   en: '📋 Product Details',
   zh: '📋 产品详情',
   ja: '📋 製品詳細情報',
+}
+
+const USD_RATE = 1380
+
+const APPROX_PRICE_LABEL: Record<Lang, (usd: string) => string> = {
+  ko: (usd) => `약 $${usd} · 환율 변동 가능`,
+  en: (usd) => `approx. $${usd} · rate may vary`,
+  zh: (usd) => `约 $${usd} · 汇率可能变动`,
+  ja: (usd) => `約 $${usd} · レートは変動あり`,
 }
 
 function SpicyBadge({ level }: { level: number }) {
@@ -99,6 +108,13 @@ export default function Best5View({ picks }: { picks: Best5Pick[] }) {
             </div>
 
             <p className="text-sm text-gray-600 leading-relaxed">{pick[`reason_${lang}`] || pick.reason_ko}</p>
+
+            {pick.ramen_items?.price_krw != null && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold text-gray-800">₩{pick.ramen_items.price_krw.toLocaleString()}</span>
+                <span className="text-xs text-gray-400">({APPROX_PRICE_LABEL[lang]((pick.ramen_items.price_krw / USD_RATE).toFixed(2))})</span>
+              </div>
+            )}
 
             {pick.ramen_items?.manufacturer_url && (
               <a
