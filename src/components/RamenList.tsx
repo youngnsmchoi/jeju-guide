@@ -161,7 +161,13 @@ const SPICY_GUIDE: Record<Lang, { title: string; levels: { icon: string; label: 
 }
 
 const USD_RATE = 1380
-const RATE_DATE = 'Jun 2026'
+
+const APPROX_PRICE_LABEL: Record<Lang, (usd: string) => string> = {
+  ko: (usd) => `약 $${usd} · 환율 변동 가능`,
+  en: (usd) => `approx. $${usd} · rate may vary`,
+  zh: (usd) => `约 $${usd} · 汇率可能变动`,
+  ja: (usd) => `約 $${usd} · レートは変動あり`,
+}
 
 // 매운맛 SHU(스코빌 지수) — 라면어워즈 랭킹, 라면업체 각사 공식 수치(jb-information) 등 근거 확인된 라면만 표시
 const SHU_BY_ID: Record<number, { shu: string; sourceUrl: string }> = {
@@ -475,7 +481,7 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
             {item.price_krw != null && (
               <div className="flex items-center gap-2 pt-1">
                 <span className="text-sm font-semibold text-gray-800">₩{item.price_krw.toLocaleString()}</span>
-                <span className="text-xs text-gray-400">(≈ ${(item.price_krw / USD_RATE).toFixed(2)} · {RATE_DATE})</span>
+                <span className="text-xs text-gray-400">({APPROX_PRICE_LABEL[lang]((item.price_krw / USD_RATE).toFixed(2))})</span>
               </div>
             )}
 
