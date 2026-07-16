@@ -59,7 +59,7 @@ const LABEL: Record<Lang, {
     title: 'K-Ramen Vibe', q1: '어떤 라면을 찾고 있나요?', recommend: '추천 라면',
     noResult: '아직 준비 중인 라면이에요.', retry: '다시 선택하기', viewAll: '전체 목록 보기',
     tagSource: '분류 출처: 해장(ize.co.kr 해장 라면 추천), 매운맛 도전(라면어워즈 스코빌 지수 랭킹), 편안한 식사(위키트리 순한 라면 소개)',
-    rouletteTitle: '점심 결정했어', rouletteSubtitle: '(전문가 추천 해줘요 ㅠㅠ)',
+    rouletteTitle: '골라주세요!', rouletteSubtitle: '',
     rouletteCountHint: '2~7개를 체크하세요',
     rouletteRun: '라면 선택 🎲', rouletteRunning: '고르는 중...', rouletteResult: '오늘의 선택은',
     rouletteAgain: '다시 돌리기',
@@ -68,7 +68,7 @@ const LABEL: Record<Lang, {
     title: 'K-Ramen Vibe', q1: 'What kind of ramen are you looking for?', recommend: 'Recommended',
     noResult: 'No ramen in this category yet.', retry: 'Choose again', viewAll: 'View all',
     tagSource: 'Sources: Fresh Start (ize.co.kr hangover ramen picks), Spicy Challenge (Ramen Awards Scoville ranking), Cozy Meal (Wikitree mild ramen roundup)',
-    rouletteTitle: 'Help me decide lunch', rouletteSubtitle: "(I can't choose, expert help pls 🥲)",
+    rouletteTitle: 'Pick one!', rouletteSubtitle: '',
     rouletteCountHint: 'Check 2 to 7 ramens',
     rouletteRun: 'Pick for me 🎲', rouletteRunning: 'Picking...', rouletteResult: "Today's pick",
     rouletteAgain: 'Spin again',
@@ -77,7 +77,7 @@ const LABEL: Record<Lang, {
     title: 'K-Ramen Vibe', q1: '你在找什么样的拉面？', recommend: '推荐拉面',
     noResult: '这个分类还没有拉面。', retry: '重新选择', viewAll: '查看全部',
     tagSource: '分类来源：解酒（ize.co.kr解酒拉面推荐）、辣度挑战（Ramen Awards史高维尔指数排名）、舒适一餐（Wikitree温和拉面介绍）',
-    rouletteTitle: '午餐决定困难', rouletteSubtitle: '（专家帮我选一下 🥲）',
+    rouletteTitle: '帮我选！', rouletteSubtitle: '',
     rouletteCountHint: '请勾选2~7款拉面',
     rouletteRun: '帮我选 🎲', rouletteRunning: '选择中...', rouletteResult: '今天选中的是',
     rouletteAgain: '再抽一次',
@@ -86,7 +86,7 @@ const LABEL: Record<Lang, {
     title: 'K-Ramen Vibe', q1: 'どんなラーメンをお探しですか？', recommend: 'おすすめラーメン',
     noResult: 'このカテゴリのラーメンはまだありません。', retry: '選び直す', viewAll: '全部見る',
     tagSource: '出典：二日酔い対策（ize.co.kr 二日酔いラーメン特集）、辛さに挑戦（Ramen Awards スコヴィル値ランキング）、落ち着く食事（Wikitree マイルドラーメン特集）',
-    rouletteTitle: 'ランチ決められない', rouletteSubtitle: '（専門家に選んでほしい 🥲）',
+    rouletteTitle: '選んで！', rouletteSubtitle: '',
     rouletteCountHint: '2〜7個チェックしてください',
     rouletteRun: '選んで 🎲', rouletteRunning: '選択中...', rouletteResult: '今日のピック',
     rouletteAgain: 'もう一回',
@@ -198,7 +198,7 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
                 <div className="bg-white rounded-2xl border border-gray-200 p-4 space-y-3">
                   <div>
                     <p className="text-sm font-bold text-gray-900">{L.rouletteTitle}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{L.rouletteSubtitle}</p>
+                    {L.rouletteSubtitle && <p className="text-xs text-gray-400 mt-0.5">{L.rouletteSubtitle}</p>}
                   </div>
                   <p className="text-xs text-gray-500">{L.rouletteCountHint} ({checkedIds.length}/{ROULETTE_MAX})</p>
 
