@@ -12,10 +12,6 @@ const LABEL: Record<Lang, {
   ingredientsLink: string
   matrixTitle: string
   comboTitle: string
-  tip: string
-  tipDesc: string
-  where: string
-  whereDesc: string
 }> = {
   ko: {
     title: '꿀조합 커스터마이징',
@@ -23,10 +19,6 @@ const LABEL: Record<Lang, {
     ingredientsLink: '⚠️ 알레르기·할랄 등 성분이 걱정되면 먼저 확인하세요 →',
     matrixTitle: '🍜 토핑 카테고리별로 골라보세요',
     comboTitle: '✅ 실제로 검증된 추천 조합',
-    tip: '💡 편의점에서 바로 구할 수 있어요',
-    tipDesc: '계란, 치즈 슬라이스, 삼각김밥 모두 편의점 냉장코너에 있습니다.',
-    where: '🍳 조리 방법',
-    whereDesc: '계란은 컵라면 뚜껑 위에 올려 뜨거운 물 붓고 3분 → 반숙. 치즈는 면 위에 바로 올리세요.',
   },
   en: {
     title: 'Topping Combos',
@@ -34,10 +26,6 @@ const LABEL: Record<Lang, {
     ingredientsLink: '⚠️ Worried about allergens or halal? Check ingredients first →',
     matrixTitle: '🍜 Pick a topping by category',
     comboTitle: '✅ Tried-and-tested combos',
-    tip: '💡 All available in-store',
-    tipDesc: 'Eggs, cheese slices, and rice balls are in the refrigerated section of any convenience store.',
-    where: '🍳 How to prep',
-    whereDesc: 'Egg: place on cup lid, pour hot water, wait 3 min → soft-boiled. Cheese: lay directly on top of the noodles.',
   },
   zh: {
     title: '黄金搭配',
@@ -45,10 +33,6 @@ const LABEL: Record<Lang, {
     ingredientsLink: '⚠️ 担心过敏原或清真认证？请先确认成分 →',
     matrixTitle: '🍜 按分类挑选配料',
     comboTitle: '✅ 已验证的推荐组合',
-    tip: '💡 便利店内均可购买',
-    tipDesc: '鸡蛋、芝士片和饭团都在便利店冷藏区。',
-    where: '🍳 烹饪方法',
-    whereDesc: '鸡蛋：放在杯面盖上，倒热水，等3分钟→溏心蛋。芝士：直接放在面条上。',
   },
   ja: {
     title: 'トッピング組み合わせ',
@@ -56,10 +40,6 @@ const LABEL: Record<Lang, {
     ingredientsLink: '⚠️ アレルギーやハラールが気になる方はまず成分を確認 →',
     matrixTitle: '🍜 カテゴリー別にトッピングを選ぶ',
     comboTitle: '✅ 実証済みのおすすめ組み合わせ',
-    tip: '💡 コンビニで全部そろう',
-    tipDesc: '卵、チーズスライス、おにぎりはどのコンビニの冷蔵コーナーにもあります。',
-    where: '🍳 作り方',
-    whereDesc: '卵：カップ麺のふたの上に置いてお湯を注ぎ3分→半熟。チーズ：麺の上にそのまま乗せる。',
   },
 }
 
@@ -329,16 +309,6 @@ export default function ToppingsView({ combos }: { combos: ToppingCombo[] }) {
             </div>
           )
         })}
-
-        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-3">
-          <p className="text-sm font-bold text-emerald-800 mb-1">{L.tip}</p>
-          <p className="text-xs text-emerald-700 leading-relaxed">{L.tipDesc}</p>
-        </div>
-
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
-          <p className="text-sm font-bold text-amber-800 mb-1">{L.where}</p>
-          <p className="text-xs text-amber-700 leading-relaxed">{L.whereDesc}</p>
-        </div>
       </main>
     </div>
   )
