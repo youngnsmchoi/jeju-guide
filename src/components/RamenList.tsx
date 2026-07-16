@@ -163,14 +163,22 @@ const SPICY_GUIDE: Record<Lang, { title: string; levels: { icon: string; label: 
 const USD_RATE = 1380
 const RATE_DATE = 'Jun 2026'
 
-// 매운맛 SHU(스코빌 지수) — 라면어워즈 랭킹 등 근거 확인된 라면만 표시
+// 매운맛 SHU(스코빌 지수) — 라면어워즈 랭킹, 라면업체 각사 공식 수치(jb-information) 등 근거 확인된 라면만 표시
 const SHU_BY_ID: Record<number, { shu: string; sourceUrl: string }> = {
   24: { shu: '5,013 SHU', sourceUrl: 'https://www.ramenawards.com/2024-korea-spiciest-instant-ramen-noodles-ranking-top-1-to-50/' },   // 열라면
   9: { shu: '5,013 SHU', sourceUrl: 'https://www.ramenawards.com/2024-korea-spiciest-instant-ramen-noodles-ranking-top-1-to-50/' },    // 열라면 용기
   25: { shu: '4,404 SHU', sourceUrl: 'https://www.ramenawards.com/2024-korea-spiciest-instant-ramen-noodles-ranking-top-1-to-50/' },   // 불닭볶음면
   10: { shu: '4,404 SHU', sourceUrl: 'https://www.ramenawards.com/2024-korea-spiciest-instant-ramen-noodles-ranking-top-1-to-50/' },   // 큰컵 불닭볶음면
   30: { shu: '9,413 SHU', sourceUrl: 'https://www.ramenawards.com/2024-korea-spiciest-instant-ramen-noodles-ranking-top-1-to-50/' },   // 틈새라면 빨계떡
-  27: { shu: '8,706 SHU', sourceUrl: 'https://www.ramenawards.com/2024-korea-spiciest-instant-ramen-noodles-ranking-top-1-to-50/' },   // 핵불닭볶음면
+  27: { shu: '10,000 SHU', sourceUrl: 'https://jb-information.tistory.com/57' },   // 핵불닭볶음면
+  11: { shu: '3,000 SHU', sourceUrl: 'https://jb-information.tistory.com/57' },    // 큰컵 까르보불닭볶음면
+  26: { shu: '3,000 SHU', sourceUrl: 'https://jb-information.tistory.com/57' },    // 까르보불닭볶음면
+  28: { shu: '2,100 SHU', sourceUrl: 'https://jb-information.tistory.com/57' },    // 로제불닭볶음면
+  18: { shu: '2,300 SHU', sourceUrl: 'https://jb-information.tistory.com/57' },    // 얼큰한너구리
+  5: { shu: '2,300 SHU', sourceUrl: 'https://jb-information.tistory.com/57' },     // 오징어짬뽕큰사발
+  7: { shu: '2,000 SHU', sourceUrl: 'https://jb-information.tistory.com/57' },     // 진라면 매운맛 용기
+  21: { shu: '2,000 SHU', sourceUrl: 'https://jb-information.tistory.com/57' },    // 진라면 매운맛
+  29: { shu: '2,652 SHU', sourceUrl: 'https://jb-information.tistory.com/57' },    // 팔도비빔면
 }
 
 const SHU_LABEL: Record<Lang, string> = {
