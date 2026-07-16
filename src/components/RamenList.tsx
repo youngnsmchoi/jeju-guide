@@ -418,6 +418,15 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
                 </a>
               </p>
             )}
+            {item.prep_time != null && (
+              <p className="flex items-center gap-1.5 text-sm text-emerald-700 font-semibold bg-emerald-50 rounded-lg px-2.5 py-1.5 w-fit">
+                <Clock size={16} />
+                {PREP_TIME_LABEL[lang](item.prep_time)}
+                {item.heat_source && (
+                  <span className="text-emerald-600 font-normal">· {HEAT_SOURCE_LABEL[item.heat_source][lang]}</span>
+                )}
+              </p>
+            )}
             {item.manufacturer_url && (
               <a
                 href={item.manufacturer_url}
@@ -468,16 +477,6 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
                 <span className="text-sm font-semibold text-gray-800">₩{item.price_krw.toLocaleString()}</span>
                 <span className="text-xs text-gray-400">(≈ ${(item.price_krw / USD_RATE).toFixed(2)} · {RATE_DATE})</span>
               </div>
-            )}
-
-            {item.prep_time != null && (
-              <p className="flex items-center gap-1.5 text-sm text-emerald-700 font-medium">
-                <Clock size={16} />
-                {PREP_TIME_LABEL[lang](item.prep_time)}
-                {item.heat_source && (
-                  <span className="text-gray-400 font-normal">· {HEAT_SOURCE_LABEL[item.heat_source][lang]}</span>
-                )}
-              </p>
             )}
 
             <button
