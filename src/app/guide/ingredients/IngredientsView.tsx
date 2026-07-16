@@ -125,11 +125,6 @@ export default function IngredientsView() {
       <NavBar />
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
-        {/* 면책 문구 */}
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
-          <p className="text-xs text-amber-700 leading-relaxed">{L.disclaimer}</p>
-        </div>
-
         {/* 3단계 */}
         {L.steps.map((step, i) => (
           <div key={i} className="bg-white rounded-2xl border border-gray-100 p-4 flex gap-4 items-start">
@@ -147,6 +142,11 @@ export default function IngredientsView() {
         <div className="bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-3">
           <p className="text-sm font-bold text-emerald-800 mb-1">{L.tip}</p>
           <p className="text-xs text-emerald-700 leading-relaxed">{L.tipDesc}</p>
+        </div>
+
+        {/* 면책 문구 — 실제 확인 행동(번역 앱 실행) 직전에 배치 */}
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
+          <p className="text-xs text-amber-700 leading-relaxed">{L.disclaimer}</p>
         </div>
 
         {/* 번역 앱 버튼 */}
