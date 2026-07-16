@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useLang } from '@/context/LangContext'
 import type { Item, Lang } from '@/lib/types'
 import { getContent } from '@/lib/types'
-import BlockRenderer from '@/components/BlockRenderer'
+import BlockRenderer, { renderText } from '@/components/BlockRenderer'
 import NavBar from '@/components/NavBar'
 
 type Tab = 'cup' | 'bag' | 'dry'
@@ -155,7 +155,7 @@ function TabContent({ item, lang, emptyEmoji, comingSoon }: {
       )}
       {getContent(item, lang) && (
         <div className="bg-white rounded-2xl border border-gray-100 p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-line">
-          {getContent(item, lang)}
+          {renderText(getContent(item, lang))}
         </div>
       )}
       {Array.isArray(item.blocks) && item.blocks.length > 0 && (

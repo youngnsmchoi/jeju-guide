@@ -11,7 +11,7 @@ function getYoutubeId(url: string): string | null {
 }
 
 // **굵게**, ~~취소선~~, !!빨강!!, ++초록++, --회색--, ##파랑## 변환 (중첩 조합 가능: 예 !!**텍스트**!!)
-function renderText(text: string, keyPrefix = ''): React.ReactNode[] {
+export function renderText(text: string, keyPrefix = ''): React.ReactNode[] {
   const parts = text.split(/(\*\*[^*]+\*\*|~~[^~]+~~|!![^!]+!!|\+\+[^+]+\+\+|--[^-]+--|##[^#]+##)/)
   return parts.map((part, i) => {
     const key = `${keyPrefix}${i}`

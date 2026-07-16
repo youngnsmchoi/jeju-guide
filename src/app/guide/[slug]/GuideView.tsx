@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useLang } from '@/context/LangContext'
 import { getTitle, getContent } from '@/lib/types'
 import type { Item, Category, Lang, RamenItem } from '@/lib/types'
-import BlockRenderer from '@/components/BlockRenderer'
+import BlockRenderer, { renderText } from '@/components/BlockRenderer'
 import RamenList from '@/components/RamenList'
 import NavBar from '@/components/NavBar'
 
@@ -71,7 +71,7 @@ export default function GuideView({ item, category, ramenItems, initialQuery }: 
             {/* 기존 텍스트 콘텐츠 (이전 데이터 호환) */}
             {(!item.blocks || item.blocks.length === 0) && content && (
               <div className="px-4 py-5">
-                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{content}</p>
+                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{renderText(content)}</p>
               </div>
             )}
           </>
