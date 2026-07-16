@@ -111,43 +111,67 @@ const SPICY_GUIDE: Record<Lang, { title: string; levels: { icon: string; label: 
   ko: {
     title: '🌶️ 맵기 기준',
     levels: [
-      { icon: '😊', label: '순함', desc: '신라면보다 약함' },
-      { icon: '🌶️', label: '보통', desc: '신라면 수준' },
-      { icon: '🌶️🌶️', label: '매움', desc: '신라면보다 강함' },
-      { icon: '🌶️🌶️🌶️', label: '극매움', desc: '불닭 수준' },
+      { icon: '😊', label: '순함', desc: '2,000 SHU 이하' },
+      { icon: '🌶️', label: '보통', desc: '2,000~4,000 SHU (신라면 3,400 SHU)' },
+      { icon: '🌶️🌶️', label: '매움', desc: '4,000~6,000 SHU' },
+      { icon: '🌶️🌶️🌶️', label: '극매움', desc: '6,000 SHU 이상 (불닭 계열)' },
     ],
   },
   en: {
     title: '🌶️ Spice guide',
     levels: [
-      { icon: '😊', label: 'Mild', desc: 'Less than Shin Ramyun' },
-      { icon: '🌶️', label: 'Medium', desc: 'Shin Ramyun level' },
-      { icon: '🌶️🌶️', label: 'Hot', desc: 'Hotter than Shin Ramyun' },
-      { icon: '🌶️🌶️🌶️', label: 'Extreme', desc: 'Buldak level' },
+      { icon: '😊', label: 'Mild', desc: '2,000 SHU or less' },
+      { icon: '🌶️', label: 'Medium', desc: '2,000–4,000 SHU (Shin Ramyun: 3,400 SHU)' },
+      { icon: '🌶️🌶️', label: 'Hot', desc: '4,000–6,000 SHU' },
+      { icon: '🌶️🌶️🌶️', label: 'Extreme', desc: '6,000+ SHU (Buldak line)' },
     ],
   },
   zh: {
     title: '🌶️ 辣度参考',
     levels: [
-      { icon: '😊', label: '微辣', desc: '比辛拉面辣度低' },
-      { icon: '🌶️', label: '中辣', desc: '辛拉面水平' },
-      { icon: '🌶️🌶️', label: '辣', desc: '比辛拉面更辣' },
-      { icon: '🌶️🌶️🌶️', label: '极辣', desc: '火鸡面水平' },
+      { icon: '😊', label: '微辣', desc: '2,000 SHU 以下' },
+      { icon: '🌶️', label: '中辣', desc: '2,000~4,000 SHU（辛拉面：3,400 SHU）' },
+      { icon: '🌶️🌶️', label: '辣', desc: '4,000~6,000 SHU' },
+      { icon: '🌶️🌶️🌶️', label: '极辣', desc: '6,000 SHU 以上（火鸡面系列）' },
     ],
   },
   ja: {
     title: '🌶️ 辛さの目安',
     levels: [
-      { icon: '😊', label: '辛くない', desc: '辛ラーメンより弱め' },
-      { icon: '🌶️', label: '普通', desc: '辛ラーメンと同レベル' },
-      { icon: '🌶️🌶️', label: '辛い', desc: '辛ラーメンより強め' },
-      { icon: '🌶️🌶️🌶️', label: '激辛', desc: 'ブルダックレベル' },
+      { icon: '😊', label: '辛くない', desc: '2,000 SHU 以下' },
+      { icon: '🌶️', label: '普通', desc: '2,000〜4,000 SHU（辛ラーメン：3,400 SHU）' },
+      { icon: '🌶️🌶️', label: '辛い', desc: '4,000〜6,000 SHU' },
+      { icon: '🌶️🌶️🌶️', label: '激辛', desc: '6,000 SHU 以上（プルダック系）' },
     ],
   },
 }
 
 const USD_RATE = 1380
 const RATE_DATE = 'Jun 2026'
+
+// 매운맛 SHU(스코빌 지수) — 라면어워즈 랭킹 등 근거 확인된 라면만 표시
+const SHU_BY_ID: Record<number, { shu: string; sourceUrl: string }> = {
+  24: { shu: '5,013 SHU', sourceUrl: 'https://www.ramenawards.com/2024-korea-spiciest-instant-ramen-noodles-ranking-top-1-to-50/' },   // 열라면
+  9: { shu: '5,013 SHU', sourceUrl: 'https://www.ramenawards.com/2024-korea-spiciest-instant-ramen-noodles-ranking-top-1-to-50/' },    // 열라면 용기
+  25: { shu: '4,404 SHU', sourceUrl: 'https://www.ramenawards.com/2024-korea-spiciest-instant-ramen-noodles-ranking-top-1-to-50/' },   // 불닭볶음면
+  10: { shu: '4,404 SHU', sourceUrl: 'https://www.ramenawards.com/2024-korea-spiciest-instant-ramen-noodles-ranking-top-1-to-50/' },   // 큰컵 불닭볶음면
+  30: { shu: '9,413 SHU', sourceUrl: 'https://www.ramenawards.com/2024-korea-spiciest-instant-ramen-noodles-ranking-top-1-to-50/' },   // 틈새라면 빨계떡
+  27: { shu: '8,706 SHU', sourceUrl: 'https://www.ramenawards.com/2024-korea-spiciest-instant-ramen-noodles-ranking-top-1-to-50/' },   // 핵불닭볶음면
+}
+
+const SHU_LABEL: Record<Lang, string> = {
+  ko: '출처',
+  en: 'Source',
+  zh: '来源',
+  ja: '出典',
+}
+
+const SPICE_NOTE: Record<Lang, string> = {
+  ko: '💡 SHU(스코빌 지수)가 표시된 라면은 공식 자료 기준입니다. 나머지 라면의 🌶️ 표시는 편집자 참고 추정치입니다.',
+  en: '💡 Ramen with an SHU number are based on published sources. The 🌶️ scale on other items is an editorial estimate.',
+  zh: '💡 标有SHU（史高维尔指数）的拉面基于公开资料。其他拉面的🌶️标记为编辑参考估算。',
+  ja: '💡 SHU（スコヴィル値）が表示されているラーメンは公式資料に基づいています。その他の🌶️表示は編集部の参考推定値です。',
+}
 
 const FIELD_LABEL: Record<'flavor_desc' | 'comparison' | 'popularity' | 'texture', Record<Lang, string>> = {
   flavor_desc: { ko: '맛', en: 'Flavor', zh: '味道', ja: '味' },
@@ -226,6 +250,7 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
             </div>
           ))}
         </div>
+        <p className="text-xs text-orange-700 mt-3 pt-3 border-t border-orange-200 leading-relaxed">{SPICE_NOTE[lang]}</p>
       </div>
 
       {/* 검색창 */}
@@ -299,6 +324,15 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
               <h2 className="text-base font-bold text-gray-900">{getRamenField(item, 'name', lang)}</h2>
               {!!item.spicy_level && <SpicyLevel level={item.spicy_level} />}
             </div>
+            {SHU_BY_ID[item.id] && (
+              <p className="text-xs text-red-500 font-semibold -mt-2">
+                🌶️ {SHU_BY_ID[item.id].shu}
+                <a href={SHU_BY_ID[item.id].sourceUrl} target="_blank" rel="noopener noreferrer"
+                  className="text-gray-400 font-normal underline underline-offset-2 ml-1">
+                  ({SHU_LABEL[lang]})
+                </a>
+              </p>
+            )}
             {item.manufacturer_url && (
               <a
                 href={item.manufacturer_url}
