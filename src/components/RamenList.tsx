@@ -73,6 +73,20 @@ const FILTER_LABEL: Record<Lang, { all: string; cup: string; bag: string }> = {
   ja: { all: 'すべて', cup: 'カップ', bag: '袋' },
 }
 
+const SPICY_FILTER_LABEL: Record<Lang, { all: string; mild: string; medium: string; hot: string; extreme: string }> = {
+  ko: { all: '전체', mild: '😊 순함', medium: '🌶️ 보통', hot: '🌶️🌶️ 매움', extreme: '🌶️🌶️🌶️ 극매움' },
+  en: { all: 'All', mild: '😊 Mild', medium: '🌶️ Medium', hot: '🌶️🌶️ Hot', extreme: '🌶️🌶️🌶️ Extreme' },
+  zh: { all: '全部', mild: '😊 微辣', medium: '🌶️ 中辣', hot: '🌶️🌶️ 辣', extreme: '🌶️🌶️🌶️ 极辣' },
+  ja: { all: 'すべて', mild: '😊 辛くない', medium: '🌶️ 普通', hot: '🌶️🌶️ 辛い', extreme: '🌶️🌶️🌶️ 激辛' },
+}
+
+const PRICE_FILTER_LABEL: Record<Lang, { all: string; low: string; mid: string; high: string }> = {
+  ko: { all: '전체', low: '~2,000원', mid: '2,000~3,000원', high: '3,000원~' },
+  en: { all: 'All', low: '~₩2,000', mid: '₩2,000~3,000', high: '₩3,000~' },
+  zh: { all: '全部', low: '~2,000韩元', mid: '2,000~3,000韩元', high: '3,000韩元~' },
+  ja: { all: 'すべて', low: '~2,000ウォン', mid: '2,000~3,000ウォン', high: '3,000ウォン~' },
+}
+
 const SEARCH_PLACEHOLDER: Record<Lang, string> = {
   ko: '라면 이름으로 검색',
   en: 'Search by name',
@@ -193,6 +207,8 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
   const router = useRouter()
   const [sortBySpicy, setSortBySpicy] = useState(false)
   const [typeFilter, setTypeFilter] = useState<'all' | 'cup' | 'bag'>('all')
+  const [spicyFilter, setSpicyFilter] = useState<'all' | 'mild' | 'medium' | 'hot' | 'extreme'>('all')
+  const [priceFilter, setPriceFilter] = useState<'all' | 'low' | 'mid' | 'high'>('all')
   const [query, setQuery] = useState('')
 
   if (items.length === 0) {
@@ -202,6 +218,19 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
   const q = query.trim().toLowerCase()
   const filteredItems = items.filter(item => {
     if (typeFilter !== 'all' && item.noodle_type !== typeFilter) return false
+    if (spicyFilter !== 'all') {
+      const level = item.spicy_level ?? 0
+      if (spicyFilter === 'mild' && level > 2) return false
+      if (spicyFilter === 'medium' && level !== 3) return false
+      if (spicyFilter === 'hot' && level !== 4) return false
+      if (spicyFilter === 'extreme' && level < 5) return false
+    }
+    if (priceFilter !== 'all') {
+      const price = item.price_krw ?? 0
+      if (priceFilter === 'low' && price > 2000) return false
+      if (priceFilter === 'mid' && (price < 2000 || price > 3000)) return false
+      if (priceFilter === 'high' && price < 3000) return false
+    }
     if (q) return (getRamenField(item, 'name', lang) ?? '').toLowerCase().includes(q)
     return true
   })
@@ -294,6 +323,26 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
             🌶️ {SORT_LABEL[lang].spicy}
           </button>
         </div>
+      </div>
+
+      <div className="flex gap-1.5 overflow-x-auto -mx-4 px-4 pb-1">
+        {(['all', 'mild', 'medium', 'hot', 'extreme'] as const).map(s => (
+          <button key={s} onClick={() => setSpicyFilter(s)}
+            className={`text-xs font-medium px-3 py-1.5 rounded-full whitespace-nowrap transition-colors
+              ${spicyFilter === s ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-500'}`}>
+            {SPICY_FILTER_LABEL[lang][s]}
+          </button>
+        ))}
+      </div>
+
+      <div className="flex gap-1.5 overflow-x-auto -mx-4 px-4 pb-1">
+        {(['all', 'low', 'mid', 'high'] as const).map(p => (
+          <button key={p} onClick={() => setPriceFilter(p)}
+            className={`text-xs font-medium px-3 py-1.5 rounded-full whitespace-nowrap transition-colors
+              ${priceFilter === p ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
+            {PRICE_FILTER_LABEL[lang][p]}
+          </button>
+        ))}
       </div>
       {sortedItems.length === 0 && (
         <p className="text-center text-gray-400 py-10 text-sm">
