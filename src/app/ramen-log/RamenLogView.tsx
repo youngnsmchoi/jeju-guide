@@ -13,9 +13,13 @@ const COUNTRIES = [
   { code: 'japan',       flag: '🇯🇵', label: 'Japan' },
   { code: 'taiwan',      flag: '🇹🇼', label: 'Taiwan' },
   { code: 'usa',         flag: '🇺🇸', label: 'USA' },
+  { code: 'hongkong',    flag: '🇭🇰', label: 'Hong Kong' },
   { code: 'vietnam',     flag: '🇻🇳', label: 'Vietnam' },
   { code: 'thailand',    flag: '🇹🇭', label: 'Thailand' },
   { code: 'philippines', flag: '🇵🇭', label: 'Philippines' },
+  { code: 'singapore',   flag: '🇸🇬', label: 'Singapore' },
+  { code: 'malaysia',    flag: '🇲🇾', label: 'Malaysia' },
+  { code: 'mongolia',    flag: '🇲🇳', label: 'Mongolia' },
   { code: 'other',       flag: '🌍', label: 'Other' },
 ]
 
