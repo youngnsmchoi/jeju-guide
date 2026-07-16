@@ -72,6 +72,7 @@ const LABEL: Record<Lang, {
   notePlaceholder: string;
   submit: string; privacy: string; done: string; doneMsg: string;
   error: string; alreadyLogged: string; loading: string; noData: string; total: string;
+  logAnother: string; viewFootprints: string;
 }> = {
   ko: {
     title: 'My Ramen Log', back: '← 홈', tabLog: '기록하기', tabStats: '발자취',
@@ -80,10 +81,11 @@ const LABEL: Record<Lang, {
     qNote: '하고 싶은 말 (선택)',
     notePlaceholder: '아쉬운 점, 이렇게 먹으면 맛있어요, 한마디...',
     submit: '완료', privacy: '선택하신 정보는 국가별 익명 통계로만 활용됩니다.',
-    done: '감사합니다!', doneMsg: '소중한 의견이 K-Ramen 가이드 개선에 활용됩니다.',
+    done: '감사합니다!', doneMsg: '소중한 의견이 Korea Convenience Store Guide 개선에 활용됩니다.',
     error: '제출에 실패했습니다. 다시 시도해 주세요.',
     alreadyLogged: '이 라면은 이미 기록하셨습니다.',
     loading: '불러오는 중...', noData: '아직 등록된 발자취가 없습니다.', total: '명',
+    logAnother: '다른 라면 기록하기', viewFootprints: '발자취 보러 가기 →',
   },
   en: {
     title: 'My Ramen Log', back: '← Home', tabLog: 'Log', tabStats: 'Footprints',
@@ -92,10 +94,11 @@ const LABEL: Record<Lang, {
     qNote: 'Anything to add? (optional)',
     notePlaceholder: 'Tips, complaints, how to make it better...',
     submit: 'Done', privacy: 'Your response is collected as anonymous statistics by country.',
-    done: 'Thank you!', doneMsg: 'Your feedback helps improve the K-Ramen guide.',
+    done: 'Thank you!', doneMsg: 'Your feedback helps improve Korea Convenience Store Guide.',
     error: 'Submission failed. Please try again.',
     alreadyLogged: 'You already logged this ramen.',
     loading: 'Loading...', noData: 'No footprints yet.', total: 'people',
+    logAnother: 'Log another ramen', viewFootprints: 'See footprints →',
   },
   zh: {
     title: 'My Ramen Log', back: '← 主页', tabLog: '记录', tabStats: '足迹',
@@ -104,10 +107,11 @@ const LABEL: Record<Lang, {
     qNote: '还有什么想说的？（可选）',
     notePlaceholder: '不足之处、这样吃更好吃、一句话...',
     submit: '完成', privacy: '您的选择仅用于按国家匿名统计。',
-    done: '谢谢！', doneMsg: '您的反馈将用于改进K-Ramen指南。',
+    done: '谢谢！', doneMsg: '您的反馈将用于改进Korea Convenience Store Guide。',
     error: '提交失败，请重试。',
     alreadyLogged: '您已经记录过这款拉面了。',
     loading: '加载中...', noData: '还没有足迹。', total: '人',
+    logAnother: '记录其他拉面', viewFootprints: '查看足迹 →',
   },
   ja: {
     title: 'My Ramen Log', back: '← ホーム', tabLog: '記録する', tabStats: '足跡',
@@ -116,10 +120,11 @@ const LABEL: Record<Lang, {
     qNote: '一言メモ（任意）',
     notePlaceholder: '残念だった点、こうすると美味しい、ひとこと...',
     submit: '完了', privacy: 'ご回答は国別の匿名統計としてのみ使用されます。',
-    done: 'ありがとうございます！', doneMsg: 'ご意見はK-Ramenガイドの改善に活用されます。',
+    done: 'ありがとうございます！', doneMsg: 'ご意見はKorea Convenience Store Guideの改善に活用されます。',
     error: '送信に失敗しました。もう一度お試しください。',
     alreadyLogged: 'このラーメンはすでに記録済みです。',
     loading: '読み込み中...', noData: 'まだ足跡がありません。', total: '人',
+    logAnother: '別のラーメンを記録する', viewFootprints: '足跡を見に行く →',
   },
 }
 
@@ -317,6 +322,16 @@ export default function RamenLogView({ items }: { items: RamenItem[] }) {
     else setError(true)
   }
 
+  const resetForm = () => {
+    setRamenId('')
+    setCountry('')
+    setRating('')
+    setMemoTags([])
+    setNote('')
+    setAlreadyLogged(false)
+    setDone(false)
+  }
+
   if (done) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -325,6 +340,16 @@ export default function RamenLogView({ items }: { items: RamenItem[] }) {
           <div className="text-5xl mb-4">🍜</div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">{L.done}</h2>
           <p className="text-sm text-gray-500 mb-8">{L.doneMsg}</p>
+          <div className="w-full max-w-xs space-y-2">
+            <button onClick={resetForm}
+              className="w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors">
+              {L.logAnother}
+            </button>
+            <button onClick={() => { setDone(false); setTab('stats') }}
+              className="w-full bg-white border border-gray-200 text-gray-700 py-3 rounded-2xl font-semibold hover:bg-gray-50 transition-colors">
+              {L.viewFootprints}
+            </button>
+          </div>
         </div>
       </div>
     )
