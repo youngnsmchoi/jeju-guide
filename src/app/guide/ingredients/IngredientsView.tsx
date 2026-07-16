@@ -1,5 +1,5 @@
 'use client'
-// 나도 먹을 수 있나요? — 파파고로 성분 직접 확인하는 방법 안내
+// 나도 먹을 수 있나요? — 번역 앱(파파고/구글 번역)으로 성분 직접 확인하는 방법 안내
 
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
@@ -12,6 +12,7 @@ const LABEL: Record<Lang, {
   tip: string
   tipDesc: string
   papago: string
+  googleTranslate: string
 }> = {
   en: {
     title: 'Can I Eat This?',
@@ -24,8 +25,8 @@ const LABEL: Record<Lang, {
       },
       {
         emoji: '📷',
-        title: 'Scan the ingredient label with Papago',
-        desc: 'Open Papago → tap the camera icon → point it at the ingredient label on the package.',
+        title: 'Scan the ingredient label with a translation app',
+        desc: 'Open Papago or Google Translate → tap the camera icon → point it at the ingredient label on the package.',
       },
       {
         emoji: '✅',
@@ -34,8 +35,9 @@ const LABEL: Record<Lang, {
       },
     ],
     tip: '💡 Tip for better scanning',
-    tipDesc: 'Take the photo in a bright spot and get as close to the label as possible. This improves Papago\'s recognition accuracy.',
+    tipDesc: 'Take the photo in a bright spot and get as close to the label as possible. This improves recognition accuracy.',
     papago: 'Open Papago',
+    googleTranslate: 'Open Google Translate',
   },
   ko: {
     title: '나도 먹을 수 있나요?',
@@ -48,8 +50,8 @@ const LABEL: Record<Lang, {
       },
       {
         emoji: '📷',
-        title: '파파고로 성분표 스캔',
-        desc: '파파고 앱 실행 → 카메라 아이콘 탭 → 라면 포장의 성분표에 카메라를 가져다 대세요.',
+        title: '번역 앱으로 성분표 스캔',
+        desc: '파파고 또는 구글 번역 실행 → 카메라 아이콘 탭 → 라면 포장의 성분표에 카메라를 가져다 대세요.',
       },
       {
         emoji: '✅',
@@ -58,8 +60,9 @@ const LABEL: Record<Lang, {
       },
     ],
     tip: '💡 인식률 올리는 팁',
-    tipDesc: '성분표 부분을 밝은 곳에서 최대한 가까이 촬영하면 파파고의 인식률이 올라갑니다.',
+    tipDesc: '성분표 부분을 밝은 곳에서 최대한 가까이 촬영하면 인식률이 올라갑니다.',
     papago: '파파고 열기',
+    googleTranslate: '구글 번역 열기',
   },
   zh: {
     title: '我能吃吗？',
@@ -72,8 +75,8 @@ const LABEL: Record<Lang, {
       },
       {
         emoji: '📷',
-        title: '用Papago扫描成分表',
-        desc: '打开Papago → 点击相机图标 → 将相机对准包装上的成分表。',
+        title: '用翻译App扫描成分表',
+        desc: '打开Papago或Google翻译 → 点击相机图标 → 将相机对准包装上的成分表。',
       },
       {
         emoji: '✅',
@@ -82,8 +85,9 @@ const LABEL: Record<Lang, {
       },
     ],
     tip: '💡 提高识别率的小贴士',
-    tipDesc: '在明亮的地方尽量靠近成分表拍照，可以提高Papago的识别准确率。',
+    tipDesc: '在明亮的地方尽量靠近成分表拍照，可以提高识别准确率。',
     papago: '打开Papago',
+    googleTranslate: '打开Google翻译',
   },
   ja: {
     title: '食べられますか？',
@@ -96,8 +100,8 @@ const LABEL: Record<Lang, {
       },
       {
         emoji: '📷',
-        title: 'Papagoで成分表をスキャン',
-        desc: 'Papagoを開く → カメラアイコンをタップ → パッケージの成分表にカメラを向ける。',
+        title: '翻訳アプリで成分表をスキャン',
+        desc: 'PapagoまたはGoogle翻訳を開く → カメラアイコンをタップ → パッケージの成分表にカメラを向ける。',
       },
       {
         emoji: '✅',
@@ -106,8 +110,9 @@ const LABEL: Record<Lang, {
       },
     ],
     tip: '💡 認識率を上げるコツ',
-    tipDesc: '明るい場所でできるだけ成分表に近づいて撮影すると、Papagoの認識精度が上がります。',
+    tipDesc: '明るい場所でできるだけ成分表に近づいて撮影すると、認識精度が上がります。',
     papago: 'Papagoを開く',
+    googleTranslate: 'Google翻訳を開く',
   },
 }
 
@@ -144,15 +149,25 @@ export default function IngredientsView() {
           <p className="text-xs text-emerald-700 leading-relaxed">{L.tipDesc}</p>
         </div>
 
-        {/* 파파고 버튼 */}
-        <a
-          href="https://papago.naver.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold text-center hover:bg-emerald-700 transition-colors"
-        >
-          {L.papago} →
-        </a>
+        {/* 번역 앱 버튼 */}
+        <div className="flex gap-2">
+          <a
+            href="https://papago.naver.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 bg-emerald-600 text-white py-3 rounded-2xl font-semibold text-center hover:bg-emerald-700 transition-colors"
+          >
+            {L.papago} →
+          </a>
+          <a
+            href="https://translate.google.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 bg-white text-emerald-700 border border-emerald-600 py-3 rounded-2xl font-semibold text-center hover:bg-emerald-50 transition-colors"
+          >
+            {L.googleTranslate} →
+          </a>
+        </div>
       </main>
     </div>
   )
