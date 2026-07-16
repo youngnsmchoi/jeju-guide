@@ -11,6 +11,16 @@ import NavBar from '@/components/NavBar'
 const ROULETTE_MIN = 2
 const ROULETTE_MAX = 7
 
+// 매운맛 도전 라면 SHU(스코빌 지수) — 라면어워즈 랭킹 기준
+const SHU_BY_ID: Record<number, string> = {
+  24: '5,013 SHU',   // 열라면
+  9: '5,013 SHU',    // 열라면 용기
+  25: '4,404 SHU',   // 불닭볶음면
+  10: '4,404 SHU',   // 큰컵 불닭볶음면
+  30: '9,413 SHU',   // 틈새라면 빨계떡
+  27: '8,706 SHU',   // 핵불닭볶음면
+}
+
 type VibeTag = 'hangover' | 'hot_challenge' | 'comfort_savory'
 
 const VIBE_OPTIONS: { tag: VibeTag; emoji: string; label: Record<Lang, string>; desc: Record<Lang, string> }[] = [
@@ -184,6 +194,9 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
                         <span className="min-w-0">
                           <span className="block text-xs font-bold text-gray-900 leading-snug">{getRamenField(item, 'name', lang)}</span>
                           {item.price_krw && <span className="block text-xs text-gray-400 mt-1">₩{item.price_krw.toLocaleString()}</span>}
+                          {selectedVibe === 'hot_challenge' && SHU_BY_ID[item.id] && (
+                            <span className="block text-xs text-red-500 font-semibold mt-0.5">🌶️ {SHU_BY_ID[item.id]}</span>
+                          )}
                         </span>
                         <span className={`shrink-0 w-4 h-4 rounded border flex items-center justify-center text-[10px] mt-0.5
                           ${checked ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-gray-300'}`}>
