@@ -1,5 +1,5 @@
 'use client'
-// 홈 화면 — 내 메뉴(즐겨찾기) + 그룹별 섹션 카드 (2열 그리드)
+// 홈 화면 — 내 메뉴(즐겨찾기) + 그룹별 섹션 카드 (2열 그리드) (배포 트리거용 재커밋)
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
