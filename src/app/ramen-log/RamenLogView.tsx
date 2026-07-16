@@ -192,12 +192,9 @@ function StatsTab({ lang }: { lang: Lang }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([
-      fetch('/api/ramen-log').then(r => r.json()),
-      fetch('/api/admin/ramen-log').then(r => r.json()),
-    ]).then(([s, f]) => {
-      setStats(Array.isArray(s) ? s : [])
-      setFeed(Array.isArray(f) ? f : [])
+    fetch('/api/ramen-log').then(r => r.json()).then(({ stats, feed }) => {
+      setStats(Array.isArray(stats) ? stats : [])
+      setFeed(Array.isArray(feed) ? feed : [])
       setLoading(false)
     }).catch(() => setLoading(false))
   }, [])
