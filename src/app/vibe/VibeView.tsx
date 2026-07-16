@@ -1,99 +1,75 @@
 'use client'
-// Vibe 큐레이션 — 3문항 점진적 펼침 → 라면 추천
+// Vibe 큐레이션 — 3개 태그(해장/도전/편안함) 중 선택 → 해당 라면 목록 표시
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 
-type VibeTag = 'hangover' | 'comfort' | 'challenge' | 'mild'
-type Ingredient = 'cheese' | 'egg' | 'gimbap'
+type VibeTag = 'hangover' | 'hot_challenge' | 'comfort_savory'
 
 const VIBE_OPTIONS: { tag: VibeTag; emoji: string; label: Record<Lang, string>; desc: Record<Lang, string> }[] = [
   {
     tag: 'hangover',
     emoji: '🍜',
-    label: { ko: '해장', en: 'Hangover Cure', zh: '解酒', ja: '二日酔い' },
-    desc: { ko: '얼큰한 국물이 당겨요', en: 'I need a spicy hot soup', zh: '想喝辣汤', ja: '辛いスープが飲みたい' },
+    label: { ko: '해장', en: 'Fresh Start', zh: '解酒', ja: '二日酔い対策' },
+    desc: {
+      ko: '해장하고 싶어요',
+      en: 'I need a fresh start!',
+      zh: '想解酒',
+      ja: '二日酔いを解消したい',
+    },
   },
   {
-    tag: 'comfort',
-    emoji: '😌',
-    label: { ko: '위로', en: 'Comfort', zh: '慰藉', ja: '癒し' },
-    desc: { ko: '부드럽고 편안한 맛이 좋아요', en: 'Something mild and cozy', zh: '想要温和舒适的味道', ja: '優しい味が食べたい' },
-  },
-  {
-    tag: 'challenge',
+    tag: 'hot_challenge',
     emoji: '🔥',
-    label: { ko: '도전', en: 'Challenge', zh: '挑战', ja: 'チャレンジ' },
-    desc: { ko: '한국 매운맛에 도전하고 싶어요', en: 'Bring on the Korean heat!', zh: '想挑战韩国辣味', ja: '韓国の辛さに挑戦したい' },
+    label: { ko: '매운맛 도전', en: 'Spicy Challenge', zh: '辣度挑战', ja: '辛さに挑戦' },
+    desc: {
+      ko: '한국 매운맛에 도전하고 싶어요',
+      en: 'I want to challenge myself!',
+      zh: '想挑战韩国辣味',
+      ja: '韓国の辛さに挑戦したい',
+    },
   },
   {
-    tag: 'mild',
-    emoji: '🌿',
-    label: { ko: '순한맛', en: 'Mild', zh: '温和', ja: 'マイルド' },
-    desc: { ko: '매운 거 잘 못 먹어요', en: 'Not good with spicy food', zh: '不太能吃辣', ja: '辛いのが苦手' },
+    tag: 'comfort_savory',
+    emoji: '😌',
+    label: { ko: '편안한 식사', en: 'Cozy Meal', zh: '舒适一餐', ja: '落ち着く食事' },
+    desc: {
+      ko: '편안한 식사를 원해요',
+      en: 'Just looking for a cozy meal.',
+      zh: '只想吃点舒服的',
+      ja: '落ち着ける食事がいい',
+    },
   },
-]
-
-const SPICE_OPTIONS: { level: number; shu: string | null; label: Record<Lang, string> }[] = [
-  { level: 1, shu: null, label: { ko: '안 매운 것만', en: 'Not spicy at all', zh: '完全不辣', ja: '辛くないもの' } },
-  { level: 2, shu: '2,000 SHU', label: { ko: '살짝 매운 정도 (진라면 정도)', en: 'Just a little spicy (like Jin Ramen)', zh: '微微辣（真拉面程度）', ja: 'ちょっと辛め（真ラーメンくらい）' } },
-  { level: 3, shu: '3,400 SHU', label: { ko: '신라면 정도', en: 'Like Shin Ramyun', zh: '辛拉面程度', ja: '辛ラーメンくらい' } },
-  { level: 4, shu: '4,400 SHU', label: { ko: '꽤 매운 것도 OK (불닭볶음면 정도)', en: 'Fairly spicy is fine (like Buldak)', zh: '比较辣也OK（火鸡面程度）', ja: 'かなり辛くてもOK（ブルダックくらい）' } },
-  { level: 5, shu: '5,000+ SHU', label: { ko: '극한의 매운맛 (열라면 이상)', en: 'Maximum spice! (Yeul Ramen+)', zh: '极辣！（热拉面以上）', ja: '激辛！（ヨルラーメン以上）' } },
-]
-
-const INGREDIENT_OPTIONS: { key: Ingredient; emoji: string; label: Record<Lang, string> }[] = [
-  { key: 'egg', emoji: '🥚', label: { ko: '계란', en: 'Egg', zh: '鸡蛋', ja: '卵' } },
-  { key: 'cheese', emoji: '🧀', label: { ko: '치즈', en: 'Cheese', zh: '芝士', ja: 'チーズ' } },
-  { key: 'gimbap', emoji: '🍙', label: { ko: '삼각김밥', en: 'Rice ball', zh: '三角饭团', ja: 'おにぎり' } },
 ]
 
 const LABEL: Record<Lang, {
-  title: string; q1: string; q2: string; q3: string;
-  q3skip: string; recommend: string; noResult: string; retry: string; viewAll: string;
-  spiceNote: string; spiceSource: string
+  title: string; q1: string; recommend: string; noResult: string; retry: string; viewAll: string;
+  tagSource: string
 }> = {
-  ko: { title: 'K-Ramen Vibe', q1: '지금 기분이 어때요?', q2: '매운맛은 얼마나 괜찮아요?', q3: '같이 먹고 싶은 것이 있나요?', q3skip: '그냥 라면만', recommend: '추천 라면', noResult: '조건에 맞는 라면이 없어요. 다시 선택해 보세요.', retry: '다시 하기', viewAll: '전체 목록 보기',
-    spiceNote: '💡 SHU(스코빌 지수)는 소스 자체의 매운맛 기준입니다. 비벼먹는 라면(불닭 계열)은 국물 라면보다 실제로 더 맵게 느껴질 수 있습니다.',
-    spiceSource: '출처: 농심 공식 발표, 뉴스톱 팩트체크, 뉴스스페이스 랭킹연구소' },
-  en: { title: 'K-Ramen Vibe', q1: "What's your vibe right now?", q2: 'How spicy can you handle?', q3: 'Want to add anything?', q3skip: 'Just ramen', recommend: 'Recommended', noResult: 'No match found. Try again!', retry: 'Try again', viewAll: 'View all',
-    spiceNote: '💡 SHU (Scoville Heat Units) measures the sauce itself. Dry/mixed noodles (like Buldak) can taste spicier than soup-based ramen even at the same SHU, since the sauce isn\'t diluted.',
-    spiceSource: 'Sources: Nongshim official statement, Newstop fact-check, Newsspace ranking research' },
-  zh: { title: 'K-Ramen Vibe', q1: '你现在的心情？', q2: '能接受多辣？', q3: '想搭配什么？', q3skip: '只要泡面', recommend: '推荐拉面', noResult: '没有符合的拉面，请重试。', retry: '重新选择', viewAll: '查看全部',
-    spiceNote: '💡 SHU（史高维尔指数）是酱料本身的辣度标准。拌面类（如火鸡面）比汤面类实际吃起来更辣，因为酱料没有被汤稀释。',
-    spiceSource: '来源：农心官方公布、Newstop事实查核、Newsspace排名研究' },
-  ja: { title: 'K-Ramen Vibe', q1: '今の気分は？', q2: '辛さはどのくらいOK？', q3: '一緒に食べたいものは？', q3skip: 'ラーメンだけ', recommend: 'おすすめラーメン', noResult: '条件に合うラーメンがありません。', retry: 'もう一度', viewAll: '全部見る',
-    spiceNote: '💡 SHU（スコヴィル値）はソース自体の辛さの基準です。混ぜ麺（プルダック系）はスープで薄まらないため、同じSHUでもスープ麺より辛く感じることがあります。',
-    spiceSource: '出典：農心公式発表、Newstopファクトチェック、Newsspaceランキング研究' },
-}
-
-function recommend(items: RamenItem[], vibe: VibeTag, spice: number, ingredients: Ingredient[]): RamenItem[] {
-  const scored = items.map(item => {
-    let score = 0
-    if (item.vibe_tag === vibe) score += 3
-    const diff = Math.abs((item.spice_level_std ?? 3) - spice)
-    score += Math.max(0, 3 - diff)
-    if (ingredients.length > 0) {
-      const match = item.ingredient_match?.split(',') ?? []
-      ingredients.forEach(ing => { if (match.includes(ing)) score += 1 })
-    }
-    return { item, score }
-  })
-  return scored.sort((a, b) => b.score - a.score).slice(0, 3).map(s => s.item)
-}
-
-function SectionHeader({ num, label, chosen }: { num: number; label: string; chosen?: string }) {
-  return (
-    <div className="flex items-center gap-2 mb-3">
-      <span className="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center shrink-0">{num}</span>
-      <span className="text-sm font-bold text-gray-800">{label}</span>
-      {chosen && <span className="ml-auto text-xs text-emerald-600 font-medium">{chosen}</span>}
-    </div>
-  )
+  ko: {
+    title: 'K-Ramen Vibe', q1: '어떤 라면을 찾고 있나요?', recommend: '추천 라면',
+    noResult: '아직 준비 중인 라면이에요.', retry: '다시 선택하기', viewAll: '전체 목록 보기',
+    tagSource: '분류 출처: 해장(ize.co.kr 해장 라면 추천), 매운맛 도전(라면어워즈 스코빌 지수 랭킹), 편안한 식사(위키트리 순한 라면 소개)',
+  },
+  en: {
+    title: 'K-Ramen Vibe', q1: 'What kind of ramen are you looking for?', recommend: 'Recommended',
+    noResult: 'No ramen in this category yet.', retry: 'Choose again', viewAll: 'View all',
+    tagSource: 'Sources: Fresh Start (ize.co.kr hangover ramen picks), Spicy Challenge (Ramen Awards Scoville ranking), Cozy Meal (Wikitree mild ramen roundup)',
+  },
+  zh: {
+    title: 'K-Ramen Vibe', q1: '你在找什么样的拉面？', recommend: '推荐拉面',
+    noResult: '这个分类还没有拉面。', retry: '重新选择', viewAll: '查看全部',
+    tagSource: '分类来源：解酒（ize.co.kr解酒拉面推荐）、辣度挑战（Ramen Awards史高维尔指数排名）、舒适一餐（Wikitree温和拉面介绍）',
+  },
+  ja: {
+    title: 'K-Ramen Vibe', q1: 'どんなラーメンをお探しですか？', recommend: 'おすすめラーメン',
+    noResult: 'このカテゴリのラーメンはまだありません。', retry: '選び直す', viewAll: '全部見る',
+    tagSource: '出典：二日酔い対策（ize.co.kr 二日酔いラーメン特集）、辛さに挑戦（Ramen Awards スコヴィル値ランキング）、落ち着く食事（Wikitree マイルドラーメン特集）',
+  },
 }
 
 export default function VibeView({ items }: { items: RamenItem[] }) {
@@ -101,53 +77,9 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
   const router = useRouter()
   const L = LABEL[lang]
 
-  const step2Ref = useRef<HTMLDivElement>(null)
-  const step3Ref = useRef<HTMLDivElement>(null)
-  const resultRef = useRef<HTMLDivElement>(null)
-
   const [selectedVibe, setSelectedVibe] = useState<VibeTag | null>(null)
-  const [selectedSpice, setSelectedSpice] = useState<number | null>(null)
-  const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([])
-  const [showResult, setShowResult] = useState(false)
 
-  const pickVibe = (tag: VibeTag) => {
-    setSelectedVibe(tag)
-    setSelectedSpice(null)
-    setSelectedIngredients([])
-    setShowResult(false)
-    setTimeout(() => step2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
-  }
-
-  const pickSpice = (level: number) => {
-    setSelectedSpice(level)
-    setSelectedIngredients([])
-    setShowResult(false)
-    setTimeout(() => step3Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
-  }
-
-  const toggleIngredient = (ing: Ingredient) =>
-    setSelectedIngredients(prev => prev.includes(ing) ? prev.filter(i => i !== ing) : [...prev, ing])
-
-  const showResults = (skipIngredients = false) => {
-    if (skipIngredients) setSelectedIngredients([])
-    setShowResult(true)
-    setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
-  }
-
-  const reset = () => {
-    setSelectedVibe(null)
-    setSelectedSpice(null)
-    setSelectedIngredients([])
-    setShowResult(false)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const results = showResult && selectedVibe && selectedSpice !== null
-    ? recommend(items, selectedVibe, selectedSpice, selectedIngredients)
-    : []
-
-  const vibeLabel = selectedVibe ? VIBE_OPTIONS.find(o => o.tag === selectedVibe)?.label[lang] : undefined
-  const spiceLabel = selectedSpice !== null ? SPICE_OPTIONS.find(o => o.level === selectedSpice)?.label[lang] : undefined
+  const results = selectedVibe ? items.filter(item => item.vibe_tag === selectedVibe) : []
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -155,82 +87,35 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 space-y-6">
 
-        {/* 1단계: 기분 */}
+        {/* 태그 선택 */}
         <div>
-          <SectionHeader num={1} label={L.q1} chosen={vibeLabel} />
-          <div className="grid grid-cols-2 gap-3">
+          <p className="text-sm font-bold text-gray-800 mb-3">{L.q1}</p>
+          <div className="space-y-2">
             {VIBE_OPTIONS.map(opt => (
-              <button key={opt.tag} onClick={() => pickVibe(opt.tag)}
-                className={`bg-white rounded-2xl border p-4 text-left transition-all
+              <button key={opt.tag} onClick={() => setSelectedVibe(opt.tag)}
+                className={`w-full bg-white rounded-2xl border p-4 text-left transition-all flex items-center gap-3
                   ${selectedVibe === opt.tag ? 'border-emerald-500 bg-emerald-50 shadow-sm' : 'border-gray-200 hover:border-emerald-300'}`}>
-                <div className="text-3xl mb-2">{opt.emoji}</div>
-                <div className="text-sm font-bold text-gray-900">{opt.label[lang]}</div>
-                <div className="text-xs text-gray-500 mt-1">{opt.desc[lang]}</div>
+                <span className="text-3xl shrink-0">{opt.emoji}</span>
+                <span>
+                  <span className="block text-sm font-bold text-gray-900">{opt.label[lang]}</span>
+                  <span className="block text-xs text-gray-500 mt-0.5">{opt.desc[lang]}</span>
+                </span>
               </button>
             ))}
           </div>
+          <p className="text-xs text-gray-300 mt-3">{L.tagSource}</p>
         </div>
 
-        {/* 2단계: 맵기 — 1단계 선택 후 표시 */}
-        {selectedVibe && (
-          <div ref={step2Ref} className="scroll-mt-16">
-            <SectionHeader num={2} label={L.q2} chosen={spiceLabel} />
-            <div className="space-y-2">
-              {SPICE_OPTIONS.map(opt => (
-                <button key={opt.level} onClick={() => pickSpice(opt.level)}
-                  className={`w-full bg-white rounded-2xl border px-4 py-3 text-left transition-all flex items-center gap-3
-                    ${selectedSpice === opt.level ? 'border-emerald-500 bg-emerald-50 shadow-sm' : 'border-gray-200 hover:border-emerald-300'}`}>
-                  <span className="text-sm w-20 shrink-0">{'🌶️'.repeat(opt.level)}</span>
-                  <span className="flex-1">
-                    <span className="block text-sm font-medium text-gray-800">{opt.label[lang]}</span>
-                    {opt.shu && <span className="block text-xs text-gray-400 mt-0.5">{opt.shu}</span>}
-                  </span>
-                </button>
-              ))}
-            </div>
-            <p className="text-xs text-gray-500 leading-relaxed mt-3">{L.spiceNote}</p>
-            <p className="text-xs text-gray-300 mt-1">{L.spiceSource}</p>
-          </div>
-        )}
-
-        {/* 3단계: 재료 — 2단계 선택 후 표시 */}
-        {selectedSpice !== null && (
-          <div ref={step3Ref} className="scroll-mt-16">
-            <SectionHeader num={3} label={L.q3} />
-            <div className="grid grid-cols-3 gap-3 mb-4">
-              {INGREDIENT_OPTIONS.map(opt => (
-                <button key={opt.key} onClick={() => toggleIngredient(opt.key)}
-                  className={`bg-white rounded-2xl border p-4 text-center transition-all
-                    ${selectedIngredients.includes(opt.key) ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-emerald-300'}`}>
-                  <div className="text-3xl mb-1">{opt.emoji}</div>
-                  <div className="text-xs font-medium text-gray-800">{opt.label[lang]}</div>
-                </button>
-              ))}
-            </div>
-            <div className="space-y-2">
-              <button onClick={() => showResults(false)}
-                className="w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors">
-                {L.recommend} →
-              </button>
-              <button onClick={() => showResults(true)}
-                className="w-full bg-white border border-gray-200 text-gray-500 py-3 rounded-2xl text-sm hover:bg-gray-50 transition-colors">
-                {L.q3skip}
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* 결과 */}
-        {showResult && (
-          <div ref={resultRef} className="scroll-mt-16 space-y-3">
+        {selectedVibe && (
+          <div className="space-y-3">
             <h2 className="text-base font-bold text-gray-900">{L.recommend}</h2>
             {results.length === 0 ? (
               <p className="text-gray-400 text-center py-10">{L.noResult}</p>
             ) : (
               <div className="space-y-3">
-                {results.map((item, i) => (
+                {results.map(item => (
                   <div key={item.id} className="bg-white rounded-2xl border border-gray-200 p-4 flex items-center gap-3">
-                    <span className="text-2xl font-black text-emerald-500">#{i + 1}</span>
                     <div>
                       <p className="text-sm font-bold text-gray-900">{getRamenField(item, 'name', lang)}</p>
                       {item.price_krw && <p className="text-xs text-gray-400 mt-0.5">₩{item.price_krw.toLocaleString()}</p>}
@@ -253,7 +138,7 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
             </div>
 
             <div className="space-y-2 pt-1">
-              <button onClick={reset}
+              <button onClick={() => setSelectedVibe(null)}
                 className="w-full bg-emerald-600 text-white py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors">
                 {L.retry}
               </button>
