@@ -194,6 +194,31 @@ const FIELD_LABEL: Record<'flavor_desc' | 'comparison' | 'popularity' | 'texture
   texture: { ko: '식감 특징', en: 'Texture', zh: '口感', ja: '食感' },
 }
 
+// "인기 국가" 근거 출처 — 기사·공식 발표로 확인된 라면만 표시
+const POPULARITY_SOURCE_BY_ID: Record<number, string> = {
+  15: 'https://www.newspim.com/news/view/20260513001017', // 신라면
+  1: 'https://www.newspim.com/news/view/20260513001017',  // 신라면큰사발
+  25: 'https://www.jeonmae.co.kr/news/articleView.html?idxno=1262565', // 불닭볶음면
+  10: 'https://www.jeonmae.co.kr/news/articleView.html?idxno=1262565', // 큰컵 불닭볶음면
+  16: 'https://www.foodbank.co.kr/news/articleView.html?idxno=59494', // 올리브짜파게티
+  19: 'https://biz.heraldcorp.com/article/2354511', // 신라면블랙
+  14: 'https://en.wikipedia.org/wiki/Dosirac', // 팔도 도시락
+}
+
+const POPULARITY_SOURCE_LABEL: Record<Lang, string> = {
+  ko: '출처',
+  en: 'Source',
+  zh: '来源',
+  ja: '出典',
+}
+
+const POPULARITY_NOTE: Record<Lang, string> = {
+  ko: '💡 출처 링크가 있는 항목은 기사·공식 발표 기준입니다. 나머지는 편집자 참고 서술입니다.',
+  en: '💡 Items with a source link are based on articles or official announcements. Others are editorial descriptions.',
+  zh: '💡 附有来源链接的内容基于报道或官方发布。其余为编辑参考描述。',
+  ja: '💡 出典リンクがある項目は記事や公式発表に基づいています。その他は編集部の参考記述です。',
+}
+
 function SpicyLevel({ level }: { level: number }) {
   return (
     <span className="text-sm tracking-tight" aria-label={`spicy level ${level}`}>
@@ -281,6 +306,9 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
         </div>
         <p className="text-xs text-orange-700 mt-3 pt-3 border-t border-orange-200 leading-relaxed">{SPICE_NOTE[lang]}</p>
       </div>
+
+      {/* 인기 국가 안내 */}
+      <p className="text-xs text-gray-400 leading-relaxed px-1">{POPULARITY_NOTE[lang]}</p>
 
       {/* 검색창 */}
       <div className="relative">
@@ -408,7 +436,15 @@ export default function RamenList({ items, lang }: { items: RamenItem[]; lang: L
             {getRamenField(item, 'popularity', lang) && (
               <div>
                 <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">{FIELD_LABEL.popularity[lang]}</p>
-                <p className="text-sm text-gray-700 leading-relaxed">{getRamenField(item, 'popularity', lang)}</p>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  {getRamenField(item, 'popularity', lang)}
+                  {POPULARITY_SOURCE_BY_ID[item.id] && (
+                    <a href={POPULARITY_SOURCE_BY_ID[item.id]} target="_blank" rel="noopener noreferrer"
+                      className="text-gray-400 font-normal underline underline-offset-2 ml-1">
+                      ({POPULARITY_SOURCE_LABEL[lang]})
+                    </a>
+                  )}
+                </p>
               </div>
             )}
 
