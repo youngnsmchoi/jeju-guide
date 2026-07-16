@@ -17,11 +17,12 @@ const LABEL: Record<Lang, {
   tip: string
   viewOnYoutube: string
   viewSource: string
+  curated: string
 }> = {
-  ko: { empty: '아직 레시피가 없어요. 첫 번째로 올려보세요!', submit: '레시피 올리기', anonymous: '익명', likeBtn: '맛있겠다', ingredients: '재료', steps: '조리 순서', tip: '💡 Tip', viewOnYoutube: 'YouTube에서 보기', viewSource: '출처 보기' },
-  en: { empty: 'No recipes yet. Be the first!', submit: 'Share a recipe', anonymous: 'Anonymous', likeBtn: 'Looks good!', ingredients: 'Ingredients', steps: 'Steps', tip: '💡 Tip', viewOnYoutube: 'Watch on YouTube', viewSource: 'View source' },
-  zh: { empty: '还没有食谱，来第一个分享吧！', submit: '分享食谱', anonymous: '匿名', likeBtn: '看起来好吃', ingredients: '食材', steps: '做法', tip: '💡 小贴士', viewOnYoutube: '在YouTube观看', viewSource: '查看来源' },
-  ja: { empty: 'まだレシピがありません。最初に投稿しましょう！', submit: 'レシピを投稿', anonymous: '匿名', likeBtn: 'おいしそう！', ingredients: '材料', steps: '作り方', tip: '💡 ヒント', viewOnYoutube: 'YouTubeで見る', viewSource: '出典を見る' },
+  ko: { empty: '아직 레시피가 없어요. 첫 번째로 올려보세요!', submit: '레시피 올리기', anonymous: '익명', likeBtn: '맛있겠다', ingredients: '재료', steps: '조리 순서', tip: '💡 Tip', viewOnYoutube: 'YouTube에서 보기', viewSource: '출처 보기', curated: '🎬 추천 영상' },
+  en: { empty: 'No recipes yet. Be the first!', submit: 'Share a recipe', anonymous: 'Anonymous', likeBtn: 'Looks good!', ingredients: 'Ingredients', steps: 'Steps', tip: '💡 Tip', viewOnYoutube: 'Watch on YouTube', viewSource: 'View source', curated: '🎬 Featured video' },
+  zh: { empty: '还没有食谱，来第一个分享吧！', submit: '分享食谱', anonymous: '匿名', likeBtn: '看起来好吃', ingredients: '食材', steps: '做法', tip: '💡 小贴士', viewOnYoutube: '在YouTube观看', viewSource: '查看来源', curated: '🎬 精选视频' },
+  ja: { empty: 'まだレシピがありません。最初に投稿しましょう！', submit: 'レシピを投稿', anonymous: '匿名', likeBtn: 'おいしそう！', ingredients: '材料', steps: '作り方', tip: '💡 ヒント', viewOnYoutube: 'YouTubeで見る', viewSource: '出典を見る', curated: '🎬 おすすめ動画' },
 }
 
 const LIKED_KEY = 'liked_recipes'
@@ -96,6 +97,7 @@ export default function RecipesView() {
           const hasLiked = liked.has(recipe.id)
           const isExpanded = expanded.has(recipe.id)
           const steps = recipe.steps?.split('\n').filter(s => s.trim()) ?? []
+          const isCurated = recipe.nickname === 'YouTube'
 
           return (
             <div key={recipe.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
@@ -121,7 +123,12 @@ export default function RecipesView() {
                     ❤️ {recipe.likes > 0 ? recipe.likes : L.likeBtn}
                   </button>
                 </div>
-                {ramenName && <p className="text-xs font-medium text-emerald-600 mb-1">{ramenName}</p>}
+                <div className="flex items-center gap-1.5 flex-wrap mb-1">
+                  {isCurated && (
+                    <span className="text-xs font-medium bg-red-50 text-red-500 rounded-full px-2 py-0.5">{L.curated}</span>
+                  )}
+                  {ramenName && <p className="text-xs font-medium text-emerald-600">{ramenName}</p>}
+                </div>
                 {recipe.description && <p className="text-sm text-gray-500 leading-relaxed">{recipe.description}</p>}
               </div>
 
@@ -170,13 +177,15 @@ export default function RecipesView() {
               )}
 
 
-              {/* 작성자 */}
-              <div className="px-4 pb-3 flex items-center gap-1 text-xs text-gray-400">
-                {recipe.country && <span>{recipe.country}</span>}
-                {recipe.age_group && <span>· {recipe.age_group}</span>}
-                {recipe.gender && <span>· {recipe.gender}</span>}
-                <span>· {recipe.nickname || L.anonymous}</span>
-              </div>
+              {/* 작성자 — 큐레이션 항목은 생략 (배지로 이미 표시됨) */}
+              {!isCurated && (
+                <div className="px-4 pb-3 flex items-center gap-1 text-xs text-gray-400">
+                  {recipe.country && <span>{recipe.country}</span>}
+                  {recipe.age_group && <span>· {recipe.age_group}</span>}
+                  {recipe.gender && <span>· {recipe.gender}</span>}
+                  <span>· {recipe.nickname || L.anonymous}</span>
+                </div>
+              )}
             </div>
           )
         })}
