@@ -49,6 +49,14 @@ export type Best5Pick = {
   reason_en: string | null
   reason_zh: string | null
   reason_ja: string | null
+  ramen_items?: { manufacturer_url: string | null } | null
+}
+
+const OFFICIAL_PAGE_LABEL: Record<Lang, string> = {
+  ko: '📋 제품 상세 정보',
+  en: '📋 Product Details',
+  zh: '📋 产品详情',
+  ja: '📋 製品詳細情報',
 }
 
 function SpicyBadge({ level }: { level: number }) {
@@ -91,6 +99,15 @@ export default function Best5View({ picks }: { picks: Best5Pick[] }) {
             </div>
 
             <p className="text-sm text-gray-600 leading-relaxed">{pick[`reason_${lang}`] || pick.reason_ko}</p>
+
+            {pick.ramen_items?.manufacturer_url && (
+              <a
+                href={pick.ramen_items.manufacturer_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5 hover:bg-emerald-100 transition-colors"
+              >{OFFICIAL_PAGE_LABEL[lang]} →</a>
+            )}
           </div>
         ))}
       </main>
