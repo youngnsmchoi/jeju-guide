@@ -14,11 +14,24 @@ const LABEL: Record<Lang, {
   title: string
   cup: string; bag: string; dry: string
   comingSoon: string
+  noStovetopWarning: string
 }> = {
-  ko: { title: '라면 끓이는 법', cup: '컵라면', bag: '봉지라면', dry: '비벼먹기', comingSoon: '준비 중입니다.' },
-  en: { title: 'How to Cook', cup: 'Cup', bag: 'Bag', dry: 'Dry Style', comingSoon: 'Coming soon.' },
-  zh: { title: '如何烹饪', cup: '杯面', bag: '袋面', dry: '干拌', comingSoon: '即将推出。' },
-  ja: { title: '作り方', cup: 'カップ', bag: '袋', dry: 'まぜそば', comingSoon: '準備中です。' },
+  ko: {
+    title: '라면 끓이는 법', cup: '컵라면', bag: '봉지라면', dry: '비벼먹기', comingSoon: '준비 중입니다.',
+    noStovetopWarning: '⚠️ 편의점에는 냄비·인덕션이 없습니다. 이 조리법은 숙소(에어비앤비 등 취사 가능한 곳)에서만 가능해요. 편의점에서 바로 먹으려면 컵라면을 선택하세요.',
+  },
+  en: {
+    title: 'How to Cook', cup: 'Cup', bag: 'Bag', dry: 'Dry Style', comingSoon: 'Coming soon.',
+    noStovetopWarning: '⚠️ Convenience stores have no stovetop or pot. This method only works at accommodation with a kitchen (like an Airbnb). To eat right at the store, choose Cup instead.',
+  },
+  zh: {
+    title: '如何烹饪', cup: '杯面', bag: '袋面', dry: '干拌', comingSoon: '即将推出。',
+    noStovetopWarning: '⚠️ 便利店没有锅和炉灶。这种做法只能在有厨房的住宿（如民宿）里进行。想在便利店马上吃，请选择杯面。',
+  },
+  ja: {
+    title: '作り方', cup: 'カップ', bag: '袋', dry: 'まぜそば', comingSoon: '準備中です。',
+    noStovetopWarning: '⚠️ コンビニには鍋やコンロがありません。この作り方は宿泊先（民泊など調理できる場所）でのみ可能です。コンビニですぐ食べたいならカップを選びましょう。',
+  },
 }
 
 const BAG_STEPS: Record<Lang, { title: string; desc: string }[]> = {
@@ -135,6 +148,9 @@ export default function CookingView({ cupItem, bagItem, dryItem }: {
         )}
         {tab === 'bag' && (
           <div className="space-y-4">
+            <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 leading-relaxed">
+              {L.noStovetopWarning}
+            </p>
             {BAG_STEPS[lang].map((step, i) => (
               <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                 <img src={`/cooking/bag-${i + 1}.png`} alt={step.title} className="w-full object-cover" />
@@ -151,6 +167,9 @@ export default function CookingView({ cupItem, bagItem, dryItem }: {
         )}
         {tab === 'dry' && (
           <div className="space-y-4">
+            <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 leading-relaxed">
+              {L.noStovetopWarning}
+            </p>
             {DRY_STEPS[lang].map((step, i) => (
               <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                 <img src={`/cooking/dry-${i + 1}.png`} alt={step.title} className="w-full object-cover" />
