@@ -138,12 +138,12 @@ const GROUPS: Group[] = [
       },
       {
         emoji: '🎯',
-        title: { ko: 'Vibe 큐레이션', en: 'Vibe Curation', zh: 'Vibe 推荐', ja: 'Vibe おすすめ' },
+        title: { ko: '라면 찾기', en: 'Find Your Ramen', zh: '寻找拉面', ja: 'ラーメン探し' },
         desc: {
-          ko: '기분 · 맵기 · 재료 선택 → 라면 추천 3개',
-          en: 'Mood · spice · toppings → top 3 picks',
-          zh: '心情 · 辣度 · 配料 → 推荐3款',
-          ja: '気分 · 辛さ · 具材 → おすすめ3品',
+          ko: '해장 · 매운맛 도전 · 편안한 식사 → 라면 추천 + 룰렛',
+          en: 'Hangover · spicy challenge · cozy meal → picks + roulette',
+          zh: '解酒 · 辣度挑战 · 舒适一餐 → 推荐+轮盘',
+          ja: '二日酔い · 辛さ挑戦 · 落ち着く食事 → おすすめ+ルーレット',
         },
         href: '/vibe',
       },

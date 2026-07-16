@@ -71,7 +71,7 @@ const LABEL: Record<Lang, {
   cupType: string; bagType: string
 }> = {
   ko: {
-    title: 'K-Ramen Vibe', q1: '어떤 라면을 찾고 있나요?', recommend: '추천 라면',
+    title: '라면 찾기', q1: '어떤 라면을 찾고 있나요?', recommend: '추천 라면',
     noResult: '아직 준비 중인 라면이에요.', retry: '다시 선택하기', viewAll: '전체 목록 보기',
     tagSource: '분류 출처: 해장(ize.co.kr 해장 라면 추천), 매운맛 도전(라면어워즈 스코빌 지수 랭킹), 편안한 식사(위키트리 순한 라면 소개)',
     rouletteTitle: '골라주세요!', rouletteSubtitle: '',
@@ -81,7 +81,7 @@ const LABEL: Record<Lang, {
     cupType: '컵 (바로 먹기)', bagType: '봉지 (끓여야 함)',
   },
   en: {
-    title: 'K-Ramen Vibe', q1: 'What kind of ramen are you looking for?', recommend: 'Recommended',
+    title: 'Find Your Ramen', q1: 'What kind of ramen are you looking for?', recommend: 'Recommended',
     noResult: 'No ramen in this category yet.', retry: 'Choose again', viewAll: 'View all',
     tagSource: 'Sources: Fresh Start (ize.co.kr hangover ramen picks), Spicy Challenge (Ramen Awards Scoville ranking), Cozy Meal (Wikitree mild ramen roundup)',
     rouletteTitle: 'Pick one!', rouletteSubtitle: '',
@@ -91,7 +91,7 @@ const LABEL: Record<Lang, {
     cupType: 'Cup (ready to eat)', bagType: 'Bag (needs cooking)',
   },
   zh: {
-    title: 'K-Ramen Vibe', q1: '你在找什么样的拉面？', recommend: '推荐拉面',
+    title: '寻找拉面', q1: '你在找什么样的拉面？', recommend: '推荐拉面',
     noResult: '这个分类还没有拉面。', retry: '重新选择', viewAll: '查看全部',
     tagSource: '分类来源：解酒（ize.co.kr解酒拉面推荐）、辣度挑战（Ramen Awards史高维尔指数排名）、舒适一餐（Wikitree温和拉面介绍）',
     rouletteTitle: '帮我选！', rouletteSubtitle: '',
@@ -101,7 +101,7 @@ const LABEL: Record<Lang, {
     cupType: '杯面（可直接吃）', bagType: '袋装（需要煮）',
   },
   ja: {
-    title: 'K-Ramen Vibe', q1: 'どんなラーメンをお探しですか？', recommend: 'おすすめラーメン',
+    title: 'ラーメン探し', q1: 'どんなラーメンをお探しですか？', recommend: 'おすすめラーメン',
     noResult: 'このカテゴリのラーメンはまだありません。', retry: '選び直す', viewAll: '全部見る',
     tagSource: '出典：二日酔い対策（ize.co.kr 二日酔いラーメン特集）、辛さに挑戦（Ramen Awards スコヴィル値ランキング）、落ち着く食事（Wikitree マイルドラーメン特集）',
     rouletteTitle: '選んで！', rouletteSubtitle: '',
@@ -177,6 +177,8 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
       <NavBar />
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-6 space-y-6">
+
+        <h1 className="text-lg font-bold text-gray-900">{L.title}</h1>
 
         {/* 태그 선택 */}
         <div>
