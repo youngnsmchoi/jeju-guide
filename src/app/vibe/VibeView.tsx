@@ -1,7 +1,7 @@
 'use client'
 // Vibe 큐레이션 — 3개 태그(해장/도전/편안함) 중 선택 → 해당 라면 목록 표시 + 룰렛으로 최종 선택
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { RamenItem, Lang } from '@/lib/types'
@@ -123,8 +123,22 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
   const [displayItem, setDisplayItem] = useState<RamenItem | null>(null)
   const [winner, setWinner] = useState<RamenItem | null>(null)
   const spinTimer = useRef<ReturnType<typeof setInterval> | null>(null)
+  const resultRef = useRef<HTMLDivElement>(null)
+  const rouletteRef = useRef<HTMLDivElement>(null)
 
   const results = selectedVibe ? items.filter(item => item.vibe_tag === selectedVibe) : []
+
+  useEffect(() => {
+    if (selectedVibe) {
+      setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
+    }
+  }, [selectedVibe])
+
+  useEffect(() => {
+    if (winner) {
+      setTimeout(() => rouletteRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50)
+    }
+  }, [winner])
 
   const toggleCheck = (id: number) => {
     setWinner(null)
@@ -185,7 +199,7 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
 
         {/* 결과 */}
         {selectedVibe && (
-          <div className="space-y-3">
+          <div ref={resultRef} className="space-y-3 scroll-mt-4">
             <h2 className="text-base font-bold text-gray-900">{L.recommend}</h2>
             {results.length === 0 ? (
               <p className="text-gray-400 text-center py-10">{L.noResult}</p>
@@ -221,7 +235,7 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
                 </div>
 
                 {/* 라면 룰렛 */}
-                <div className="bg-white rounded-2xl border border-gray-200 p-4 space-y-3">
+                <div ref={rouletteRef} className="bg-white rounded-2xl border border-gray-200 p-4 space-y-3 scroll-mt-4">
                   <div>
                     <p className="text-sm font-bold text-gray-900">{L.rouletteTitle}</p>
                     {L.rouletteSubtitle && <p className="text-xs text-gray-400 mt-0.5">{L.rouletteSubtitle}</p>}
@@ -235,6 +249,15 @@ export default function VibeView({ items }: { items: RamenItem[] }) {
                       <p className={`font-black text-gray-900 ${winner ? 'text-xl' : 'text-base'}`}>
                         {getRamenField(displayItem, 'name', lang)}
                       </p>
+                      {winner && (
+                        <div className="flex items-center justify-center gap-2 mt-2">
+                          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded
+                            ${CUP_TYPE_IDS.has(winner.id) ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'}`}>
+                            {CUP_TYPE_IDS.has(winner.id) ? L.cupType : L.bagType}
+                          </span>
+                          {winner.price_krw && <span className="text-xs text-gray-500">₩{winner.price_krw.toLocaleString()}</span>}
+                        </div>
+                      )}
                     </div>
                   )}
 
