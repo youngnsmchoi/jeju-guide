@@ -6,8 +6,9 @@ import GuideView from './GuideView'
 
 export const revalidate = 60
 
-export default async function GuidePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function GuidePage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ q?: string }> }) {
   const { slug } = await params
+  const { q } = await searchParams
 
   const { data: item } = await supabase.from('jeju_items').select('*').eq('slug', slug).single()
 
@@ -27,6 +28,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
       item={item as Item}
       category={category as Category | null}
       ramenItems={ramenItems as RamenItem[] | null}
+      initialQuery={q}
     />
   )
 }

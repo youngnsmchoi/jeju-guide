@@ -21,7 +21,7 @@ function getYoutubeId(url: string): string | null {
   return m ? m[1] : null
 }
 
-export default function GuideView({ item, category, ramenItems }: { item: Item; category: Category | null; ramenItems: RamenItem[] | null }) {
+export default function GuideView({ item, category, ramenItems, initialQuery }: { item: Item; category: Category | null; ramenItems: RamenItem[] | null; initialQuery?: string }) {
   const { lang } = useLang()
 
   const mapLabels = MAP_LABELS[lang]
@@ -40,7 +40,7 @@ export default function GuideView({ item, category, ramenItems }: { item: Item; 
 
         {/* 라면 가이드: 레코드 카드 목록 */}
         {ramenItems ? (
-          <RamenList items={ramenItems} lang={lang} />
+          <RamenList items={ramenItems} lang={lang} initialQuery={initialQuery} />
         ) : (
           <>
             {/* 영상 */}

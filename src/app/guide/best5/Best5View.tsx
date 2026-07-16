@@ -1,6 +1,7 @@
 'use client'
 // Best 5 추천 — 운영자 픽 라면 순위 카드 (DB 연동)
 
+import Link from 'next/link'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
@@ -49,7 +50,7 @@ export type Best5Pick = {
   reason_en: string | null
   reason_zh: string | null
   reason_ja: string | null
-  ramen_items?: { manufacturer_url: string | null; price_krw: number | null } | null
+  ramen_items?: { manufacturer_url: string | null; price_krw: number | null; name_ko: string | null } | null
 }
 
 const OFFICIAL_PAGE_LABEL: Record<Lang, string> = {
@@ -57,6 +58,13 @@ const OFFICIAL_PAGE_LABEL: Record<Lang, string> = {
   en: '📋 Product Details',
   zh: '📋 产品详情',
   ja: '📋 製品詳細情報',
+}
+
+const RAMEN_LIST_LABEL: Record<Lang, string> = {
+  ko: '📜 라면 목록에서 보기',
+  en: '📜 View in ramen list',
+  zh: '📜 在拉面列表中查看',
+  ja: '📜 ラーメン一覧で見る',
 }
 
 const USD_RATE = 1380
@@ -123,6 +131,13 @@ export default function Best5View({ picks }: { picks: Best5Pick[] }) {
                 rel="noopener noreferrer"
                 className="block w-full text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5 hover:bg-emerald-100 transition-colors"
               >{OFFICIAL_PAGE_LABEL[lang]} →</a>
+            )}
+
+            {pick.ramen_items?.name_ko && (
+              <Link
+                href={`/guide/ramen?q=${encodeURIComponent(pick.ramen_items.name_ko)}`}
+                className="block w-full text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 hover:bg-gray-100 transition-colors"
+              >{RAMEN_LIST_LABEL[lang]} →</Link>
             )}
           </div>
         ))}

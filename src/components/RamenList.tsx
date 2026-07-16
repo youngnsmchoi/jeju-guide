@@ -242,13 +242,13 @@ function SpicyLevel({ level }: { level: number }) {
 }
 
 
-export default function RamenList({ items, lang }: { items: RamenItem[]; lang: Lang }) {
+export default function RamenList({ items, lang, initialQuery }: { items: RamenItem[]; lang: Lang; initialQuery?: string }) {
   const router = useRouter()
   const [sortBySpicy, setSortBySpicy] = useState(false)
   const [typeFilter, setTypeFilter] = useState<'all' | 'cup' | 'bag'>('all')
   const [spicyFilter, setSpicyFilter] = useState<'all' | 'mild' | 'medium' | 'hot' | 'extreme'>('all')
   const [priceFilter, setPriceFilter] = useState<'all' | 'low' | 'mid' | 'high'>('all')
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(initialQuery ?? '')
 
   if (items.length === 0) {
     return <p className="text-center text-gray-400 py-20">등록된 라면이 없습니다.</p>
