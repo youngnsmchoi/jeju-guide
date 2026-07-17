@@ -2,7 +2,7 @@
 // 레시피 제출 폼
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
@@ -96,9 +96,11 @@ const AGE_GROUPS = ['10s', '20s', '30s', '40s', '50s+']
 export default function RecipeNewView({ ramenList }: { ramenList: RamenOption[] }) {
   const { lang } = useLang()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const L = LABEL[lang]
 
-  const [ramenId, setRamenId] = useState<number | ''>('')
+  const preselectedRamenId = searchParams.get('ramen_id')
+  const [ramenId, setRamenId] = useState<number | ''>(preselectedRamenId ? Number(preselectedRamenId) : '')
   const [recipeTitle, setRecipeTitle] = useState('')
   const [description, setDescription] = useState('')
   const [ingredients, setIngredients] = useState('')

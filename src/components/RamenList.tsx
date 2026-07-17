@@ -128,6 +128,13 @@ const LOG_LABEL: Record<Lang, string> = {
   ja: '📝 食べました',
 }
 
+const RECIPE_LABEL: Record<Lang, string> = {
+  ko: '✏️ 이 라면으로 레시피 올리기',
+  en: '✏️ Share a recipe with this ramen',
+  zh: '✏️ 用这款拉面分享食谱',
+  ja: '✏️ このラーメンでレシピを投稿',
+}
+
 const SPICY_GUIDE: Record<Lang, { title: string; levels: { icon: string; label: string; desc: string }[] }> = {
   ko: {
     title: '🌶️ 맵기 기준',
@@ -501,6 +508,12 @@ export default function RamenList({ items, lang, initialQuery }: { items: RamenI
               onClick={() => router.push(`/ramen-log?ramen_id=${item.id}`)}
               className="w-full text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 hover:bg-gray-100 transition-colors text-left">
               {LOG_LABEL[lang]}
+            </button>
+
+            <button
+              onClick={() => router.push(`/recipes/new?ramen_id=${item.id}`)}
+              className="w-full text-sm text-violet-600 bg-violet-50 border border-violet-200 rounded-xl px-4 py-2.5 hover:bg-violet-100 transition-colors text-left">
+              {RECIPE_LABEL[lang]}
             </button>
 
           </div>

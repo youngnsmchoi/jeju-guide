@@ -12,6 +12,8 @@ const LABEL: Record<Lang, {
   ingredientsLink: string
   matrixTitle: string
   comboTitle: string
+  shareCta: string
+  shareCtaDesc: string
 }> = {
   ko: {
     title: '꿀조합 커스터마이징',
@@ -19,6 +21,8 @@ const LABEL: Record<Lang, {
     ingredientsLink: '⚠️ 알레르기·할랄 등 성분이 걱정되면 먼저 확인하세요 →',
     matrixTitle: '🍜 토핑 카테고리별로 골라보세요',
     comboTitle: '✅ 실제로 검증된 추천 조합',
+    shareCta: '✏️ 내 조합 레시피로 올리기',
+    shareCtaDesc: '나만 아는 꿀조합이 있나요? 다른 여행자들과 공유해보세요.',
   },
   en: {
     title: 'Topping Combos',
@@ -26,6 +30,8 @@ const LABEL: Record<Lang, {
     ingredientsLink: '⚠️ Worried about allergens or halal? Check ingredients first →',
     matrixTitle: '🍜 Pick a topping by category',
     comboTitle: '✅ Tried-and-tested combos',
+    shareCta: '✏️ Share your own combo',
+    shareCtaDesc: 'Got a secret combo? Share it with other travelers.',
   },
   zh: {
     title: '黄金搭配',
@@ -33,6 +39,8 @@ const LABEL: Record<Lang, {
     ingredientsLink: '⚠️ 担心过敏原或清真认证？请先确认成分 →',
     matrixTitle: '🍜 按分类挑选配料',
     comboTitle: '✅ 已验证的推荐组合',
+    shareCta: '✏️ 分享我的搭配食谱',
+    shareCtaDesc: '有只有你知道的秘密搭配吗？和其他旅行者分享吧。',
   },
   ja: {
     title: 'トッピング組み合わせ',
@@ -40,6 +48,8 @@ const LABEL: Record<Lang, {
     ingredientsLink: '⚠️ アレルギーやハラールが気になる方はまず成分を確認 →',
     matrixTitle: '🍜 カテゴリー別にトッピングを選ぶ',
     comboTitle: '✅ 実証済みのおすすめ組み合わせ',
+    shareCta: '✏️ 自分の組み合わせを投稿する',
+    shareCtaDesc: '自分だけの黄金比、他の旅行者にもシェアしませんか？',
   },
 }
 
@@ -309,6 +319,16 @@ export default function ToppingsView({ combos }: { combos: ToppingCombo[] }) {
             </div>
           )
         })}
+
+        {/* 레시피 공유 유도 */}
+        <div className="bg-violet-50 border border-violet-200 rounded-2xl px-4 py-4 space-y-2">
+          <p className="text-sm text-violet-700">{L.shareCtaDesc}</p>
+          <button
+            onClick={() => router.push('/recipes/new')}
+            className="w-full bg-violet-600 text-white py-3 rounded-2xl font-semibold hover:bg-violet-700 transition-colors">
+            {L.shareCta}
+          </button>
+        </div>
       </main>
     </div>
   )
