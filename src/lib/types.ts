@@ -51,6 +51,26 @@ export interface Item {
   blocks: Block[] | null
 }
 
+export interface GimbapItem {
+  id: number
+  order_num: number
+  name_ko: string
+  name_en: string | null
+  name_zh: string | null
+  name_ja: string | null
+  image_url: string | null
+  flavor_desc_ko: string | null
+  flavor_desc_en: string | null
+  flavor_desc_zh: string | null
+  flavor_desc_ja: string | null
+  allergen_note_ko: string | null
+  allergen_note_en: string | null
+  allergen_note_zh: string | null
+  allergen_note_ja: string | null
+  price_krw: number | null
+  manufacturer_url: string | null
+}
+
 export interface RamenItem {
   id: number
   order_num: number
@@ -107,6 +127,10 @@ export interface Recipe {
 }
 
 export function getRamenField(item: RamenItem, field: 'name' | 'flavor_desc' | 'comparison' | 'popularity' | 'texture', lang: Lang): string {
+  return item[`${field}_${lang}`] || item[`${field}_ko`] || ''
+}
+
+export function getGimbapField(item: GimbapItem, field: 'name' | 'flavor_desc' | 'allergen_note', lang: Lang): string {
   return item[`${field}_${lang}`] || item[`${field}_ko`] || ''
 }
 

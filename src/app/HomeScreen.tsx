@@ -118,6 +118,17 @@ const GROUPS: Group[] = [
         },
         href: '/guide/cvs-tips',
       },
+      {
+        emoji: '🍙',
+        title: { ko: '삼각김밥 가이드', en: 'Gimbap Guide', zh: '饭团指南', ja: 'おにぎりガイド' },
+        desc: {
+          ko: '포장 뜯는 법 · 맛 종류',
+          en: 'How to unwrap · flavor types',
+          zh: '拆包装方法 · 口味种类',
+          ja: '包装の開け方 · 味の種類',
+        },
+        href: '/guide/gimbap',
+      },
     ],
   },
   {
