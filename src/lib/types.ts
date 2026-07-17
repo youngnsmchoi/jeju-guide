@@ -71,6 +71,31 @@ export interface GimbapItem {
   manufacturer_url: string | null
 }
 
+export interface SnackItem {
+  id: number
+  order_num: number
+  name_ko: string
+  name_en: string | null
+  name_zh: string | null
+  name_ja: string | null
+  image_url: string | null
+  flavor_desc_ko: string | null
+  flavor_desc_en: string | null
+  flavor_desc_zh: string | null
+  flavor_desc_ja: string | null
+  why_popular_ko: string | null
+  why_popular_en: string | null
+  why_popular_zh: string | null
+  why_popular_ja: string | null
+  allergen_note_ko: string | null
+  allergen_note_en: string | null
+  allergen_note_zh: string | null
+  allergen_note_ja: string | null
+  category: 'drink' | 'ice_cream' | 'snack' | 'bread' | null
+  price_krw: number | null
+  manufacturer_url: string | null
+}
+
 export interface DosirakItem {
   id: number
   order_num: number
@@ -159,6 +184,10 @@ export function getGimbapField(item: GimbapItem, field: 'name' | 'flavor_desc' |
 }
 
 export function getDosirakField(item: DosirakItem, field: 'name' | 'flavor_desc' | 'composition' | 'allergen_note', lang: Lang): string {
+  return item[`${field}_${lang}`] || item[`${field}_ko`] || ''
+}
+
+export function getSnackField(item: SnackItem, field: 'name' | 'flavor_desc' | 'why_popular' | 'allergen_note', lang: Lang): string {
   return item[`${field}_${lang}`] || item[`${field}_ko`] || ''
 }
 

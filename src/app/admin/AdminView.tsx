@@ -6,6 +6,7 @@ import type { Category, Item } from '@/lib/types'
 import RamenAdmin from './RamenAdmin'
 import GimbapAdmin from './GimbapAdmin'
 import DosirakAdmin from './DosirakAdmin'
+import SnacksAdmin from './SnacksAdmin'
 import RamenLogAdmin from './RamenLogAdmin'
 import Best5Admin from './Best5Admin'
 import ToppingsAdmin from './ToppingsAdmin'
@@ -24,7 +25,7 @@ const emptyForm = (categoryId: number): ItemFormState => ({
   blocks: [],
 })
 
-type Tab = 'ramen' | 'gimbap' | 'dosirak' | 'log' | 'best5' | 'toppings' | 'countryPicks' | 'recipes' | 'feedback' | { catId: number }
+type Tab = 'ramen' | 'gimbap' | 'dosirak' | 'snacks' | 'log' | 'best5' | 'toppings' | 'countryPicks' | 'recipes' | 'feedback' | { catId: number }
 
 function isCatTab(tab: Tab | null): tab is { catId: number } {
   return typeof tab === 'object' && tab !== null
@@ -126,6 +127,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
     { tab: 'ramen' as Tab,        label: '라면 관리',  icon: '🍜' },
     { tab: 'gimbap' as Tab,       label: '삼각김밥',   icon: '🍙' },
     { tab: 'dosirak' as Tab,      label: '도시락',     icon: '🍱' },
+    { tab: 'snacks' as Tab,       label: '디저트/간식', icon: '🍭' },
     { tab: 'log' as Tab,          label: 'Ramen Log',  icon: '📋' },
     { tab: 'best5' as Tab,        label: 'Best 5',     icon: '🏆' },
     { tab: 'toppings' as Tab,     label: '꿀조합',     icon: '🍳' },
@@ -210,6 +212,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
           {activeTab === 'ramen'        && <RamenAdmin />}
           {activeTab === 'gimbap'       && <GimbapAdmin />}
           {activeTab === 'dosirak'      && <DosirakAdmin />}
+          {activeTab === 'snacks'       && <SnacksAdmin />}
           {activeTab === 'log'          && <RamenLogAdmin />}
           {activeTab === 'best5'        && <Best5Admin />}
           {activeTab === 'toppings'     && <ToppingsAdmin />}

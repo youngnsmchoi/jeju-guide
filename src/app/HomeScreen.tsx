@@ -140,6 +140,17 @@ const GROUPS: Group[] = [
         },
         href: '/guide/dosirak',
       },
+      {
+        emoji: '🍭',
+        title: { ko: '디저트/간식 추천', en: 'Snacks & Desserts', zh: '零食甜品推荐', ja: 'お菓子・デザート' },
+        desc: {
+          ko: '한국인이 꼭 먹어보라는 스테디셀러',
+          en: 'Steady sellers Koreans always recommend',
+          zh: '韩国人力荐的长销单品',
+          ja: '韓国人おすすめのロングセラー',
+        },
+        href: '/guide/snacks',
+      },
     ],
   },
   {
