@@ -129,6 +129,17 @@ const GROUPS: Group[] = [
         },
         href: '/guide/gimbap',
       },
+      {
+        emoji: '🍱',
+        title: { ko: '도시락 가이드', en: 'Bento Guide', zh: '便当指南', ja: '弁当ガイド' },
+        desc: {
+          ko: '데우는 법 · 종류별 구성',
+          en: 'How to heat · what\'s inside',
+          zh: '加热方法 · 各类构成',
+          ja: '温め方 · 種類別の内容',
+        },
+        href: '/guide/dosirak',
+      },
     ],
   },
   {
