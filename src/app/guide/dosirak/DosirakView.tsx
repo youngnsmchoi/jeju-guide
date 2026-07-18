@@ -12,6 +12,7 @@ const LABEL: Record<Lang, {
   howToHeatSteps: string[]
   ingredientsLink: string
   typesTitle: string
+  typesNote: string
   compositionLabel: string
   priceUnknown: string
 }> = {
@@ -25,6 +26,7 @@ const LABEL: Record<Lang, {
     ],
     ingredientsLink: '⚠️ 알레르기·할랄·채식 여부가 걱정되면 먼저 확인하세요 →',
     typesTitle: '🍱 도시락 종류',
+    typesNote: '아래는 편의점에서 흔히 볼 수 있는 대표 유형입니다. 매장·시기에 따라 실제 상품명과 구성은 다를 수 있어요.',
     compositionLabel: '구성',
     priceUnknown: '가격 확인 중',
   },
@@ -38,6 +40,7 @@ const LABEL: Record<Lang, {
     ],
     ingredientsLink: '⚠️ Worried about allergens, halal, or vegetarian status? Check first →',
     typesTitle: '🍱 Bento Types',
+    typesNote: 'These are common types found at convenience stores. Actual product names and contents may vary by store and season.',
     compositionLabel: 'What\'s inside',
     priceUnknown: 'Price TBD',
   },
@@ -51,6 +54,7 @@ const LABEL: Record<Lang, {
     ],
     ingredientsLink: '⚠️ 担心过敏原、清真或素食问题？请先确认 →',
     typesTitle: '🍱 便当种类',
+    typesNote: '以下是便利店常见的代表类型，实际商品名称和构成可能因门店、季节而异。',
     compositionLabel: '内含',
     priceUnknown: '价格待确认',
   },
@@ -64,6 +68,7 @@ const LABEL: Record<Lang, {
     ],
     ingredientsLink: '⚠️ アレルギー・ハラール・ベジタリアンが気になる方はまず確認 →',
     typesTitle: '🍱 弁当の種類',
+    typesNote: '以下はコンビニでよく見かける代表的なタイプです。実際の商品名や内容は店舗・時期により異なる場合があります。',
     compositionLabel: '内容',
     priceUnknown: '価格確認中',
   },
@@ -102,7 +107,10 @@ export default function DosirakView({ items }: { items: DosirakItem[] }) {
         </div>
 
         {/* 도시락 종류 목록 */}
-        <p className="text-base font-bold text-gray-900 pt-2">{L.typesTitle}</p>
+        <div className="pt-2">
+          <p className="text-base font-bold text-gray-900">{L.typesTitle}</p>
+          <p className="text-xs text-gray-400 mt-1 leading-relaxed">{L.typesNote}</p>
+        </div>
         {items.map(item => (
           <div key={item.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
             {item.image_url && (
