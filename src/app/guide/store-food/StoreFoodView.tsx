@@ -60,6 +60,18 @@ const CARDS: Card[] = [
     cardClass: 'bg-blue-50 border-blue-100',
   },
   {
+    emoji: '🍢',
+    title: { ko: '핫바', en: 'Hotbar', zh: '关东煮/串', ja: 'ホットバー' },
+    desc: {
+      ko: '사는 법 · 종류별 정보',
+      en: 'How to buy · types',
+      zh: '购买方法 · 各类信息',
+      ja: '買い方 · 種類別情報',
+    },
+    href: '/guide/hotbar',
+    cardClass: 'bg-orange-50 border-orange-100',
+  },
+  {
     emoji: '🍭',
     title: { ko: '디저트/간식', en: 'Snacks & Desserts', zh: '零食甜品', ja: 'お菓子・デザート' },
     desc: {
