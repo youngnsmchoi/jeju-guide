@@ -76,6 +76,30 @@ export interface SnackItem {
   manufacturer_url: string | null
 }
 
+export interface JulGimbapItem {
+  id: number
+  order_num: number
+  name_ko: string
+  name_en: string | null
+  name_zh: string | null
+  name_ja: string | null
+  image_url: string | null
+  flavor_desc_ko: string | null
+  flavor_desc_en: string | null
+  flavor_desc_zh: string | null
+  flavor_desc_ja: string | null
+  composition_ko: string | null
+  composition_en: string | null
+  composition_zh: string | null
+  composition_ja: string | null
+  allergen_note_ko: string | null
+  allergen_note_en: string | null
+  allergen_note_zh: string | null
+  allergen_note_ja: string | null
+  price_krw: number | null
+  manufacturer_url: string | null
+}
+
 export interface DosirakItem {
   id: number
   order_num: number
@@ -160,6 +184,10 @@ export function getRamenField(item: RamenItem, field: 'name' | 'flavor_desc' | '
 }
 
 export function getDosirakField(item: DosirakItem, field: 'name' | 'flavor_desc' | 'composition' | 'allergen_note', lang: Lang): string {
+  return item[`${field}_${lang}`] || item[`${field}_ko`] || ''
+}
+
+export function getJulGimbapField(item: JulGimbapItem, field: 'name' | 'flavor_desc' | 'composition' | 'allergen_note', lang: Lang): string {
   return item[`${field}_${lang}`] || item[`${field}_ko`] || ''
 }
 

@@ -36,6 +36,18 @@ const CARDS: Card[] = [
     cardClass: 'bg-emerald-50 border-emerald-100',
   },
   {
+    emoji: '🍙',
+    title: { ko: '줄김밥', en: 'Gimbap Roll', zh: '紫菜卷', ja: '海苔巻き' },
+    desc: {
+      ko: '삼각김밥보다 든든한 한 끼 · 종류별 구성',
+      en: 'A heartier meal than triangle gimbap · what\'s inside',
+      zh: '比饭团更饱腹的一餐 · 各类构成',
+      ja: 'おにぎりより食べ応えのある一食 · 種類別の内容',
+    },
+    href: '/guide/jul-gimbap',
+    cardClass: 'bg-teal-50 border-teal-100',
+  },
+  {
     emoji: '🍱',
     title: { ko: '도시락', en: 'Bento', zh: '便当', ja: '弁当' },
     desc: {

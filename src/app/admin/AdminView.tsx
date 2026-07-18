@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react'
 import type { Category, Item } from '@/lib/types'
 import RamenAdmin from './RamenAdmin'
+import JulGimbapAdmin from './JulGimbapAdmin'
 import DosirakAdmin from './DosirakAdmin'
 import SnacksAdmin from './SnacksAdmin'
 import RamenLogAdmin from './RamenLogAdmin'
@@ -24,7 +25,7 @@ const emptyForm = (categoryId: number): ItemFormState => ({
   blocks: [],
 })
 
-type Tab = 'ramen' | 'dosirak' | 'snacks' | 'log' | 'best5' | 'toppings' | 'countryPicks' | 'recipes' | 'feedback' | { catId: number }
+type Tab = 'ramen' | 'julGimbap' | 'dosirak' | 'snacks' | 'log' | 'best5' | 'toppings' | 'countryPicks' | 'recipes' | 'feedback' | { catId: number }
 
 function isCatTab(tab: Tab | null): tab is { catId: number } {
   return typeof tab === 'object' && tab !== null
@@ -124,6 +125,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
 
   const MENU = [
     { tab: 'ramen' as Tab,        label: '라면 관리',  icon: '🍜' },
+    { tab: 'julGimbap' as Tab,    label: '줄김밥',     icon: '🍙' },
     { tab: 'dosirak' as Tab,      label: '도시락',     icon: '🍱' },
     { tab: 'snacks' as Tab,       label: '디저트/간식', icon: '🍭' },
     { tab: 'log' as Tab,          label: 'Ramen Log',  icon: '📋' },
@@ -208,6 +210,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
 
         <main className="flex-1 p-4 md:p-6 max-w-4xl w-full mx-auto space-y-4">
           {activeTab === 'ramen'        && <RamenAdmin />}
+          {activeTab === 'julGimbap'    && <JulGimbapAdmin />}
           {activeTab === 'dosirak'      && <DosirakAdmin />}
           {activeTab === 'snacks'       && <SnacksAdmin />}
           {activeTab === 'log'          && <RamenLogAdmin />}
