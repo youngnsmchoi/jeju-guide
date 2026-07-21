@@ -76,6 +76,44 @@ export interface SnackItem {
   manufacturer_url: string | null
 }
 
+export interface LinkRamenItem {
+  id: number
+  order_num: number
+  name_ko: string
+  name_en: string | null
+  name_zh: string | null
+  name_ja: string | null
+  foodqr_barcode: string | null
+  manufacturer_url: string
+  ingredients_ko: string | null
+  ingredients_en: string | null
+  ingredients_zh: string | null
+  ingredients_ja: string | null
+  allergens_ko: string | null
+  allergens_en: string | null
+  allergens_zh: string | null
+  allergens_ja: string | null
+  cross_contamination_ko: string | null
+  cross_contamination_en: string | null
+  cross_contamination_zh: string | null
+  cross_contamination_ja: string | null
+  serving_size_g: number | null
+  nutrition_kcal: number | null
+  nutrition_sodium_mg: number | null
+  nutrition_carbs_g: number | null
+  nutrition_sugar_g: number | null
+  nutrition_fat_g: number | null
+  nutrition_trans_fat_g: number | null
+  nutrition_sat_fat_g: number | null
+  nutrition_cholesterol_mg: number | null
+  nutrition_protein_g: number | null
+  nutrition_calcium_mg: number | null
+  storage_note_ko: string | null
+  storage_note_en: string | null
+  storage_note_zh: string | null
+  storage_note_ja: string | null
+}
+
 export interface HotbarItem {
   id: number
   order_num: number
@@ -212,6 +250,10 @@ export function getJulGimbapField(item: JulGimbapItem, field: 'name' | 'flavor_d
 }
 
 export function getHotbarField(item: HotbarItem, field: 'name' | 'flavor_desc' | 'allergen_note', lang: Lang): string {
+  return item[`${field}_${lang}`] || item[`${field}_ko`] || ''
+}
+
+export function getLinkRamenField(item: LinkRamenItem, field: 'name' | 'ingredients' | 'allergens' | 'cross_contamination' | 'storage_note', lang: Lang): string {
   return item[`${field}_${lang}`] || item[`${field}_ko`] || ''
 }
 
