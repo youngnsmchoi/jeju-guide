@@ -113,7 +113,9 @@ function RamenCard({ item, lang }: { item: LinkRamenItem; lang: Lang }) {
         <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
           {getLinkRamenField(item, 'name', lang)}
           {item.package_type && (
-            <span className="text-[11px] font-medium text-gray-500 bg-gray-100 rounded-full px-2 py-0.5 shrink-0">
+            <span className={`text-xs font-bold rounded-full px-2.5 py-1 shrink-0 ${
+              item.package_type === 'cup' ? 'text-orange-700 bg-orange-100' : 'text-blue-700 bg-blue-100'
+            }`}>
               {item.package_type === 'cup' ? L.packageCup : L.packageBag}
             </span>
           )}
