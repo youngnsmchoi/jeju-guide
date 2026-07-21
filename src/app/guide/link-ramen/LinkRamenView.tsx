@@ -21,6 +21,8 @@ const LABEL: Record<Lang, {
   crossContaminationLabel: string
   sourceNote: string
   checkPackageNote: string
+  packageCup: string
+  packageBag: string
 }> = {
   ko: {
     intro: '아래 정보는 정부 공식 데이터 또는 제조사 공식 페이지를 기반으로 합니다. 최종 확인은 실물 포장을 참고하세요.',
@@ -36,6 +38,8 @@ const LABEL: Record<Lang, {
     crossContaminationLabel: '⚠️ 교차오염 주의',
     sourceNote: '출처: 제조사 공식 홈페이지 (번역 제공)',
     checkPackageNote: '⚠️ 최신 정보는 실물 포장을 확인하세요',
+    packageCup: '컵',
+    packageBag: '봉지',
   },
   en: {
     intro: 'The information below is based on official government data or the manufacturer\'s official page. Please check the actual package for final confirmation.',
@@ -51,6 +55,8 @@ const LABEL: Record<Lang, {
     crossContaminationLabel: '⚠️ Cross-contamination notice',
     sourceNote: 'Source: Manufacturer\'s official website (translated)',
     checkPackageNote: '⚠️ Check the actual package for the latest information',
+    packageCup: 'Cup',
+    packageBag: 'Bag',
   },
   zh: {
     intro: '以下信息基于政府官方数据或制造商官方页面。最终请以实物包装为准。',
@@ -66,6 +72,8 @@ const LABEL: Record<Lang, {
     crossContaminationLabel: '⚠️ 交叉污染提示',
     sourceNote: '出处：制造商官方网站（提供翻译）',
     checkPackageNote: '⚠️ 最新信息请确认实物包装',
+    packageCup: '杯面',
+    packageBag: '袋装',
   },
   ja: {
     intro: '以下の情報は政府公式データまたはメーカー公式ページに基づいています。最終確認は実物のパッケージをご覧ください。',
@@ -81,6 +89,8 @@ const LABEL: Record<Lang, {
     crossContaminationLabel: '⚠️ 交差汚染に関する注意',
     sourceNote: '出典：メーカー公式サイト（翻訳提供）',
     checkPackageNote: '⚠️ 最新情報は実物のパッケージをご確認ください',
+    packageCup: 'カップ',
+    packageBag: '袋',
   },
 }
 
@@ -100,7 +110,14 @@ function RamenCard({ item, lang }: { item: LinkRamenItem; lang: Lang }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
       <div className="p-4 space-y-2">
-        <h2 className="text-base font-bold text-gray-900">{getLinkRamenField(item, 'name', lang)}</h2>
+        <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+          {getLinkRamenField(item, 'name', lang)}
+          {item.package_type && (
+            <span className="text-[11px] font-medium text-gray-500 bg-gray-100 rounded-full px-2 py-0.5 shrink-0">
+              {item.package_type === 'cup' ? L.packageCup : L.packageBag}
+            </span>
+          )}
+        </h2>
 
         {foodqrUrl ? (
           <>

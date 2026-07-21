@@ -83,6 +83,7 @@ export interface LinkRamenItem {
   name_en: string | null
   name_zh: string | null
   name_ja: string | null
+  package_type: 'cup' | 'bag' | null
   foodqr_barcode: string | null
   manufacturer_url: string
   ingredients_ko: string | null
