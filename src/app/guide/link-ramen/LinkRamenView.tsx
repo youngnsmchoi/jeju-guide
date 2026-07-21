@@ -11,6 +11,7 @@ const LABEL: Record<Lang, {
   intro: string
   foodqrLink: string
   foodqrSlowNote: string
+  foodqrKoreanOnlyNote: string
   manufacturerLink: string
   detailToggle: string
   tabNutrition: string
@@ -25,6 +26,7 @@ const LABEL: Record<Lang, {
     intro: '아래 정보는 정부 공식 데이터 또는 제조사 공식 페이지를 기반으로 합니다. 최종 확인은 실물 포장을 참고하세요.',
     foodqrLink: '🔗 식약처 FOOD QR에서 상세 정보 보기 →',
     foodqrSlowNote: '외부 자료라 로딩이 늦어질 수 있어요',
+    foodqrKoreanOnlyNote: '이 페이지는 한국어만 지원돼요. 브라우저 번역 기능을 사용해보세요.',
     manufacturerLink: '🔗 제조사 공식 페이지에서 보기 →',
     detailToggle: '영양·원재료·알레르기 정보 보기',
     tabNutrition: '영양표시',
@@ -39,6 +41,7 @@ const LABEL: Record<Lang, {
     intro: 'The information below is based on official government data or the manufacturer\'s official page. Please check the actual package for final confirmation.',
     foodqrLink: '🔗 View details on Ministry of Food and Drug Safety FOOD QR →',
     foodqrSlowNote: 'Loading external data — may take a moment',
+    foodqrKoreanOnlyNote: 'This page is Korean only. Try your browser\'s translate feature.',
     manufacturerLink: '🔗 View on manufacturer\'s official page →',
     detailToggle: 'View nutrition, ingredients, allergen info',
     tabNutrition: 'Nutrition Facts',
@@ -53,6 +56,7 @@ const LABEL: Record<Lang, {
     intro: '以下信息基于政府官方数据或制造商官方页面。最终请以实物包装为准。',
     foodqrLink: '🔗 在食品医药品安全处FOOD QR查看详情 →',
     foodqrSlowNote: '加载外部数据，可能需要一点时间',
+    foodqrKoreanOnlyNote: '此页面仅支持韩语，请尝试使用浏览器的翻译功能。',
     manufacturerLink: '🔗 在制造商官方页面查看 →',
     detailToggle: '查看营养成分、原材料、过敏原信息',
     tabNutrition: '营养标示',
@@ -67,6 +71,7 @@ const LABEL: Record<Lang, {
     intro: '以下の情報は政府公式データまたはメーカー公式ページに基づいています。最終確認は実物のパッケージをご覧ください。',
     foodqrLink: '🔗 食品医薬品安全処FOOD QRで詳細を見る →',
     foodqrSlowNote: '外部データのため、読み込みに時間がかかる場合があります',
+    foodqrKoreanOnlyNote: 'このページは韓国語のみ対応です。ブラウザの翻訳機能をお試しください。',
     manufacturerLink: '🔗 メーカー公式ページで見る →',
     detailToggle: '栄養成分・原材料・アレルギー情報を見る',
     tabNutrition: '栄養表示',
@@ -104,6 +109,7 @@ function RamenCard({ item, lang }: { item: LinkRamenItem; lang: Lang }) {
               {L.foodqrLink}
             </a>
             <p className="text-[11px] text-gray-400 bg-gray-50 rounded-lg px-3 py-2">{L.foodqrSlowNote}</p>
+            <p className="text-[11px] text-blue-600 bg-blue-50 rounded-lg px-3 py-2">{L.foodqrKoreanOnlyNote}</p>
           </>
         ) : (
           <a href={item.manufacturer_url} target="_blank" rel="noopener noreferrer"
