@@ -19,6 +19,7 @@ const LABEL: Record<Lang, {
   alreadyRated: string
   levelNames: string[]
   viewAverage: string
+  rateThis: string
   averageResult: (avg: number, count: number) => string
   notEnough: (count: number, min: number) => string
   referenceNote: string
@@ -28,6 +29,7 @@ const LABEL: Record<Lang, {
     intro: '이 라면이 얼마나 매운지, 여러분의 나라 기준으로 평가해주세요. 이용자들의 평가를 모은 참고 자료이며, 공식 정보가 아닙니다.',
     selectCountry: '내 나라 선택',
     selectLevel: '느낀 맵기 정도',
+    rateThis: '✍️ 평가하기',
     submit: '평가 제출하기',
     submitted: '평가해주셔서 감사합니다!',
     alreadyRated: '이미 최근에 평가하셨어요. 24시간 후 다시 시도해주세요.',
@@ -42,6 +44,7 @@ const LABEL: Record<Lang, {
     intro: 'Rate how spicy this ramen felt to you, based on your country. This is a crowd-sourced reference from users, not official data.',
     selectCountry: 'Select your country',
     selectLevel: 'How spicy did it feel?',
+    rateThis: '✍️ Rate This Ramen',
     submit: 'Submit Rating',
     submitted: 'Thanks for your rating!',
     alreadyRated: 'You already rated this recently. Please try again in 24 hours.',
@@ -56,6 +59,7 @@ const LABEL: Record<Lang, {
     intro: '请根据您的国家标准，评价这款拉面有多辣。这是用户评价汇总的参考资料，并非官方信息。',
     selectCountry: '选择您的国家',
     selectLevel: '您感觉的辣度',
+    rateThis: '✍️ 我要评价',
     submit: '提交评价',
     submitted: '感谢您的评价！',
     alreadyRated: '您最近已评价过。请24小时后再试。',
@@ -70,6 +74,7 @@ const LABEL: Record<Lang, {
     intro: 'このラーメンがどれくらい辛かったか、あなたの国基準で評価してください。ユーザーの評価を集めた参考資料であり、公式情報ではありません。',
     selectCountry: '国を選択',
     selectLevel: '感じた辛さ',
+    rateThis: '✍️ 評価する',
     submit: '評価を送信',
     submitted: '評価ありがとうございます！',
     alreadyRated: '最近すでに評価済みです。24時間後にもう一度お試しください。',
@@ -144,7 +149,7 @@ export default function SpicyRatingView({ item }: { item: LinkRamenItem }) {
 
         {/* 평가 결과 조회 */}
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-3">
-          <h2 className="text-sm font-bold text-gray-800">{L.viewAverage}</h2>
+          <h2 className="text-sm font-bold text-gray-800">👀 {L.viewAverage}</h2>
           <select
             value={viewCountry}
             onChange={e => setViewCountry(e.target.value)}
@@ -172,7 +177,8 @@ export default function SpicyRatingView({ item }: { item: LinkRamenItem }) {
             {L.submitted}
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-3">
+          <div className="bg-rose-50/40 rounded-2xl border-2 border-rose-200 shadow-sm p-4 space-y-3">
+            <h2 className="text-sm font-bold text-rose-700">{L.rateThis}</h2>
             <select
               value={country}
               onChange={e => setCountry(e.target.value)}
