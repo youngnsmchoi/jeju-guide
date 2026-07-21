@@ -112,10 +112,13 @@ function RamenCard({ item, lang }: { item: LinkRamenItem; lang: Lang }) {
             <p className="text-[11px] text-blue-600 bg-blue-50 rounded-lg px-3 py-2">{L.foodqrKoreanOnlyNote}</p>
           </>
         ) : (
-          <a href={item.manufacturer_url} target="_blank" rel="noopener noreferrer"
-            className="block text-sm font-medium text-emerald-700 hover:text-emerald-800">
-            {L.manufacturerLink}
-          </a>
+          <>
+            <a href={item.manufacturer_url} target="_blank" rel="noopener noreferrer"
+              className="block text-sm font-medium text-emerald-700 hover:text-emerald-800">
+              {L.manufacturerLink}
+            </a>
+            <p className="text-[11px] text-blue-600 bg-blue-50 rounded-lg px-3 py-2">{L.foodqrKoreanOnlyNote}</p>
+          </>
         )}
       </div>
 
