@@ -162,12 +162,12 @@ const GROUPS: Group[] = [
         emoji: '🍜',
         title: { ko: '라면 전체 보기', en: 'All Ramen', zh: '全部拉面', ja: 'ラーメン一覧' },
         desc: {
-          ko: '30종 라면 정보 · 맵기 · 가격',
-          en: '30 ramen items · spice level · price',
-          zh: '30种拉面 · 辣度 · 价格',
-          ja: '30種ラーメン · 辛さ · 価格',
+          ko: '29종 라면 정보 · 공식 자료 링크',
+          en: '29 ramen items · official source links',
+          zh: '29种拉面 · 官方资料链接',
+          ja: '29種ラーメン · 公式資料リンク',
         },
-        href: '/guide/ramen',
+        href: '/guide/link-ramen',
       },
       {
         emoji: '⭐',
