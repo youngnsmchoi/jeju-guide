@@ -10,6 +10,7 @@ import NavBar from '@/components/NavBar'
 const LABEL: Record<Lang, {
   intro: string
   foodqrLink: string
+  foodqrLoading: string
   manufacturerLink: string
   detailToggle: string
   tabNutrition: string
@@ -23,6 +24,7 @@ const LABEL: Record<Lang, {
   ko: {
     intro: '아래 정보는 정부 공식 데이터 또는 제조사 공식 페이지를 기반으로 합니다. 최종 확인은 실물 포장을 참고하세요.',
     foodqrLink: '🔗 식약처 FOOD QR에서 상세 정보 보기 →',
+    foodqrLoading: '정부 공식 데이터를 불러오는 중입니다...',
     manufacturerLink: '🔗 제조사 공식 페이지에서 보기 →',
     detailToggle: '영양·원재료·알레르기 정보 보기',
     tabNutrition: '영양표시',
@@ -36,6 +38,7 @@ const LABEL: Record<Lang, {
   en: {
     intro: 'The information below is based on official government data or the manufacturer\'s official page. Please check the actual package for final confirmation.',
     foodqrLink: '🔗 View details on Ministry of Food and Drug Safety FOOD QR →',
+    foodqrLoading: 'Loading official government data...',
     manufacturerLink: '🔗 View on manufacturer\'s official page →',
     detailToggle: 'View nutrition, ingredients, allergen info',
     tabNutrition: 'Nutrition Facts',
@@ -49,6 +52,7 @@ const LABEL: Record<Lang, {
   zh: {
     intro: '以下信息基于政府官方数据或制造商官方页面。最终请以实物包装为准。',
     foodqrLink: '🔗 在食品医药品安全处FOOD QR查看详情 →',
+    foodqrLoading: '正在加载政府官方数据...',
     manufacturerLink: '🔗 在制造商官方页面查看 →',
     detailToggle: '查看营养成分、原材料、过敏原信息',
     tabNutrition: '营养标示',
@@ -62,6 +66,7 @@ const LABEL: Record<Lang, {
   ja: {
     intro: '以下の情報は政府公式データまたはメーカー公式ページに基づいています。最終確認は実物のパッケージをご覧ください。',
     foodqrLink: '🔗 食品医薬品安全処FOOD QRで詳細を見る →',
+    foodqrLoading: '政府公式データを読み込み中です...',
     manufacturerLink: '🔗 メーカー公式ページで見る →',
     detailToggle: '栄養成分・原材料・アレルギー情報を見る',
     tabNutrition: '栄養表示',
@@ -81,6 +86,7 @@ function RamenCard({ item, lang }: { item: LinkRamenItem; lang: Lang }) {
   const L = LABEL[lang]
   const [expanded, setExpanded] = useState(false)
   const [tab, setTab] = useState<Tab>('nutrition')
+  const [foodqrLoading, setFoodqrLoading] = useState(false)
 
   const tabLabel = (t: Tab) =>
     t === 'nutrition' ? L.tabNutrition : t === 'ingredients' ? L.tabIngredients : t === 'allergens' ? L.tabAllergens : L.tabStorage
@@ -93,10 +99,22 @@ function RamenCard({ item, lang }: { item: LinkRamenItem; lang: Lang }) {
         <h2 className="text-base font-bold text-gray-900">{getLinkRamenField(item, 'name', lang)}</h2>
 
         {foodqrUrl ? (
-          <a href={foodqrUrl} target="_blank" rel="noopener noreferrer"
-            className="block text-sm font-medium text-emerald-700 hover:text-emerald-800">
-            {L.foodqrLink}
-          </a>
+          <>
+            <a href={foodqrUrl} target="_blank" rel="noopener noreferrer"
+              onClick={() => {
+                setFoodqrLoading(true)
+                setTimeout(() => setFoodqrLoading(false), 3000)
+              }}
+              className="block text-sm font-medium text-emerald-700 hover:text-emerald-800">
+              {L.foodqrLink}
+            </a>
+            {foodqrLoading && (
+              <p className="text-xs text-emerald-600 flex items-center gap-1.5">
+                <span className="inline-block w-3 h-3 border-2 border-emerald-300 border-t-emerald-600 rounded-full animate-spin" />
+                {L.foodqrLoading}
+              </p>
+            )}
+          </>
         ) : (
           <a href={item.manufacturer_url} target="_blank" rel="noopener noreferrer"
             className="block text-sm font-medium text-emerald-700 hover:text-emerald-800">
