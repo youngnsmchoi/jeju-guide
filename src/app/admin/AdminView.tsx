@@ -37,7 +37,17 @@ export default function AdminView({ categories }: { categories: Category[] }) {
   const [authed, setAuthed] = useState(false)
   const [pw, setPw] = useState('')
   const [pwError, setPwError] = useState(false)
-  const [activeTab, setActiveTab] = useState<Tab>('ramen')
+  const [activeTab, setActiveTabState] = useState<Tab>('ramen')
+
+  useEffect(() => {
+    const saved = localStorage.getItem('adminActiveTab')
+    if (saved) setActiveTabState(saved as Tab)
+  }, [])
+
+  const setActiveTab = (tab: Tab) => {
+    setActiveTabState(tab)
+    if (typeof tab === 'string') localStorage.setItem('adminActiveTab', tab)
+  }
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [items, setItems] = useState<Item[]>([])
   const [form, setForm] = useState<ItemFormState | null>(null)
