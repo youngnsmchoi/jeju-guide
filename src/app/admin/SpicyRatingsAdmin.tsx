@@ -59,6 +59,10 @@ export default function SpicyRatingsAdmin() {
         </div>
       </div>
 
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs text-gray-500 leading-relaxed">
+        ℹ️ 이용자는 같은 라면에 24시간 내 1회만 평가할 수 있습니다 (IP 주소를 해시로 변환해 중복을 판단하며, 실제 IP는 저장하지 않습니다). 나라별 평균은 평가가 5건 이상 쌓여야 화면에 표시됩니다.
+      </div>
+
       {loading && <p className="text-center text-gray-400 py-8 text-sm">로딩 중...</p>}
       {!loading && filtered.length === 0 && (
         <p className="text-center text-gray-400 py-8 text-sm">항목이 없습니다.</p>
@@ -86,10 +90,6 @@ export default function SpicyRatingsAdmin() {
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs text-gray-500 leading-relaxed">
-        ℹ️ 이용자는 같은 라면에 24시간 내 1회만 평가할 수 있습니다 (IP 주소를 해시로 변환해 중복을 판단하며, 실제 IP는 저장하지 않습니다). 나라별 평균은 평가가 5건 이상 쌓여야 화면에 표시됩니다.
       </div>
     </div>
   )
