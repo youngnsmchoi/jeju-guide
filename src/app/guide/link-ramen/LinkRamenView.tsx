@@ -10,6 +10,7 @@ import NavBar from '@/components/NavBar'
 const LABEL: Record<Lang, {
   intro: string
   foodqrLink: string
+  foodqrSlowNote: string
   manufacturerLink: string
   detailToggle: string
   tabNutrition: string
@@ -23,6 +24,7 @@ const LABEL: Record<Lang, {
   ko: {
     intro: '아래 정보는 정부 공식 데이터 또는 제조사 공식 페이지를 기반으로 합니다. 최종 확인은 실물 포장을 참고하세요.',
     foodqrLink: '🔗 식약처 FOOD QR에서 상세 정보 보기 →',
+    foodqrSlowNote: '외부 자료라 로딩이 늦어질 수 있어요',
     manufacturerLink: '🔗 제조사 공식 페이지에서 보기 →',
     detailToggle: '영양·원재료·알레르기 정보 보기',
     tabNutrition: '영양표시',
@@ -36,6 +38,7 @@ const LABEL: Record<Lang, {
   en: {
     intro: 'The information below is based on official government data or the manufacturer\'s official page. Please check the actual package for final confirmation.',
     foodqrLink: '🔗 View details on Ministry of Food and Drug Safety FOOD QR →',
+    foodqrSlowNote: 'Loading external data — may take a moment',
     manufacturerLink: '🔗 View on manufacturer\'s official page →',
     detailToggle: 'View nutrition, ingredients, allergen info',
     tabNutrition: 'Nutrition Facts',
@@ -49,6 +52,7 @@ const LABEL: Record<Lang, {
   zh: {
     intro: '以下信息基于政府官方数据或制造商官方页面。最终请以实物包装为准。',
     foodqrLink: '🔗 在食品医药品安全处FOOD QR查看详情 →',
+    foodqrSlowNote: '加载外部数据，可能需要一点时间',
     manufacturerLink: '🔗 在制造商官方页面查看 →',
     detailToggle: '查看营养成分、原材料、过敏原信息',
     tabNutrition: '营养标示',
@@ -62,6 +66,7 @@ const LABEL: Record<Lang, {
   ja: {
     intro: '以下の情報は政府公式データまたはメーカー公式ページに基づいています。最終確認は実物のパッケージをご覧ください。',
     foodqrLink: '🔗 食品医薬品安全処FOOD QRで詳細を見る →',
+    foodqrSlowNote: '外部データのため、読み込みに時間がかかる場合があります',
     manufacturerLink: '🔗 メーカー公式ページで見る →',
     detailToggle: '栄養成分・原材料・アレルギー情報を見る',
     tabNutrition: '栄養表示',
@@ -93,10 +98,13 @@ function RamenCard({ item, lang }: { item: LinkRamenItem; lang: Lang }) {
         <h2 className="text-base font-bold text-gray-900">{getLinkRamenField(item, 'name', lang)}</h2>
 
         {foodqrUrl ? (
-          <a href={foodqrUrl} target="_blank" rel="noopener noreferrer"
-            className="block text-sm font-medium text-emerald-700 hover:text-emerald-800">
-            {L.foodqrLink}
-          </a>
+          <>
+            <a href={foodqrUrl} target="_blank" rel="noopener noreferrer"
+              className="block text-sm font-medium text-emerald-700 hover:text-emerald-800">
+              {L.foodqrLink}
+            </a>
+            <p className="text-[11px] text-gray-400">{L.foodqrSlowNote}</p>
+          </>
         ) : (
           <a href={item.manufacturer_url} target="_blank" rel="noopener noreferrer"
             className="block text-sm font-medium text-emerald-700 hover:text-emerald-800">
