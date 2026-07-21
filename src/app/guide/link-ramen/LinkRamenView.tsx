@@ -103,7 +103,7 @@ function RamenCard({ item, lang }: { item: LinkRamenItem; lang: Lang }) {
               className="block text-sm font-medium text-emerald-700 hover:text-emerald-800">
               {L.foodqrLink}
             </a>
-            <p className="text-[11px] text-gray-400">{L.foodqrSlowNote}</p>
+            <p className="text-[11px] text-gray-400 bg-gray-50 rounded-lg px-3 py-2">{L.foodqrSlowNote}</p>
           </>
         ) : (
           <a href={item.manufacturer_url} target="_blank" rel="noopener noreferrer"
