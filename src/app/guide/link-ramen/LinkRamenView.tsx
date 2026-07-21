@@ -23,6 +23,9 @@ const LABEL: Record<Lang, {
   checkPackageNote: string
   packageCup: string
   packageBag: string
+  filterAll: string
+  searchPlaceholder: string
+  noResults: string
 }> = {
   ko: {
     intro: '아래 정보는 정부 공식 데이터 또는 제조사 공식 페이지를 기반으로 합니다. 최종 확인은 실물 포장을 참고하세요.',
@@ -40,6 +43,9 @@ const LABEL: Record<Lang, {
     checkPackageNote: '⚠️ 최신 정보는 실물 포장을 확인하세요',
     packageCup: '컵',
     packageBag: '봉지',
+    filterAll: '전체',
+    searchPlaceholder: '라면 이름 검색',
+    noResults: '검색 결과가 없어요',
   },
   en: {
     intro: 'The information below is based on official government data or the manufacturer\'s official page. Please check the actual package for final confirmation.',
@@ -57,6 +63,9 @@ const LABEL: Record<Lang, {
     checkPackageNote: '⚠️ Check the actual package for the latest information',
     packageCup: 'Cup',
     packageBag: 'Bag',
+    filterAll: 'All',
+    searchPlaceholder: 'Search ramen name',
+    noResults: 'No results found',
   },
   zh: {
     intro: '以下信息基于政府官方数据或制造商官方页面。最终请以实物包装为准。',
@@ -74,6 +83,9 @@ const LABEL: Record<Lang, {
     checkPackageNote: '⚠️ 最新信息请确认实物包装',
     packageCup: '杯面',
     packageBag: '袋装',
+    filterAll: '全部',
+    searchPlaceholder: '搜索拉面名称',
+    noResults: '没有找到结果',
   },
   ja: {
     intro: '以下の情報は政府公式データまたはメーカー公式ページに基づいています。最終確認は実物のパッケージをご覧ください。',
@@ -91,6 +103,9 @@ const LABEL: Record<Lang, {
     checkPackageNote: '⚠️ 最新情報は実物のパッケージをご確認ください',
     packageCup: 'カップ',
     packageBag: '袋',
+    filterAll: '全部',
+    searchPlaceholder: 'ラーメン名を検索',
+    noResults: '検索結果がありません',
   },
 }
 
@@ -229,9 +244,19 @@ function RamenCard({ item, lang }: { item: LinkRamenItem; lang: Lang }) {
   )
 }
 
+type PackageFilter = 'all' | 'cup' | 'bag'
+
 export default function LinkRamenView({ items }: { items: LinkRamenItem[] }) {
   const { lang } = useLang()
   const L = LABEL[lang]
+  const [filter, setFilter] = useState<PackageFilter>('all')
+  const [query, setQuery] = useState('')
+
+  const filtered = items.filter(item => {
+    if (filter !== 'all' && item.package_type !== filter) return false
+    if (query.trim() && !getLinkRamenField(item, 'name', lang).toLowerCase().includes(query.trim().toLowerCase())) return false
+    return true
+  })
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -240,9 +265,32 @@ export default function LinkRamenView({ items }: { items: LinkRamenItem[] }) {
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <p className="text-sm text-gray-600 leading-relaxed">{L.intro}</p>
 
-        {items.map(item => (
-          <RamenCard key={item.id} item={item} lang={lang} />
-        ))}
+        <input
+          type="text"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder={L.searchPlaceholder}
+          className="w-full text-sm bg-white border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+        />
+
+        <div className="flex gap-2">
+          {(['all', 'cup', 'bag'] as PackageFilter[]).map(f => (
+            <button key={f} onClick={() => setFilter(f)}
+              className={`flex-1 text-sm font-bold rounded-xl px-3 py-2 transition-colors ${
+                filter === f ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 border border-gray-200'
+              }`}>
+              {f === 'all' ? L.filterAll : f === 'cup' ? L.packageCup : L.packageBag}
+            </button>
+          ))}
+        </div>
+
+        {filtered.length === 0 ? (
+          <p className="text-sm text-gray-400 text-center py-10">{L.noResults}</p>
+        ) : (
+          filtered.map(item => (
+            <RamenCard key={item.id} item={item} lang={lang} />
+          ))
+        )}
       </main>
     </div>
   )
