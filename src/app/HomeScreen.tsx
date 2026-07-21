@@ -249,6 +249,17 @@ const GROUPS: Group[] = [
         },
         href: '/recipes',
       },
+      {
+        emoji: '🌶️',
+        title: { ko: '나라별 맵기 평가', en: 'Spiciness by Country', zh: '各国辣度评价', ja: '国別辛さ評価' },
+        desc: {
+          ko: '내 나라 기준으로 평가하고 참고치 보기',
+          en: 'Rate & compare by your country',
+          zh: '按你的国家评价并查看参考值',
+          ja: '自分の国基準で評価・参考値を見る',
+        },
+        href: '/guide/link-ramen',
+      },
     ],
   },
 ]
