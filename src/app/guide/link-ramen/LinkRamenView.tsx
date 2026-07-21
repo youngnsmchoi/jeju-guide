@@ -2,6 +2,7 @@
 // 라면 가이드 v2 — FOOD QR 링크 우선 제공, 없으면 제조사 정보를 번역한 아코디언 카드로 안내
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useLang } from '@/context/LangContext'
 import type { LinkRamenItem, Lang } from '@/lib/types'
 import { getLinkRamenField } from '@/lib/types'
@@ -26,6 +27,7 @@ const LABEL: Record<Lang, {
   filterAll: string
   searchPlaceholder: string
   noResults: string
+  spicyLinkLabel: string
 }> = {
   ko: {
     intro: '아래 정보는 정부 공식 데이터 또는 제조사 공식 페이지를 기반으로 합니다. 최종 확인은 실물 포장을 참고하세요.',
@@ -46,6 +48,7 @@ const LABEL: Record<Lang, {
     filterAll: '전체',
     searchPlaceholder: '라면 이름 검색',
     noResults: '검색 결과가 없어요',
+    spicyLinkLabel: '🌶️ 나라별 맵기 평가 보기/남기기 →',
   },
   en: {
     intro: 'The information below is based on official government data or the manufacturer\'s official page. Please check the actual package for final confirmation.',
@@ -66,6 +69,7 @@ const LABEL: Record<Lang, {
     filterAll: 'All',
     searchPlaceholder: 'Search ramen name',
     noResults: 'No results found',
+    spicyLinkLabel: '🌶️ See/Add Spiciness Rating by Country →',
   },
   zh: {
     intro: '以下信息基于政府官方数据或制造商官方页面。最终请以实物包装为准。',
@@ -86,6 +90,7 @@ const LABEL: Record<Lang, {
     filterAll: '全部',
     searchPlaceholder: '搜索拉面名称',
     noResults: '没有找到结果',
+    spicyLinkLabel: '🌶️ 查看/添加各国辣度评价 →',
   },
   ja: {
     intro: '以下の情報は政府公式データまたはメーカー公式ページに基づいています。最終確認は実物のパッケージをご覧ください。',
@@ -106,6 +111,7 @@ const LABEL: Record<Lang, {
     filterAll: '全部',
     searchPlaceholder: 'ラーメン名を検索',
     noResults: '検索結果がありません',
+    spicyLinkLabel: '🌶️ 国別辛さ評価を見る/投稿する →',
   },
 }
 
@@ -154,6 +160,11 @@ function RamenCard({ item, lang }: { item: LinkRamenItem; lang: Lang }) {
             <p className="text-[11px] text-blue-600 bg-blue-50 rounded-lg px-3 py-2">{L.foodqrKoreanOnlyNote}</p>
           </>
         )}
+
+        <Link href={`/guide/link-ramen/${item.id}/spicy`}
+          className="block text-sm font-medium text-rose-600 hover:text-rose-700">
+          {L.spicyLinkLabel}
+        </Link>
       </div>
 
       {/* FOOD QR가 없는 경우에만 번역 카드 제공 */}

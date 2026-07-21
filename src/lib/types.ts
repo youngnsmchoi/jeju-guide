@@ -115,6 +115,15 @@ export interface LinkRamenItem {
   storage_note_ja: string | null
 }
 
+export interface LinkRamenSpicyRating {
+  id: number
+  ramen_id: number
+  country: string
+  spicy_level: number
+  hidden: boolean
+  created_at: string
+}
+
 export interface HotbarItem {
   id: number
   order_num: number
