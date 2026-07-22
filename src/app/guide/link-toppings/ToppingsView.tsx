@@ -268,7 +268,7 @@ export default function ToppingsView({ combos }: { combos: ToppingCombo[] }) {
 
         {/* 성분 확인 링크 — 눈에 띄게 상단 배치 */}
         <button
-          onClick={() => router.push('/guide/ingredients')}
+          onClick={() => router.push('/guide/link-ingredients')}
           className="w-full text-left bg-amber-50 border border-amber-300 rounded-2xl px-4 py-3 hover:bg-amber-100 transition-colors"
         >
           <p className="text-sm font-bold text-amber-800">{L.ingredientsLink}</p>

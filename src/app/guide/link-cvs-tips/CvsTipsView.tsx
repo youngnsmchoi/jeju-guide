@@ -1,19 +1,19 @@
 'use client'
-// 편의점 꿀팁 — 전자레인지·삼각김밥·T-money 외국인 실용 안내
+// 편의점 꿀팁 — 전자레인지·삼각김밥 등 외국인 실용 안내
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 
-type Tab = 'microwave' | 'onigiri' | 'tmoney' | 'toilet' | 'trash' | 'wifi' | 'common'
-const TABS: Tab[] = ['microwave', 'onigiri', 'tmoney', 'toilet', 'trash', 'wifi', 'common']
+type Tab = 'microwave' | 'onigiri' | 'toilet' | 'trash' | 'wifi' | 'common'
+const TABS: Tab[] = ['microwave', 'onigiri', 'toilet', 'trash', 'wifi', 'common']
 
 const LABEL: Record<Lang, {
   title: string
   tabMicrowave: string
   tabOnigiri: string
-  tabTmoney: string
   tabToilet: string
   tabTrash: string
   tabWifi: string
@@ -32,14 +32,6 @@ const LABEL: Record<Lang, {
     tip: string
     flavors: string
     flavorList: string[]
-  }
-  tmoney: {
-    title: string
-    intro: string
-    steps: string[]
-    phraseLabel: string
-    phrase: string
-    tip: string
   }
   toilet: {
     title: string
@@ -64,13 +56,13 @@ const LABEL: Record<Lang, {
     title: string
     points: string[]
   }
+  tmoneyLink: string
   expand: string
 }> = {
   ko: {
     title: '편의점 꿀팁',
     tabMicrowave: '🔥 전자레인지',
     tabOnigiri: '🍙 삼각김밥',
-    tabTmoney: '🚇 T-money',
     tabToilet: '🚻 화장실',
     tabTrash: '🗑️ 쓰레기',
     tabWifi: '📶 와이파이',
@@ -98,18 +90,6 @@ const LABEL: Record<Lang, {
       tip: '💡 천천히 당기면 김이 찢어지지 않아요.',
       flavors: '인기 종류',
       flavorList: ['참치마요 (Tuna Mayo)', '불고기 (Bulgogi)', '명란 (Pollock Roe)', '스팸 (Spam)'],
-    },
-    tmoney: {
-      title: '🚇 T-money 교통카드',
-      intro: '버스·지하철·택시 모두 사용 가능. 편의점 카운터에서 구매·충전할 수 있습니다.',
-      steps: [
-        '카운터에 카드를 올려놓고 충전 금액을 말하세요.',
-        '현금 또는 카드로 충전 가능합니다.',
-        '최소 1,000원 단위로 충전됩니다.',
-      ],
-      phraseLabel: '충전할 때 보여주세요',
-      phrase: '티머니 충전해주세요',
-      tip: '카드가 없으면 편의점에서 구매 가능합니다. (약 3,000~4,000원)',
     },
     toilet: {
       title: '🚻 화장실 이용',
@@ -152,13 +132,13 @@ const LABEL: Record<Lang, {
         '냉장·냉동 식품, 음료, 간식 판매',
       ],
     },
+    tmoneyLink: '🚇 교통카드(T-money) 자세히 보기 →',
     expand: '확대',
   },
   en: {
     title: 'CVS Tips',
     tabMicrowave: '🔥 Microwave',
     tabOnigiri: '🍙 Onigiri',
-    tabTmoney: '🚇 T-money',
     tabToilet: '🚻 Toilet',
     tabTrash: '🗑️ Trash',
     tabWifi: '📶 Wi-Fi',
@@ -186,18 +166,6 @@ const LABEL: Record<Lang, {
       tip: '💡 Pull slowly so the seaweed doesn\'t tear.',
       flavors: 'Popular flavors',
       flavorList: ['참치마요 Tuna Mayo', '불고기 Bulgogi', '명란 Pollock Roe', '스팸 Spam'],
-    },
-    tmoney: {
-      title: '🚇 T-money Card',
-      intro: 'Works on buses, subways, and taxis. Buy or top up at any convenience store counter.',
-      steps: [
-        'Place your card on the counter and tell the amount you want to add.',
-        'Pay by cash or card.',
-        'Minimum top-up is ₩1,000.',
-      ],
-      phraseLabel: 'Show this to top up',
-      phrase: '티머니 충전해주세요 (Please top up my T-money)',
-      tip: 'No card? You can buy one at the counter for about ₩3,000–4,000.',
     },
     toilet: {
       title: '🚻 Using the toilet',
@@ -240,13 +208,13 @@ const LABEL: Record<Lang, {
         'Chilled drinks, snacks, and frozen foods',
       ],
     },
+    tmoneyLink: '🚇 See Transit Card (T-money) Guide →',
     expand: 'Show',
   },
   zh: {
     title: '便利店小贴士',
     tabMicrowave: '🔥 微波炉',
     tabOnigiri: '🍙 三角饭团',
-    tabTmoney: '🚇 T-money',
     tabToilet: '🚻 洗手间',
     tabTrash: '🗑️ 垃圾分类',
     tabWifi: '📶 WiFi',
@@ -274,18 +242,6 @@ const LABEL: Record<Lang, {
       tip: '💡 慢慢拉，海苔就不会碎。',
       flavors: '热门口味',
       flavorList: ['참치마요 金枪鱼蛋黄酱', '불고기 烤牛肉', '명란 明太鱼子', '스팸 午餐肉'],
-    },
-    tmoney: {
-      title: '🚇 T-money 交通卡',
-      intro: '可乘坐公交、地铁和出租车。可在便利店柜台购买或充值。',
-      steps: [
-        '将卡放在柜台上，告知充值金额。',
-        '可用现金或刷卡充值。',
-        '最低充值单位为1,000韩元。',
-      ],
-      phraseLabel: '充值时出示',
-      phrase: '티머니 충전해주세요（请帮我充值T-money）',
-      tip: '没有卡？可在柜台购买，约3,000~4,000韩元。',
     },
     toilet: {
       title: '🚻 洗手间使用',
@@ -328,13 +284,13 @@ const LABEL: Record<Lang, {
         '销售冷藏饮料、零食及冷冻食品',
       ],
     },
+    tmoneyLink: '🚇 查看交通卡(T-money)详情 →',
     expand: '放大',
   },
   ja: {
     title: 'コンビニお役立ち情報',
     tabMicrowave: '🔥 電子レンジ',
     tabOnigiri: '🍙 おにぎり',
-    tabTmoney: '🚇 T-money',
     tabToilet: '🚻 トイレ',
     tabTrash: '🗑️ ゴミ分別',
     tabWifi: '📶 Wi-Fi',
@@ -362,18 +318,6 @@ const LABEL: Record<Lang, {
       tip: '💡 ゆっくり引っ張ると海苔が破れません。',
       flavors: '人気の種類',
       flavorList: ['참치마요 ツナマヨ', '불고기 プルコギ', '명란 明太子', '스팸 スパム'],
-    },
-    tmoney: {
-      title: '🚇 T-moneyカード',
-      intro: 'バス・地下鉄・タクシーで使えます。コンビニのレジで購入・チャージができます。',
-      steps: [
-        'カードをレジに置いてチャージ金額を伝えてください。',
-        '現金またはカードでチャージできます。',
-        '最低1,000ウォン単位でチャージできます。',
-      ],
-      phraseLabel: 'チャージ時に見せる',
-      phrase: '티머니 충전해주세요（T-moneyをチャージしてください）',
-      tip: 'カードがない場合はレジで購入できます。（約3,000〜4,000ウォン）',
     },
     toilet: {
       title: '🚻 トイレの利用',
@@ -416,6 +360,7 @@ const LABEL: Record<Lang, {
         '冷蔵飲料・スナック・冷凍食品販売',
       ],
     },
+    tmoneyLink: '🚇 交通カード(T-money)の詳細を見る →',
     expand: '拡大',
   },
 }
@@ -453,7 +398,6 @@ export default function CvsTipsView() {
   const tabLabel = (t: Tab): string => ({
     microwave: L.tabMicrowave,
     onigiri: L.tabOnigiri,
-    tmoney: L.tabTmoney,
     toilet: L.tabToilet,
     trash: L.tabTrash,
     wifi: L.tabWifi,
@@ -519,24 +463,6 @@ export default function CvsTipsView() {
           </div>
         )}
 
-        {tab === 'tmoney' && (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
-            <p className="text-sm font-bold text-gray-800">{L.tmoney.title}</p>
-            <p className="text-xs text-gray-600 leading-relaxed">{L.tmoney.intro}</p>
-            <ol className="space-y-2">
-              {L.tmoney.steps.map((step, i) => (
-                <li key={i} className="flex gap-2 text-xs text-gray-700">
-                  <span className="shrink-0 w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold">{i + 1}</span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ol>
-            <p className="text-xs text-gray-500 font-medium">{L.tmoney.phraseLabel}</p>
-            <PhraseButton phrase={L.tmoney.phrase} expandLabel={L.expand} />
-            <p className="text-xs text-blue-600 bg-blue-50 rounded-xl px-3 py-2">{L.tmoney.tip}</p>
-          </div>
-        )}
-
         {tab === 'toilet' && (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
             <p className="text-sm font-bold text-gray-800">{L.toilet.title}</p>
@@ -597,6 +523,10 @@ export default function CvsTipsView() {
                 </li>
               ))}
             </ul>
+            <Link href="/guide/link-tmoney"
+              className="block text-sm font-medium text-emerald-700 hover:text-emerald-800 pt-1">
+              {L.tmoneyLink}
+            </Link>
           </div>
         )}
       </main>

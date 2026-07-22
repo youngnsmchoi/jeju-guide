@@ -9,11 +9,11 @@ import LangSelector from '@/components/LangSelector'
 
 const FAVORITES_KEY = 'home_favorites'
 const DEFAULT_FAVORITES = [
-  '/guide/payment',
-  '/guide/money',
-  '/guide/cvs-tips',
-  '/guide/cooking',
-  '/guide/country-picks',
+  '/guide/link-payment',
+  '/guide/link-money',
+  '/guide/link-cvs-tips',
+  '/guide/link-cooking',
+  '/guide/link-country-picks',
 ]
 
 const MY_MENU_LABEL: Record<Lang, string> = {
@@ -30,7 +30,7 @@ const START_HERE_LABEL: Record<Lang, string> = {
   ja: '初めての方はこの順番で',
 }
 
-const START_HERE_HREFS = ['/guide/payment', '/guide/money', '/guide/cvs-tips']
+const START_HERE_HREFS = ['/guide/link-payment', '/guide/link-money', '/guide/link-cvs-tips']
 
 const ASK_BANNER_LABEL: Record<Lang, { text: string; arrow: string }> = {
   ko: { text: '찾는 정보가 없나요? 알려주세요', arrow: '→' },
@@ -111,12 +111,23 @@ const GROUPS: Group[] = [
         emoji: '💡',
         title: { ko: '편의점 꿀팁', en: 'CVS Tips', zh: '便利店小贴士', ja: 'コンビニお役立ち' },
         desc: {
-          ko: '전자레인지 · 화장실 · 쓰레기 · T-money',
-          en: 'Microwave · Toilet · Trash · T-money',
-          zh: '微波炉 · 洗手间 · 垃圾分类 · T-money',
-          ja: '電子レンジ · トイレ · ゴミ · T-money',
+          ko: '전자레인지 · 화장실 · 쓰레기 · 와이파이',
+          en: 'Microwave · Toilet · Trash · Wi-Fi',
+          zh: '微波炉 · 洗手间 · 垃圾分类 · Wi-Fi',
+          ja: '電子レンジ · トイレ · ゴミ · Wi-Fi',
         },
         href: '/guide/link-cvs-tips',
+      },
+      {
+        emoji: '🚇',
+        title: { ko: '교통카드 안내', en: 'Transit Card Guide', zh: '交通卡指南', ja: '交通カード案内' },
+        desc: {
+          ko: 'T-money 구입 · 충전 · 사용 · 편의점 결제',
+          en: 'Buy · top up · use · pay at store',
+          zh: '购买 · 充值 · 使用 · 便利店结账',
+          ja: '購入 · チャージ · 使用 · コンビニ決済',
+        },
+        href: '/guide/link-tmoney',
       },
       {
         emoji: '🍙',
