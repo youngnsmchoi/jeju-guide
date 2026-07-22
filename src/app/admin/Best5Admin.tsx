@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react'
 import type { Lang } from '@/lib/types'
-import type { Best5Pick } from '@/app/guide/best5/Best5View'
+import type { Best5Pick } from '@/app/guide/link-best5/Best5View'
 import { LANGS } from '@/lib/langs'
 
 type FormState = Omit<Best5Pick, 'id'> & { id?: number }

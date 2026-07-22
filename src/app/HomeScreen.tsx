@@ -83,7 +83,7 @@ const GROUPS: Group[] = [
           zh: '购买流程 · 准备袋子问题',
           ja: '購入手順 · 袋の質問に備える',
         },
-        href: '/guide/payment',
+        href: '/guide/link-payment',
       },
       {
         emoji: '💵',
@@ -94,7 +94,7 @@ const GROUPS: Group[] = [
           zh: '纸币介绍 · 汇率换算 · 便利店价格',
           ja: '紙幣の種類 · 換算機 · コンビニ価格',
         },
-        href: '/guide/money',
+        href: '/guide/link-money',
       },
       {
         emoji: '🏷️',
@@ -116,7 +116,7 @@ const GROUPS: Group[] = [
           zh: '微波炉 · 洗手间 · 垃圾分类 · T-money',
           ja: '電子レンジ · トイレ · ゴミ · T-money',
         },
-        href: '/guide/cvs-tips',
+        href: '/guide/link-cvs-tips',
       },
       {
         emoji: '🍙',
@@ -127,7 +127,7 @@ const GROUPS: Group[] = [
           zh: '饭团 · 便当 · 零食',
           ja: 'おにぎり · 弁当 · お菓子',
         },
-        href: '/guide/store-food',
+        href: '/guide/link-store-food',
       },
     ],
   },
@@ -145,7 +145,7 @@ const GROUPS: Group[] = [
           zh: '日本·中国·美国…你的国家的选择',
           ja: '日本·中国·アメリカ…自国の人気ランキング',
         },
-        href: '/guide/country-picks',
+        href: '/guide/link-country-picks',
       },
       {
         emoji: '🎯',
@@ -178,7 +178,7 @@ const GROUPS: Group[] = [
           zh: '外国人推荐排名',
           ja: '外国人おすすめランキング',
         },
-        href: '/guide/best5',
+        href: '/guide/link-best5',
       },
     ],
   },
@@ -196,7 +196,7 @@ const GROUPS: Group[] = [
           zh: '杯面 · 袋面 · 干拌',
           ja: 'カップ · 袋 · まぜそば',
         },
-        href: '/guide/cooking',
+        href: '/guide/link-cooking',
       },
       {
         emoji: '🥗',
@@ -207,7 +207,7 @@ const GROUPS: Group[] = [
           zh: '如何自行确认成分表（使用Papago）',
           ja: '成分表を自分で確認する方法（Papago活用）',
         },
-        href: '/guide/ingredients',
+        href: '/guide/link-ingredients',
       },
       {
         emoji: '🥚',
@@ -218,7 +218,7 @@ const GROUPS: Group[] = [
           zh: '鸡蛋 · 芝士 · 饭团组合',
           ja: '卵 · チーズ · おにぎり',
         },
-        href: '/guide/toppings',
+        href: '/guide/link-toppings',
       },
       {
         emoji: '📝',

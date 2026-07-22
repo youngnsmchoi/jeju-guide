@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react'
 import type { Lang } from '@/lib/types'
-import type { ToppingCombo } from '@/app/guide/toppings/ToppingsView'
+import type { ToppingCombo } from '@/app/guide/link-toppings/ToppingsView'
 import { LANGS } from '@/lib/langs'
 
 const ALL_TOPPINGS = ['🥚', '🧀', '🍙'] as const

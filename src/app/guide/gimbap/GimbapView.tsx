@@ -173,7 +173,7 @@ export default function GimbapView() {
         </div>
 
         <a
-          href="/guide/ingredients"
+          href="/guide/link-ingredients"
           className="block bg-amber-50 border border-amber-300 rounded-2xl px-4 py-3 hover:bg-amber-100 transition-colors"
         >
           <p className="text-sm font-bold text-amber-800">{L.ingredientsLink}</p>
