@@ -16,6 +16,14 @@ const IMAGE_SRC: Record<TabKey, string> = {
   bulk: '/images/receipts/receipt-bulk-discount.png',
 }
 
+// 실제 이미지 픽셀 비율 (여백 없이 딱 맞게 표시하기 위함)
+const IMAGE_RATIO: Record<TabKey, number> = {
+  basic: 1200 / 1027,
+  mix: 1200 / 988,
+  alcohol: 1141 / 1200,
+  bulk: 1200 / 1079,
+}
+
 const LABEL: Record<Lang, {
   tabNames: Record<TabKey, string>
   storeName: string
@@ -170,7 +178,7 @@ export default function ReceiptSamples({ lang }: { lang: Lang }) {
           <p className="text-xs font-bold">{L.storeName}</p>
           <p className="text-[10px] text-gray-300">{L.storeAddress}</p>
         </div>
-        <div className="relative w-full" style={{ aspectRatio: '4/5' }}>
+        <div className="relative w-full" style={{ aspectRatio: IMAGE_RATIO[tab] }}>
           <Image
             src={IMAGE_SRC[tab]}
             alt={L.tabNames[tab]}
