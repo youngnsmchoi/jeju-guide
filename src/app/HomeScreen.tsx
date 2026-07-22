@@ -156,6 +156,18 @@ const GROUPS: Group[] = [
     cardClass: 'bg-orange-50 border-orange-100',
     sections: [
       {
+        emoji: '🍜',
+        title: { ko: '라면 전체 보기', en: 'All Ramen', zh: '全部拉面', ja: 'ラーメン一覧' },
+        desc: {
+          ko: '29종 라면 정보 · 공식 자료 링크',
+          en: '29 ramen items · official source links',
+          zh: '29种拉面 · 官方资料链接',
+          ja: '29種ラーメン · 公式資料リンク',
+        },
+        href: '/guide/link-ramen',
+        badge: 'official',
+      },
+      {
         emoji: '🌏',
         title: { ko: '나라별 인기 라면', en: 'Popular by Country', zh: '各国人气拉面', ja: '国別人気ラーメン' },
         desc: {
@@ -178,18 +190,6 @@ const GROUPS: Group[] = [
         },
         href: '/vibe',
         badge: 'editorial',
-      },
-      {
-        emoji: '🍜',
-        title: { ko: '라면 전체 보기', en: 'All Ramen', zh: '全部拉面', ja: 'ラーメン一覧' },
-        desc: {
-          ko: '29종 라면 정보 · 공식 자료 링크',
-          en: '29 ramen items · official source links',
-          zh: '29种拉面 · 官方资料链接',
-          ja: '29種ラーメン · 公式資料リンク',
-        },
-        href: '/guide/link-ramen',
-        badge: 'official',
       },
       {
         emoji: '⭐',
