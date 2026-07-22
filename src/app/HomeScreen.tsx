@@ -59,6 +59,14 @@ type Section = {
   title: Record<Lang, string>
   desc: Record<Lang, string>
   href: string | null
+  badge?: 'official' | 'editorial'
+}
+
+const BADGE_LABEL: Record<Lang, { official: string; editorial: string }> = {
+  ko: { official: '공식 자료', editorial: '편집자 참고' },
+  en: { official: 'Official', editorial: 'Editor\'s Pick' },
+  zh: { official: '官方资料', editorial: '编辑参考' },
+  ja: { official: '公式資料', editorial: '編集者参考' },
 }
 
 type Group = {
@@ -157,6 +165,7 @@ const GROUPS: Group[] = [
           ja: '日本·中国·アメリカ…自国の人気ランキング',
         },
         href: '/guide/link-country-picks',
+        badge: 'editorial',
       },
       {
         emoji: '🎯',
@@ -168,6 +177,7 @@ const GROUPS: Group[] = [
           ja: '二日酔い · 辛さ挑戦 · 落ち着く食事 → おすすめ+ルーレット',
         },
         href: '/vibe',
+        badge: 'editorial',
       },
       {
         emoji: '🍜',
@@ -179,6 +189,7 @@ const GROUPS: Group[] = [
           ja: '29種ラーメン · 公式資料リンク',
         },
         href: '/guide/link-ramen',
+        badge: 'official',
       },
       {
         emoji: '⭐',
@@ -190,6 +201,7 @@ const GROUPS: Group[] = [
           ja: '外国人おすすめランキング',
         },
         href: '/guide/link-best5',
+        badge: 'editorial',
       },
     ],
   },
@@ -458,6 +470,13 @@ function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, 
           className="absolute top-2 right-2 text-sm leading-none p-0.5">
           {isFavorite ? '⭐' : '☆'}
         </button>
+      )}
+      {section.badge && (
+        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+          section.badge === 'official' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+        }`}>
+          {BADGE_LABEL[lang][section.badge]}
+        </span>
       )}
       <p className="text-xs font-bold text-gray-900 leading-snug pr-4">{section.title[lang]}</p>
       <p className="text-xs text-gray-400 leading-relaxed pr-4">{section.desc[lang]}</p>
