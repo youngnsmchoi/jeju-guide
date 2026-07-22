@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
+import ReceiptSamples from './ReceiptSamples'
 
 type BillBreakdown = { fiftyK: number; tenK: number; fiveK: number; oneK: number; paid: number; change: number }
 
@@ -54,7 +55,6 @@ const LABEL: Record<Lang, {
   receiptLabel: string
   receiptYes: string
   receiptSampleTitle: string
-  receiptSampleDesc: string
   onePlusOneLink: string
   moneyGuideLink: string
   cashOnlyNote: string
@@ -99,7 +99,6 @@ const LABEL: Record<Lang, {
     receiptLabel: 'Ask for a receipt and check it',
     receiptYes: 'Receipt, please',
     receiptSampleTitle: '🧾 How to read a Korean receipt',
-    receiptSampleDesc: '(Sample coming soon)',
     cashOnlyNote: '💵 Paid in cash? Use the calculator below to check your change.',
     onePlusOneLink: '🏷️ How to Save (1+1 / 2+1 deals) →',
     moneyGuideLink: '💵 Korean Money Guide →',
@@ -158,7 +157,6 @@ const LABEL: Record<Lang, {
     receiptLabel: '영수증을 받아서 확인하세요',
     receiptYes: '영수증 주세요',
     receiptSampleTitle: '🧾 한국 영수증 읽는 법',
-    receiptSampleDesc: '(샘플 준비 중)',
     cashOnlyNote: '💵 현금으로 내셨다면, 아래 계산기로 거스름돈이 맞는지 확인해보세요.',
     onePlusOneLink: '🏷️ 할인 득템법 (1+1·2+1) →',
     moneyGuideLink: '💵 한국 돈 안내 →',
@@ -217,7 +215,6 @@ const LABEL: Record<Lang, {
     receiptLabel: '请索要收据并确认',
     receiptYes: '请给我收据',
     receiptSampleTitle: '🧾 韩国收据阅读方法',
-    receiptSampleDesc: '（示例准备中）',
     cashOnlyNote: '💵 如果用现金支付，请用下方计算器确认找零是否正确。',
     onePlusOneLink: '🏷️ 优惠攻略 (1+1·2+1) →',
     moneyGuideLink: '💵 韩元指南 →',
@@ -276,7 +273,6 @@ const LABEL: Record<Lang, {
     receiptLabel: 'レシートをもらって確認しましょう',
     receiptYes: 'レシートください',
     receiptSampleTitle: '🧾 韓国のレシートの読み方',
-    receiptSampleDesc: '（サンプル準備中）',
     cashOnlyNote: '💵 現金で支払った場合は、下の計算機でおつりが合っているか確認してください。',
     onePlusOneLink: '🏷️ お得な買い方 (1+1・2+1) →',
     moneyGuideLink: '💵 韓国のお金ガイド →',
@@ -444,9 +440,7 @@ export default function PaymentView() {
             {step.receiptSample && (
               <div className="pl-10 space-y-2">
                 <p className="text-xs font-bold text-gray-700">{L.receiptSampleTitle}</p>
-                <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 flex items-center justify-center py-8">
-                  <p className="text-xs text-gray-400">{L.receiptSampleDesc}</p>
-                </div>
+                <ReceiptSamples lang={lang} />
               </div>
             )}
 
