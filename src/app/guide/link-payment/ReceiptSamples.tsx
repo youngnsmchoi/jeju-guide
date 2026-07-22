@@ -172,13 +172,13 @@ export default function ReceiptSamples({ lang }: { lang: Lang }) {
         ))}
       </div>
 
-      <div className="rounded-xl border border-gray-200 overflow-hidden bg-white">
+      <div className="rounded-xl border border-gray-200 overflow-hidden bg-sky-100">
         {/* 가상 상호/주소 헤더 — 실제 매장과 무관한 예시 */}
         <div className="bg-gray-800 text-white px-3 py-2 text-center">
           <p className="text-xs font-bold">{L.storeName}</p>
           <p className="text-[10px] text-gray-300">{L.storeAddress}</p>
         </div>
-        <div className="relative w-full" style={{ aspectRatio: IMAGE_RATIO[tab] }}>
+        <div className="relative w-full bg-sky-100" style={{ aspectRatio: IMAGE_RATIO[tab] }}>
           <Image
             src={IMAGE_SRC[tab]}
             alt={L.tabNames[tab]}
