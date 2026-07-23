@@ -24,6 +24,7 @@ const LABEL: Record<Lang, {
     steps: string[]
     timeTableTitle: string
     timeTable: string[]
+    exampleLabel: string
     warning: string
     phraseLabel: string
     phrase: string
@@ -83,6 +84,7 @@ const LABEL: Record<Lang, {
         '삼각김밥: 1000W(편의점 전자레인지) 기준 20~30초 · 700W(가정용) 기준 35~40초',
         '도시락: 뚜껑 제거 후 1분 40초(매장용) · 2분(가정용)',
       ],
+      exampleLabel: '📸 실물 예시: 이 도시락은 "1분 40초"라고 적혀 있어요. 전자레인지에서는 이렇게 시간 버튼을 눌러 맞추고 시작하면 됩니다.',
       warning: '⚠️ 알루미늄 용기·포일은 절대 넣지 마세요. 불이 날 수 있습니다.',
       phraseLabel: '점원에게 부탁할 때',
       phrase: '데워주세요',
@@ -164,6 +166,7 @@ const LABEL: Record<Lang, {
         'Triangle kimbap: about 20–30 sec at 1000W (store microwave) · 35–40 sec at 700W (home microwave)',
         'Bento (dosirak): remove the lid first, then 1 min 40 sec (store microwave) · 2 min (home microwave)',
       ],
+      exampleLabel: '📸 Real example: this bento says "1 min 40 sec." On the microwave, you\'d press the time buttons to set that, then press start — like this.',
       warning: '⚠️ Never put aluminum containers or foil inside. It can cause a fire.',
       phraseLabel: 'Ask the staff',
       phrase: '데워주세요 (Please heat this up)',
@@ -245,6 +248,7 @@ const LABEL: Record<Lang, {
         '饭团：1000W（便利店微波炉）约20~30秒 · 700W（家用微波炉）约35~40秒',
         '便当：先取下盖子，1分40秒（店用微波炉）· 2分钟（家用微波炉）',
       ],
+      exampleLabel: '📸 实物示例：这个便当上写着"1分40秒"。在微波炉上，按时间按钮设置好这个时间后按开始即可，如下图所示。',
       warning: '⚠️ 绝对不能放铝制容器或锡纸，可能引起火灾。',
       phraseLabel: '请店员帮忙时',
       phrase: '데워주세요（请帮我加热）',
@@ -326,6 +330,7 @@ const LABEL: Record<Lang, {
         'おにぎり：1000W（コンビニの電子レンジ）で約20〜30秒 ・ 700W（家庭用）で約35〜40秒',
         '弁当：フタを外してから1分40秒（店舗用）・ 2分（家庭用）',
       ],
+      exampleLabel: '📸 実物例：この弁当には「1分40秒」と書かれています。電子レンジではこのように時間ボタンを押して設定し、スタートを押してください。',
       warning: '⚠️ アルミ容器やアルミホイルは絶対に入れないでください。火災の原因になります。',
       phraseLabel: '店員に頼むとき',
       phrase: '데워주세요（温めてください）',
@@ -446,9 +451,6 @@ export default function CvsTipsView() {
         {tab === 'microwave' && (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
             <p className="text-sm font-bold text-gray-800">{L.microwave.title}</p>
-            <div className="relative w-full rounded-xl overflow-hidden bg-gray-50" style={{ aspectRatio: 1000 / 561 }}>
-              <Image src="/images/cvs-tips/microwave.png" alt={L.microwave.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
-            </div>
             <ol className="space-y-2">
               {L.microwave.steps.map((step, i) => (
                 <li key={i} className="flex gap-2 text-xs text-gray-700">
@@ -463,9 +465,15 @@ export default function CvsTipsView() {
                 <p key={i} className="text-xs text-orange-700 leading-relaxed">{line}</p>
               ))}
             </div>
+
+            <p className="text-xs font-bold text-gray-700">{L.microwave.exampleLabel}</p>
             <div className="relative w-full rounded-xl overflow-hidden bg-gray-50" style={{ aspectRatio: 1000 / 984 }}>
               <Image src="/images/cvs-tips/dosirak.png" alt="dosirak time label example" fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
             </div>
+            <div className="relative w-full rounded-xl overflow-hidden bg-gray-50" style={{ aspectRatio: 1000 / 561 }}>
+              <Image src="/images/cvs-tips/microwave.png" alt={L.microwave.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
+            </div>
+
             <div className="bg-red-50 border border-red-200 rounded-xl px-3 py-2">
               <p className="text-xs text-red-700">{L.microwave.warning}</p>
             </div>
