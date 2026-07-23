@@ -3,6 +3,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
@@ -21,6 +22,8 @@ const LABEL: Record<Lang, {
   microwave: {
     title: string
     steps: string[]
+    timeTableTitle: string
+    timeTable: string[]
     warning: string
     phraseLabel: string
     phrase: string
@@ -70,10 +73,15 @@ const LABEL: Record<Lang, {
     microwave: {
       title: '🔥 전자레인지 사용법',
       steps: [
-        '카운터 근처 셀프 전자레인지를 찾으세요.',
-        '도시락·컵 등 용기 뚜껑을 열고 넣으세요.',
-        '시간 버튼을 누르고 시작하세요. (보통 1~2분)',
+        '전자레인지를 찾으세요. (의자·탁자가 있는 취식 공간 주변에 있습니다)',
+        '제품(삼각김밥, 김밥, 도시락 등) 포장에 적힌 설명서에 따라 뚜껑을 열거나 그대로 넣으세요.',
+        '시간 버튼을 눌러 원하는 시간을 맞추고 시작 버튼을 누르세요.',
         '다 되면 조심히 꺼내세요. 용기가 뜨겁습니다.',
+      ],
+      timeTableTitle: '⏱️ 시간 참고표 (포장에 시간이 없을 때)',
+      timeTable: [
+        '삼각김밥: 1000W(편의점 전자레인지) 기준 20~30초 · 700W(가정용) 기준 35~40초',
+        '도시락: 뚜껑 제거 후 1분 40초(매장용) · 2분(가정용)',
       ],
       warning: '⚠️ 알루미늄 용기·포일은 절대 넣지 마세요. 불이 날 수 있습니다.',
       phraseLabel: '점원에게 부탁할 때',
@@ -146,10 +154,15 @@ const LABEL: Record<Lang, {
     microwave: {
       title: '🔥 How to use the microwave',
       steps: [
-        'Find the self-service microwave near the counter.',
-        'Open the lid of your food container before placing it inside.',
-        'Press the time button and start. (Usually 1–2 minutes)',
+        'Find the microwave. (It\'s usually near the eat-in seating area with chairs and tables.)',
+        'Follow the instructions printed on the food package (triangle kimbap, gimbap, bento, etc.) — open the lid or leave it as is, depending on the product.',
+        'Press the time button to set how long you need, then press start.',
         'Remove carefully — the container will be hot.',
+      ],
+      timeTableTitle: '⏱️ Time reference (if the package doesn\'t show a time)',
+      timeTable: [
+        'Triangle kimbap: about 20–30 sec at 1000W (store microwave) · 35–40 sec at 700W (home microwave)',
+        'Bento (dosirak): remove the lid first, then 1 min 40 sec (store microwave) · 2 min (home microwave)',
       ],
       warning: '⚠️ Never put aluminum containers or foil inside. It can cause a fire.',
       phraseLabel: 'Ask the staff',
@@ -222,10 +235,15 @@ const LABEL: Record<Lang, {
     microwave: {
       title: '🔥 微波炉使用方法',
       steps: [
-        '在收银台附近找到自助微波炉。',
-        '打开食品容器的盖子后放入。',
-        '按下时间按钮开始加热。（通常1~2分钟）',
+        '找到微波炉。（通常在有椅子和桌子的用餐区附近）',
+        '请按照食品包装（饭团、紫菜包饭、便当等）上印的说明操作——根据产品打开盖子或直接放入。',
+        '按时间按钮设置所需时间，然后按开始键。',
         '小心取出，容器会很烫。',
+      ],
+      timeTableTitle: '⏱️ 时间参考（包装上没有标注时间时）',
+      timeTable: [
+        '饭团：1000W（便利店微波炉）约20~30秒 · 700W（家用微波炉）约35~40秒',
+        '便当：先取下盖子，1分40秒（店用微波炉）· 2分钟（家用微波炉）',
       ],
       warning: '⚠️ 绝对不能放铝制容器或锡纸，可能引起火灾。',
       phraseLabel: '请店员帮忙时',
@@ -298,10 +316,15 @@ const LABEL: Record<Lang, {
     microwave: {
       title: '🔥 電子レンジの使い方',
       steps: [
-        'レジ近くのセルフ電子レンジを探してください。',
-        '食品容器のフタを開けてから入れてください。',
-        '時間ボタンを押してスタート。（通常1〜2分）',
+        '電子レンジを探してください。（椅子・テーブルがあるイートインスペース付近にあります）',
+        '商品（おにぎり、のり巻き、弁当など）のパッケージに書かれた説明に従ってください。フタを開けるか、そのまま入れるかは商品によります。',
+        '時間ボタンを押して必要な時間を設定し、スタートボタンを押してください。',
         '容器が熱いので気をつけて取り出してください。',
+      ],
+      timeTableTitle: '⏱️ 時間の目安（パッケージに時間表記がない場合）',
+      timeTable: [
+        'おにぎり：1000W（コンビニの電子レンジ）で約20〜30秒 ・ 700W（家庭用）で約35〜40秒',
+        '弁当：フタを外してから1分40秒（店舗用）・ 2分（家庭用）',
       ],
       warning: '⚠️ アルミ容器やアルミホイルは絶対に入れないでください。火災の原因になります。',
       phraseLabel: '店員に頼むとき',
@@ -423,6 +446,9 @@ export default function CvsTipsView() {
         {tab === 'microwave' && (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
             <p className="text-sm font-bold text-gray-800">{L.microwave.title}</p>
+            <div className="relative w-full rounded-xl overflow-hidden bg-gray-50" style={{ aspectRatio: 1000 / 561 }}>
+              <Image src="/images/cvs-tips/microwave.png" alt={L.microwave.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
+            </div>
             <ol className="space-y-2">
               {L.microwave.steps.map((step, i) => (
                 <li key={i} className="flex gap-2 text-xs text-gray-700">
@@ -431,6 +457,15 @@ export default function CvsTipsView() {
                 </li>
               ))}
             </ol>
+            <div className="bg-orange-50 border border-orange-200 rounded-xl p-3 space-y-1">
+              <p className="text-xs font-bold text-orange-800">{L.microwave.timeTableTitle}</p>
+              {L.microwave.timeTable.map((line, i) => (
+                <p key={i} className="text-xs text-orange-700 leading-relaxed">{line}</p>
+              ))}
+            </div>
+            <div className="relative w-full rounded-xl overflow-hidden bg-gray-50" style={{ aspectRatio: 1000 / 984 }}>
+              <Image src="/images/cvs-tips/dosirak.png" alt="dosirak time label example" fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
+            </div>
             <div className="bg-red-50 border border-red-200 rounded-xl px-3 py-2">
               <p className="text-xs text-red-700">{L.microwave.warning}</p>
             </div>
@@ -442,6 +477,9 @@ export default function CvsTipsView() {
         {tab === 'onigiri' && (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
             <p className="text-sm font-bold text-gray-800">{L.onigiri.title}</p>
+            <div className="relative w-full rounded-xl overflow-hidden bg-gray-50" style={{ aspectRatio: 1000 / 960 }}>
+              <Image src="/images/cvs-tips/onigiri.png" alt={L.onigiri.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
+            </div>
             <p className="text-xs text-gray-600 leading-relaxed">{L.onigiri.intro}</p>
             <ol className="space-y-2">
               {L.onigiri.steps.map((step, i) => (
