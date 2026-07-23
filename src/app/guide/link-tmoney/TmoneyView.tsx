@@ -2,6 +2,7 @@
 // 교통카드(T-money) 안내 — 구입·충전·사용·편의점 결제 4단계
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
@@ -18,7 +19,7 @@ const LABEL: Record<Lang, {
   tabShop: string
   expand: string
   buy: { title: string; points: string[] }
-  topup: { title: string; steps: string[]; phraseLabel: string; phrase: string }
+  topup: { title: string; steps: string[]; warning: string; amountLabel: string; phraseLabel: string; phraseTemplate: (amount: string) => string }
   use: { title: string; points: string[]; warning: string }
   shop: { title: string; points: string[] }
 }> = {
@@ -41,12 +42,13 @@ const LABEL: Record<Lang, {
     topup: {
       title: '교통카드 충전',
       steps: [
-        '카운터에 카드를 올려놓고 충전 금액을 말하세요.',
-        '현금 또는 카드로 충전 가능합니다.',
+        '카드리더기에 카드를 올려놓고 충전 금액을 보여주세요.',
         '최소 1,000원 단위로 충전됩니다.',
       ],
+      warning: '⚠️ 참고: 티머니 잔액 충전은 현금만 가능합니다. 카드로는 충전할 수 없어요.',
+      amountLabel: '충전할 금액을 입력하세요 (원)',
       phraseLabel: '충전할 때 보여주세요',
-      phrase: '티머니 충전해주세요',
+      phraseTemplate: (amount) => `티머니 ${amount}원 충전해주세요`,
     },
     use: {
       title: '교통카드 사용',
@@ -85,12 +87,13 @@ const LABEL: Record<Lang, {
     topup: {
       title: 'Topping Up',
       steps: [
-        'Place the card on the counter and tell the cashier how much to add.',
-        'You can pay in cash or by card.',
+        'Place the card on the card reader and show the amount you want to add.',
         'Top-ups are in units of at least 1,000 won.',
       ],
+      warning: '⚠️ Note: Top-ups can only be paid in cash. Card payment is not accepted for topping up.',
+      amountLabel: 'Enter the amount to top up (KRW)',
       phraseLabel: 'Show this when topping up',
-      phrase: '티머니 충전해주세요 (Please top up my T-money)',
+      phraseTemplate: (amount) => `티머니 ${amount}원 충전해주세요 (Please top up ${amount} won on my T-money)`,
     },
     use: {
       title: 'Using the Card',
@@ -129,12 +132,13 @@ const LABEL: Record<Lang, {
     topup: {
       title: '交通卡充值',
       steps: [
-        '把卡放在柜台上，告诉店员要充值的金额。',
-        '可以用现金或卡支付充值费用。',
+        '把卡放在读卡器上，出示您要充值的金额。',
         '最低以1,000韩元为单位充值。',
       ],
+      warning: '⚠️ 请注意：交通卡充值只能使用现金，不支持刷卡充值。',
+      amountLabel: '请输入要充值的金额（韩元）',
       phraseLabel: '充值时请出示',
-      phrase: '티머니 충전해주세요（请帮我充值T-money）',
+      phraseTemplate: (amount) => `티머니 ${amount}원 충전해주세요（请帮我充值${amount}韩元）`,
     },
     use: {
       title: '使用交通卡',
@@ -173,12 +177,13 @@ const LABEL: Record<Lang, {
     topup: {
       title: '交通カードのチャージ',
       steps: [
-        'レジにカードを置き、チャージ金額を伝えてください。',
-        '現金またはカードでチャージできます。',
+        'カードリーダーにカードを置き、チャージしたい金額を見せてください。',
         '最低1,000ウォン単位でチャージされます。',
       ],
+      warning: '⚠️ 注意：チャージは現金のみ可能です。カードでのチャージはできません。',
+      amountLabel: 'チャージする金額を入力してください（ウォン）',
       phraseLabel: 'チャージの際にお見せください',
-      phrase: '티머니 충전해주세요（T-moneyをチャージしてください）',
+      phraseTemplate: (amount) => `티머니 ${amount}원 충전해주세요（T-moneyに${amount}ウォンチャージしてください）`,
     },
     use: {
       title: '交通カードの使用',
@@ -200,10 +205,27 @@ const LABEL: Record<Lang, {
   },
 }
 
-function PhraseButton({ phrase, expandLabel }: { phrase: string; expandLabel: string }) {
+function AmountPhraseButton({ amountLabel, phraseTemplate, expandLabel }: {
+  amountLabel: string
+  phraseTemplate: (amount: string) => string
+  expandLabel: string
+}) {
+  const [amount, setAmount] = useState('10,000')
   const [overlay, setOverlay] = useState(false)
+  const phrase = phraseTemplate(amount || '0')
+
   return (
     <>
+      <div className="space-y-2">
+        <label className="text-xs text-gray-500 font-medium block">{amountLabel}</label>
+        <input
+          type="text"
+          inputMode="numeric"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value.replace(/[^0-9,]/g, ''))}
+          className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-400"
+        />
+      </div>
       <div className="bg-white rounded-xl border border-emerald-200 px-4 py-3 flex items-center justify-between gap-3">
         <p className="text-sm font-semibold text-gray-900">{phrase}</p>
         <button onClick={() => setOverlay(true)}
@@ -274,8 +296,12 @@ export default function TmoneyView() {
                   <li key={i} className="text-xs text-gray-600 leading-relaxed">{s}</li>
                 ))}
               </ol>
+              <p className="text-xs text-red-700 bg-red-50 rounded-lg px-3 py-2">{L.topup.warning}</p>
+              <div className="relative w-full rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '815 / 1024' }}>
+                <Image src="/images/tmoney/card-reader.png" alt={L.topup.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
+              </div>
               <p className="text-xs text-gray-500 font-medium">{L.topup.phraseLabel}</p>
-              <PhraseButton phrase={L.topup.phrase} expandLabel={L.expand} />
+              <AmountPhraseButton amountLabel={L.topup.amountLabel} phraseTemplate={L.topup.phraseTemplate} expandLabel={L.expand} />
             </>
           )}
 
