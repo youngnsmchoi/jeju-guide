@@ -7,8 +7,8 @@ import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 
-type Tab = 'buy' | 'topup' | 'use' | 'shop'
-const TABS: Tab[] = ['buy', 'topup', 'use', 'shop']
+type Tab = 'buy' | 'topup' | 'use' | 'shop' | 'check'
+const TABS: Tab[] = ['buy', 'topup', 'use', 'shop', 'check']
 
 const LABEL: Record<Lang, {
   title: string
@@ -17,11 +17,13 @@ const LABEL: Record<Lang, {
   tabTopup: string
   tabUse: string
   tabShop: string
+  tabCheck: string
   expand: string
   buy: { title: string; points: string[] }
   topup: { title: string; steps: string[]; warning: string; amountLabel: string; phraseLabel: string; phraseTemplate: (amount: string) => string }
   use: { title: string; points: string[]; warning: string }
   shop: { title: string; points: string[] }
+  check: { title: string; steps: string[]; phraseLabel: string; phrase: string }
 }> = {
   ko: {
     title: '🚇 교통카드 안내',
@@ -30,6 +32,7 @@ const LABEL: Record<Lang, {
     tabTopup: '② 충전',
     tabUse: '③ 사용',
     tabShop: '④ 편의점 결제',
+    tabCheck: '⑤ 잔액 확인',
     expand: '확대',
     buy: {
       title: '교통카드 구입',
@@ -67,6 +70,16 @@ const LABEL: Record<Lang, {
         '잔액이 부족하면 다른 결제수단(현금·카드)이 필요합니다.',
       ],
     },
+    check: {
+      title: '교통카드 잔액 확인',
+      steps: [
+        '편의점 카운터에서 교통카드를 점원에게 건네주세요.',
+        '아래 문장을 점원에게 보여주세요.',
+        '결제 단말기의 고객용 화면에 잔액이 표시됩니다.',
+      ],
+      phraseLabel: '점원에게 보여주세요',
+      phrase: '교통카드 잔액 확인해주세요',
+    },
   },
   en: {
     title: '🚇 Transit Card Guide',
@@ -75,6 +88,7 @@ const LABEL: Record<Lang, {
     tabTopup: '② Top Up',
     tabUse: '③ Use',
     tabShop: '④ Pay at Store',
+    tabCheck: '⑤ Check Balance',
     expand: 'Show',
     buy: {
       title: 'Buying a Transit Card',
@@ -112,6 +126,16 @@ const LABEL: Record<Lang, {
         'If the balance is insufficient, you\'ll need another payment method (cash or card).',
       ],
     },
+    check: {
+      title: 'Checking Your Balance',
+      steps: [
+        'Hand your transit card to the staff at the convenience store counter.',
+        'Show them the phrase below.',
+        'Your balance will appear on the customer-facing screen of the payment terminal.',
+      ],
+      phraseLabel: 'Show this to the staff',
+      phrase: '교통카드 잔액 확인해주세요 (Please check my transit card balance)',
+    },
   },
   zh: {
     title: '🚇 交通卡指南',
@@ -120,6 +144,7 @@ const LABEL: Record<Lang, {
     tabTopup: '②充值',
     tabUse: '③使用',
     tabShop: '④便利店结账',
+    tabCheck: '⑤查询余额',
     expand: '放大',
     buy: {
       title: '购买交通卡',
@@ -157,6 +182,16 @@ const LABEL: Record<Lang, {
         '如果余额不足，需要使用其他支付方式（现金或卡）。',
       ],
     },
+    check: {
+      title: '查询交通卡余额',
+      steps: [
+        '在便利店柜台把交通卡交给店员。',
+        '把下面的句子出示给店员看。',
+        '余额会显示在结账机的顾客端屏幕上。',
+      ],
+      phraseLabel: '请出示给店员',
+      phrase: '교통카드 잔액 확인해주세요（请帮我查询交通卡余额）',
+    },
   },
   ja: {
     title: '🚇 交通カード案内',
@@ -165,6 +200,7 @@ const LABEL: Record<Lang, {
     tabTopup: '②チャージ',
     tabUse: '③使用',
     tabShop: '④コンビニ決済',
+    tabCheck: '⑤残高確認',
     expand: '拡大',
     buy: {
       title: '交通カードの購入',
@@ -201,6 +237,16 @@ const LABEL: Record<Lang, {
         'レジで「T-moneyで払います」と伝え、カードをリーダーにタッチしてください。',
         '残高が不足している場合は、他の支払い方法（現金・カード）が必要です。',
       ],
+    },
+    check: {
+      title: '交通カードの残高確認',
+      steps: [
+        'コンビニのレジで交通カードを店員に渡してください。',
+        '下の文章を店員に見せてください。',
+        '決済端末のお客様用画面に残高が表示されます。',
+      ],
+      phraseLabel: '店員に見せてください',
+      phrase: '교통카드 잔액 확인해주세요（交通カードの残高を確認してください）',
     },
   },
 }
@@ -263,6 +309,31 @@ function AmountPhraseButton({ amountLabel, phraseLabel, phraseTemplate, expandLa
   )
 }
 
+function PhraseButton({ phrase, expandLabel }: { phrase: string; expandLabel: string }) {
+  const [overlay, setOverlay] = useState(false)
+  return (
+    <>
+      <div className="bg-white rounded-xl border border-emerald-200 px-4 py-3 flex items-center justify-between gap-3">
+        <p className="text-sm font-semibold text-gray-900">{phrase}</p>
+        <button onClick={() => setOverlay(true)}
+          className="shrink-0 text-xs bg-emerald-600 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-700 transition-colors">
+          {expandLabel}
+        </button>
+      </div>
+      {overlay && (
+        <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center px-8"
+          onClick={() => setOverlay(false)}>
+          <p className="text-5xl font-bold text-gray-900 text-center leading-tight">{phrase}</p>
+          <button onClick={() => setOverlay(false)}
+            className="absolute top-6 right-6 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-xl hover:bg-gray-200">
+            ✕
+          </button>
+        </div>
+      )}
+    </>
+  )
+}
+
 export default function TmoneyView() {
   const { lang } = useLang()
   const L = LABEL[lang]
@@ -273,6 +344,7 @@ export default function TmoneyView() {
     topup: L.tabTopup,
     use: L.tabUse,
     shop: L.tabShop,
+    check: L.tabCheck,
   })[t]
 
   return (
@@ -340,6 +412,19 @@ export default function TmoneyView() {
                   <li key={i} className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{p}</li>
                 ))}
               </ul>
+            </>
+          )}
+
+          {tab === 'check' && (
+            <>
+              <p className="text-sm font-bold text-gray-800">{L.check.title}</p>
+              <ol className="space-y-1.5 list-decimal list-inside">
+                {L.check.steps.map((s, i) => (
+                  <li key={i} className="text-xs text-gray-600 leading-relaxed">{s}</li>
+                ))}
+              </ol>
+              <p className="text-xs text-gray-500 font-medium">{L.check.phraseLabel}</p>
+              <PhraseButton phrase={L.check.phrase} expandLabel={L.expand} />
             </>
           )}
         </div>
