@@ -205,6 +205,20 @@ const LABEL: Record<Lang, {
   },
 }
 
+function HighlightedPhrase({ phrase, amount, className }: { phrase: string; amount: string; className: string }) {
+  const segments = phrase.split(amount)
+  return (
+    <p className={className}>
+      {segments.map((seg, i) => (
+        <span key={i}>
+          {seg}
+          {i < segments.length - 1 && <span className="text-emerald-600">{amount}</span>}
+        </span>
+      ))}
+    </p>
+  )
+}
+
 function AmountPhraseButton({ amountLabel, phraseLabel, phraseTemplate, expandLabel }: {
   amountLabel: string
   phraseLabel: string
@@ -229,7 +243,7 @@ function AmountPhraseButton({ amountLabel, phraseLabel, phraseTemplate, expandLa
       </div>
       <p className="text-xs text-gray-500 font-medium">{phraseLabel}</p>
       <div className="bg-white rounded-xl border border-emerald-200 px-4 py-3 flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-gray-900">{phrase}</p>
+        <HighlightedPhrase phrase={phrase} amount={amount || '0'} className="text-sm font-semibold text-gray-900" />
         <button onClick={() => setOverlay(true)}
           className="shrink-0 text-xs bg-emerald-600 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-700 transition-colors">
           {expandLabel}
@@ -238,7 +252,7 @@ function AmountPhraseButton({ amountLabel, phraseLabel, phraseTemplate, expandLa
       {overlay && (
         <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center px-8"
           onClick={() => setOverlay(false)}>
-          <p className="text-5xl font-bold text-gray-900 text-center leading-tight">{phrase}</p>
+          <HighlightedPhrase phrase={phrase} amount={amount || '0'} className="text-5xl font-bold text-gray-900 text-center leading-tight" />
           <button onClick={() => setOverlay(false)}
             className="absolute top-6 right-6 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-xl hover:bg-gray-200">
             ✕
