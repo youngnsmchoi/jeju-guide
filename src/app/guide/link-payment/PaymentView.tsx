@@ -112,7 +112,8 @@ const LABEL: Record<Lang, {
     discountTranslate: {
       title: '🗣️ The cashier may ask you something about a discount',
       body: [
-        'If an item is a 1+1 / 2+1 deal but the quantity doesn\'t match, the cashier will check with you before scanning.',
+        'If an item is a 1+1 / 2+1 deal but the quantity doesn\'t match, the cashier will check with you while scanning or at payment.',
+        'You can also just say you don\'t want the free item(s) — for 1+1, decline the 1 free item; for 2+1, decline the 1 free item. The cashier will handle it and charge you the regular price.',
         'You don\'t need to understand Korean — turn on a translation app\'s voice/conversation mode (like Papago or Google Translate) beforehand so you can respond in real time.',
         'If you hear words like "discount," "1+1," or "one more," it\'s almost always about this.',
       ],
@@ -180,7 +181,8 @@ const LABEL: Record<Lang, {
     discountTranslate: {
       title: '🗣️ 점원이 할인 관련해서 말을 걸 수 있어요',
       body: [
-        '1+1·2+1 할인 상품인데 개수가 맞지 않으면, 점원이 스캔 전에 확인 차 말을 겁니다.',
+        '1+1·2+1 할인 상품인데 개수가 맞지 않으면, 점원이 스캔하면서 또는 결제 시에 확인 차 말을 겁니다.',
+        '증정 상품을 받고 싶지 않다고 말해도 됩니다 — 1+1이면 1개, 2+1이면 1개를 안 가져가겠다고 하면 점원이 정가로 처리해줍니다.',
         '한국어를 몰라도 괜찮습니다 — 계산 전에 번역 앱(파파고, 구글 번역 등)의 음성·대화 모드를 미리 켜두면 실시간으로 대응할 수 있습니다.',
         '"할인", "1+1", "하나 더" 같은 단어가 들리면 대부분 이 상황입니다.',
       ],
@@ -248,7 +250,8 @@ const LABEL: Record<Lang, {
     discountTranslate: {
       title: '🗣️ 收银员可能会就折扣询问您',
       body: [
-        '如果商品是1+1·2+1优惠，但数量不符，收银员会在扫码前向您确认。',
+        '如果商品是1+1·2+1优惠，但数量不符，收银员会在扫码时或结账时向您确认。',
+        '您也可以直接说不需要赠品——1+1的话不拿那1个赠品，2+1的话不拿那1个赠品，收银员会按原价处理。',
         '不懂韩语也没关系——结账前请提前打开翻译应用（如Papago、谷歌翻译）的语音/对话模式，即可实时沟通。',
         '如果听到"折扣"、"1+1"、"再拿一个"之类的词，基本都是这种情况。',
       ],
@@ -316,7 +319,8 @@ const LABEL: Record<Lang, {
     discountTranslate: {
       title: '🗣️ 店員が割引について話しかけてくることがあります',
       body: [
-        '1+1・2+1対象商品なのに個数が合わない場合、店員がスキャン前に確認のため話しかけます。',
+        '1+1・2+1対象商品なのに個数が合わない場合、店員がスキャン中または会計時に確認のため話しかけます。',
+        '無料の商品はいらないと伝えても大丈夫です — 1+1なら1個、2+1なら1個を受け取らないと言えば、店員が定価で処理してくれます。',
         '韓国語がわからなくても大丈夫です。会計前に翻訳アプリ（Papago、Google翻訳など）の音声・会話モードをオンにしておけば、リアルタイムでやり取りできます。',
         '「割引」「1+1」「もう1つ」といった言葉が聞こえたら、たいていこの状況です。',
       ],
