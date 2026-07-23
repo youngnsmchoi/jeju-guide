@@ -56,7 +56,7 @@ const LABEL: Record<Lang, {
       bulk: [
         '주로 아이스크림에 적용되는 방식입니다. (다른 상품에도 있을 수 있습니다.)',
         '1+1이 아니라, 같은 가격대 상품을 몇 개 사는지에 따라 할인율이 자동으로 정해집니다.',
-        '이 영수증 예시(영수증 표기: 쌍쌍바): 1,500원짜리 아이스크림 5개(정가 7,500원)를 구입 → 5개 구매 시 50% 할인이 적용되어 3,750원만 결제됩니다.',
+        '이 영수증 예시(영수증 표기: 쌍쌍바 3개, 스크류바 1개, 수박바 1개): 종류는 다르지만 모두 1,500원짜리 아이스크림이라 총 5개(정가 7,500원)로 합산되고, 5개 구매 시 50% 할인이 적용되어 3,750원만 결제됩니다.',
         '몇 개 사면 몇 % 할인인지는 진열대의 숏카드를 보고 확인해야 합니다.',
       ],
     },
@@ -87,7 +87,7 @@ const LABEL: Record<Lang, {
       bulk: [
         'This is mostly seen with ice cream. (Other items may use it too.)',
         'Instead of 1+1, the discount rate is automatically set based on how many same-priced items you buy.',
-        'Example from this receipt (receipt shows: 쌍쌍바 / "Ssang Ssang Bar" ice cream): five 1,500-won ice creams (7,500 won full price) — buying 5 triggers a 50% discount, so you pay only 3,750 won.',
+        'Example from this receipt (receipt shows: 쌍쌍바 x3, 스크류바 x1, 수박바 x1 — 3 different ice cream flavors, all priced at 1,500 won): different flavors, but since they\'re all the same price, they\'re combined into a total of 5 items (7,500 won full price) — buying 5 triggers a 50% discount, so you pay only 3,750 won.',
         'Check the shelf\'s short card to see how many items you need for which discount.',
       ],
     },
@@ -118,7 +118,7 @@ const LABEL: Record<Lang, {
       bulk: [
         '主要见于冰淇淋。（其他商品也可能有此方式。）',
         '不是1+1，而是根据购买同价位商品的数量，自动确定折扣率。',
-        '本收据示例（小票上写的是：쌍쌍바 / "双双棒"冰淇淋）：购买5个1,500韩元的冰淇淋（原价7,500韩元）→ 购买5个可享受50%折扣，实际只需支付3,750韩元。',
+        '本收据示例（小票上写的是：쌍쌍바 3个、스크류바 1个、수박바 1个 — 3种不同口味的冰淇淋，但单价都是1,500韩元）：虽然口味不同，但因为单价相同，合计为5个（原价7,500韩元）→ 购买5个可享受50%折扣，实际只需支付3,750韩元。',
         '具体购买多少个可享受多少折扣，需查看货架上的价签卡确认。',
       ],
     },
@@ -149,7 +149,7 @@ const LABEL: Record<Lang, {
       bulk: [
         '主にアイスクリームに適用される方式です。（他の商品にもある場合があります。）',
         '1+1ではなく、同じ価格帯の商品を何個買うかによって割引率が自動的に決まります。',
-        'このレシート例（レシート表記：쌍쌍바／「サンサンバー」アイスクリーム）：1,500ウォンのアイスクリームを5個購入（定価7,500ウォン）→ 5個購入で50%割引が適用され、実際には3,750ウォンのみ支払います。',
+        'このレシート例（レシート表記：쌍쌍바 3個、스크류바 1個、수박바 1個 — 3種類の異なる味のアイスクリームですが、いずれも1,500ウォン）：味は違っても同じ価格なので合計5個（定価7,500ウォン）としてまとめられ、5個購入で50%割引が適用され、実際には3,750ウォンのみ支払います。',
         '何個買うと何%割引になるかは、棚のショートカードで確認する必要があります。',
       ],
     },
