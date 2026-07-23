@@ -25,6 +25,7 @@ const LABEL: Record<Lang, {
     timeTableTitle: string
     timeTable: string[]
     exampleLabel: string
+    buttonGuide: string[]
     warning: string
     phraseLabel: string
     phrase: string
@@ -79,12 +80,18 @@ const LABEL: Record<Lang, {
         '시간 버튼을 눌러 원하는 시간을 맞추고 시작 버튼을 누르세요.',
         '다 되면 조심히 꺼내세요. 용기가 뜨겁습니다.',
       ],
-      timeTableTitle: '⏱️ 시간 참고표 (포장에 시간이 없을 때)',
+      timeTableTitle: '⏱️ 시간 참고표',
       timeTable: [
         '삼각김밥: 1000W(편의점 전자레인지) 기준 20~30초 · 700W(가정용) 기준 35~40초',
         '도시락: 뚜껑 제거 후 1분 40초(매장용) · 2분(가정용)',
       ],
       exampleLabel: '📸 실물 예시: 이 도시락은 "1분 40초"라고 적혀 있어요. 전자레인지에서는 이렇게 시간 버튼을 눌러 맞추고 시작하면 됩니다.',
+      buttonGuide: [
+        '① "1분" 버튼 1번 누르기',
+        '② "30초" 버튼 1번 누르기',
+        '③ "10초" 버튼 1번 누르기 (1분+30초+10초 = 1분 40초)',
+        '④ "시작" 버튼 누르기',
+      ],
       warning: '⚠️ 알루미늄 용기·포일은 절대 넣지 마세요. 불이 날 수 있습니다.',
       phraseLabel: '점원에게 부탁할 때',
       phrase: '데워주세요',
@@ -161,12 +168,18 @@ const LABEL: Record<Lang, {
         'Press the time button to set how long you need, then press start.',
         'Remove carefully — the container will be hot.',
       ],
-      timeTableTitle: '⏱️ Time reference (if the package doesn\'t show a time)',
+      timeTableTitle: '⏱️ Time reference',
       timeTable: [
         'Triangle kimbap: about 20–30 sec at 1000W (store microwave) · 35–40 sec at 700W (home microwave)',
         'Bento (dosirak): remove the lid first, then 1 min 40 sec (store microwave) · 2 min (home microwave)',
       ],
       exampleLabel: '📸 Real example: this bento says "1 min 40 sec." On the microwave, you\'d press the time buttons to set that, then press start — like this.',
+      buttonGuide: [
+        '① Press the "1 min" button once',
+        '② Press the "30 sec" button once',
+        '③ Press the "10 sec" button once (1 min + 30 sec + 10 sec = 1 min 40 sec)',
+        '④ Press "Start"',
+      ],
       warning: '⚠️ Never put aluminum containers or foil inside. It can cause a fire.',
       phraseLabel: 'Ask the staff',
       phrase: '데워주세요 (Please heat this up)',
@@ -243,12 +256,18 @@ const LABEL: Record<Lang, {
         '按时间按钮设置所需时间，然后按开始键。',
         '小心取出，容器会很烫。',
       ],
-      timeTableTitle: '⏱️ 时间参考（包装上没有标注时间时）',
+      timeTableTitle: '⏱️ 时间参考',
       timeTable: [
         '饭团：1000W（便利店微波炉）约20~30秒 · 700W（家用微波炉）约35~40秒',
         '便当：先取下盖子，1分40秒（店用微波炉）· 2分钟（家用微波炉）',
       ],
       exampleLabel: '📸 实物示例：这个便当上写着"1分40秒"。在微波炉上，按时间按钮设置好这个时间后按开始即可，如下图所示。',
+      buttonGuide: [
+        '① 按一次"1分"按钮',
+        '② 按一次"30秒"按钮',
+        '③ 按一次"10秒"按钮（1分+30秒+10秒＝1分40秒）',
+        '④ 按"开始"按钮',
+      ],
       warning: '⚠️ 绝对不能放铝制容器或锡纸，可能引起火灾。',
       phraseLabel: '请店员帮忙时',
       phrase: '데워주세요（请帮我加热）',
@@ -325,12 +344,18 @@ const LABEL: Record<Lang, {
         '時間ボタンを押して必要な時間を設定し、スタートボタンを押してください。',
         '容器が熱いので気をつけて取り出してください。',
       ],
-      timeTableTitle: '⏱️ 時間の目安（パッケージに時間表記がない場合）',
+      timeTableTitle: '⏱️ 時間の目安',
       timeTable: [
         'おにぎり：1000W（コンビニの電子レンジ）で約20〜30秒 ・ 700W（家庭用）で約35〜40秒',
         '弁当：フタを外してから1分40秒（店舗用）・ 2分（家庭用）',
       ],
       exampleLabel: '📸 実物例：この弁当には「1分40秒」と書かれています。電子レンジではこのように時間ボタンを押して設定し、スタートを押してください。',
+      buttonGuide: [
+        '① 「1分」ボタンを1回押す',
+        '② 「30秒」ボタンを1回押す',
+        '③ 「10秒」ボタンを1回押す（1分＋30秒＋10秒＝1分40秒）',
+        '④ 「スタート」ボタンを押す',
+      ],
       warning: '⚠️ アルミ容器やアルミホイルは絶対に入れないでください。火災の原因になります。',
       phraseLabel: '店員に頼むとき',
       phrase: '데워주세요（温めてください）',
@@ -473,6 +498,11 @@ export default function CvsTipsView() {
             <div className="relative w-full rounded-xl overflow-hidden bg-gray-50" style={{ aspectRatio: 1000 / 561 }}>
               <Image src="/images/cvs-tips/microwave.png" alt={L.microwave.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
             </div>
+            <ol className="space-y-1">
+              {L.microwave.buttonGuide.map((line, i) => (
+                <li key={i} className="text-xs text-gray-600 leading-relaxed">{line}</li>
+              ))}
+            </ol>
 
             <div className="bg-red-50 border border-red-200 rounded-xl px-3 py-2">
               <p className="text-xs text-red-700">{L.microwave.warning}</p>
