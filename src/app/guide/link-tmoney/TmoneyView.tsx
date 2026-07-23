@@ -205,8 +205,9 @@ const LABEL: Record<Lang, {
   },
 }
 
-function AmountPhraseButton({ amountLabel, phraseTemplate, expandLabel }: {
+function AmountPhraseButton({ amountLabel, phraseLabel, phraseTemplate, expandLabel }: {
   amountLabel: string
+  phraseLabel: string
   phraseTemplate: (amount: string) => string
   expandLabel: string
 }) {
@@ -226,6 +227,7 @@ function AmountPhraseButton({ amountLabel, phraseTemplate, expandLabel }: {
           className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-400"
         />
       </div>
+      <p className="text-xs text-gray-500 font-medium">{phraseLabel}</p>
       <div className="bg-white rounded-xl border border-emerald-200 px-4 py-3 flex items-center justify-between gap-3">
         <p className="text-sm font-semibold text-gray-900">{phrase}</p>
         <button onClick={() => setOverlay(true)}
@@ -300,8 +302,7 @@ export default function TmoneyView() {
               <div className="relative w-full rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '815 / 1024' }}>
                 <Image src="/images/tmoney/card-reader.png" alt={L.topup.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
               </div>
-              <p className="text-xs text-gray-500 font-medium">{L.topup.phraseLabel}</p>
-              <AmountPhraseButton amountLabel={L.topup.amountLabel} phraseTemplate={L.topup.phraseTemplate} expandLabel={L.expand} />
+              <AmountPhraseButton amountLabel={L.topup.amountLabel} phraseLabel={L.topup.phraseLabel} phraseTemplate={L.topup.phraseTemplate} expandLabel={L.expand} />
             </>
           )}
 
