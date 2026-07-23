@@ -59,6 +59,11 @@ const LABEL: Record<Lang, {
   moneyGuideLink: string
   cashOnlyNote: string
   cashLink: string
+  discountTranslate: {
+    title: string
+    body: string[]
+    guideNote: string
+  }
   cashPopup: {
     title: string
     inputLabel: string
@@ -88,6 +93,7 @@ const LABEL: Record<Lang, {
     cashGuide?: boolean
     onePlusOne?: boolean
     moneyGuide?: boolean
+    discountTranslate?: boolean
   }[]
 }> = {
   en: {
@@ -103,6 +109,15 @@ const LABEL: Record<Lang, {
     onePlusOneLink: '🏷️ How to Save (1+1 / 2+1 deals) →',
     moneyGuideLink: '💵 Korean Money Guide →',
     cashLink: '💵 How to use Korean cash →',
+    discountTranslate: {
+      title: '🗣️ The cashier may ask you something about a discount',
+      body: [
+        'If an item is a 1+1 / 2+1 deal but the quantity doesn\'t match, the cashier will check with you before scanning.',
+        'You don\'t need to understand Korean — turn on a translation app\'s voice/conversation mode (like Papago or Google Translate) beforehand so you can respond in real time.',
+        'If you hear words like "discount," "1+1," or "one more," it\'s almost always about this.',
+      ],
+      guideNote: '💡 Before you check out, it also helps to look at "How to Save" and "How to read a Korean receipt" below.',
+    },
     cashPopup: {
       title: '💵 Korean Cash Guide',
       inputLabel: 'Enter the total on the register',
@@ -134,6 +149,7 @@ const LABEL: Record<Lang, {
       {
         emoji: '📱', title: 'Barcode scanning',
         desc: 'The cashier scans your items.',
+        discountTranslate: true,
       },
       {
         emoji: '💳', title: 'Pay',
@@ -161,6 +177,15 @@ const LABEL: Record<Lang, {
     onePlusOneLink: '🏷️ 할인 득템법 (1+1·2+1) →',
     moneyGuideLink: '💵 한국 돈 안내 →',
     cashLink: '💵 한국 현금 사용법 →',
+    discountTranslate: {
+      title: '🗣️ 점원이 할인 관련해서 말을 걸 수 있어요',
+      body: [
+        '1+1·2+1 할인 상품인데 개수가 맞지 않으면, 점원이 스캔 전에 확인 차 말을 겁니다.',
+        '한국어를 몰라도 괜찮습니다 — 계산 전에 번역 앱(파파고, 구글 번역 등)의 음성·대화 모드를 미리 켜두면 실시간으로 대응할 수 있습니다.',
+        '"할인", "1+1", "하나 더" 같은 단어가 들리면 대부분 이 상황입니다.',
+      ],
+      guideNote: '💡 계산 전에 아래 "할인 득템법"과 "한국 영수증 읽는 법"도 참고하면 도움이 됩니다.',
+    },
     cashPopup: {
       title: '💵 한국 현금 안내',
       inputLabel: 'POS 화면 금액을 입력하세요',
@@ -192,6 +217,7 @@ const LABEL: Record<Lang, {
       {
         emoji: '📱', title: '바코드 스캔',
         desc: '점원이 상품 바코드를 스캔합니다.',
+        discountTranslate: true,
       },
       {
         emoji: '💳', title: '결제',
@@ -219,6 +245,15 @@ const LABEL: Record<Lang, {
     onePlusOneLink: '🏷️ 优惠攻略 (1+1·2+1) →',
     moneyGuideLink: '💵 韩元指南 →',
     cashLink: '💵 韩元现金使用指南 →',
+    discountTranslate: {
+      title: '🗣️ 收银员可能会就折扣询问您',
+      body: [
+        '如果商品是1+1·2+1优惠，但数量不符，收银员会在扫码前向您确认。',
+        '不懂韩语也没关系——结账前请提前打开翻译应用（如Papago、谷歌翻译）的语音/对话模式，即可实时沟通。',
+        '如果听到"折扣"、"1+1"、"再拿一个"之类的词，基本都是这种情况。',
+      ],
+      guideNote: '💡 结账前，参考下方的"优惠攻略"和"韩国收据阅读方法"也会有帮助。',
+    },
     cashPopup: {
       title: '💵 韩元现金指南',
       inputLabel: '请输入收银台显示的金额',
@@ -250,6 +285,7 @@ const LABEL: Record<Lang, {
       {
         emoji: '📱', title: '扫描条码',
         desc: '收银员扫描您的商品。',
+        discountTranslate: true,
       },
       {
         emoji: '💳', title: '付款',
@@ -277,6 +313,15 @@ const LABEL: Record<Lang, {
     onePlusOneLink: '🏷️ お得な買い方 (1+1・2+1) →',
     moneyGuideLink: '💵 韓国のお金ガイド →',
     cashLink: '💵 韓国現金の使い方 →',
+    discountTranslate: {
+      title: '🗣️ 店員が割引について話しかけてくることがあります',
+      body: [
+        '1+1・2+1対象商品なのに個数が合わない場合、店員がスキャン前に確認のため話しかけます。',
+        '韓国語がわからなくても大丈夫です。会計前に翻訳アプリ（Papago、Google翻訳など）の音声・会話モードをオンにしておけば、リアルタイムでやり取りできます。',
+        '「割引」「1+1」「もう1つ」といった言葉が聞こえたら、たいていこの状況です。',
+      ],
+      guideNote: '💡 会計前に、下記の「お得な買い方」と「韓国のレシートの読み方」も参考にすると役立ちます。',
+    },
     cashPopup: {
       title: '💵 韓国現金ガイド',
       inputLabel: 'レジ画面の金額を入力してください',
@@ -308,6 +353,7 @@ const LABEL: Record<Lang, {
       {
         emoji: '📱', title: 'バーコードスキャン',
         desc: '店員が商品をスキャンします。',
+        discountTranslate: true,
       },
       {
         emoji: '💳', title: 'お支払い',
@@ -397,9 +443,26 @@ export default function PaymentView() {
             {/* 한국 돈 안내 링크 */}
             {step.moneyGuide && (
               <div className="pl-10">
-                <Link href="/guide/money"
+                <Link href="/guide/link-money"
                   className="text-xs text-emerald-700 font-semibold underline underline-offset-2 hover:text-emerald-800 transition-colors">
                   {L.moneyGuideLink}
+                </Link>
+              </div>
+            )}
+
+            {/* 할인 확인 시 점원과의 대화 — 번역 앱 안내 */}
+            {step.discountTranslate && (
+              <div className="pl-10 space-y-2">
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 space-y-1.5">
+                  <p className="text-xs font-bold text-blue-800">{L.discountTranslate.title}</p>
+                  {L.discountTranslate.body.map((line, li) => (
+                    <p key={li} className="text-xs text-blue-700 leading-relaxed">{line}</p>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 leading-relaxed">{L.discountTranslate.guideNote}</p>
+                <Link href="/guide/convenience-store-1plus1"
+                  className="block text-xs text-emerald-700 font-semibold underline underline-offset-2 hover:text-emerald-800 transition-colors">
+                  {L.onePlusOneLink}
                 </Link>
               </div>
             )}
