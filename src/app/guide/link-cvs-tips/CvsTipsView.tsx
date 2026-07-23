@@ -121,10 +121,11 @@ const LABEL: Record<Lang, {
     },
     trash: {
       title: '🗑️ 쓰레기 버리는 법',
-      intro: '한국은 일반쓰레기·플라스틱·비닐을 나눠서 버립니다. 매장 안 쓰레기통도 분리되어 있는 경우가 많아요.',
+      intro: '한국은 쓰레기를 일반쓰레기·음식물쓰레기·캔·병·플라스틱, 이렇게 나눠서 버립니다. 매장 안 쓰레기통도 이 3가지로 분리되어 있는 경우가 많아요.',
       points: [
-        '먹고 남은 국물·음식물은 지정된 구멍(음식물)에 버리세요.',
-        '컵라면 용기·플라스틱은 플라스틱 칸에, 비닐 포장지는 비닐 칸에 버리세요.',
+        '비닐 포장지, 냅킨 등은 "일반쓰레기(General Waste)" 칸에 버리세요.',
+        '먹다 남은 음식물은 "음식물쓰레기(Food Waste)" 칸에 버리세요.',
+        '캔·병·플라스틱 용기(컵라면 용기 포함)는 "캔·병·플라스틱(Can·Bottle·Plastic)" 칸에 버리세요.',
         '헷갈리면 아무 칸에나 넣지 말고 점원에게 물어보세요.',
       ],
       tip: '💡 매장 내 취식(이트인) 후에는 자리 정리까지가 매너입니다.',
@@ -209,10 +210,11 @@ const LABEL: Record<Lang, {
     },
     trash: {
       title: '🗑️ How to sort your trash',
-      intro: 'Korea separates general waste, plastic, and vinyl/plastic film. In-store trash bins are often split the same way.',
+      intro: 'Korea sorts trash into three types: general waste, food waste, and cans/bottles/plastic. In-store trash bins are often split the same way.',
       points: [
-        'Leftover liquid or food waste goes in the marked food-waste slot.',
-        'Cup noodle containers and hard plastic go in the plastic bin; wrappers and film go in the vinyl bin.',
+        'Wrappers, napkins, etc. go in the "General Waste" slot.',
+        'Leftover food goes in the "Food Waste" slot.',
+        'Cans, bottles, and plastic containers (including cup noodle containers) go in the "Can·Bottle·Plastic" slot.',
         'If you\'re not sure, don\'t just pick one — ask the staff.',
       ],
       tip: '💡 If you ate at the eat-in table, clean up your spot before leaving — it\'s expected here.',
@@ -297,10 +299,11 @@ const LABEL: Record<Lang, {
     },
     trash: {
       title: '🗑️ 垃圾分类方法',
-      intro: '韩国将垃圾分为一般垃圾、塑料、塑料袋（食品包装膜）等，店内垃圾桶也常按此分类。',
+      intro: '韩国将垃圾分为一般垃圾、食物垃圾、罐·瓶·塑料三大类，店内垃圾桶也常按此分类。',
       points: [
-        '吃剩的汤汁、食物残渣请倒入指定的食物垃圾口。',
-        '杯面容器等硬塑料放入塑料桶，包装袋等薄膜放入塑料袋垃圾桶。',
+        '包装袋、纸巾等请丢入"一般垃圾（General Waste）"口。',
+        '吃剩的食物请倒入"食物垃圾（Food Waste）"口。',
+        '罐、瓶、塑料容器（包括杯面容器）请丢入"罐·瓶·塑料（Can·Bottle·Plastic）"口。',
         '如果分不清，不要随便丢，请询问店员。',
       ],
       tip: '💡 在店内食用区（Eat-in）用餐后，请整理好座位再离开，这是基本礼仪。',
@@ -385,10 +388,11 @@ const LABEL: Record<Lang, {
     },
     trash: {
       title: '🗑️ ゴミの捨て方',
-      intro: '韓国では一般ゴミ・プラスチック・ビニールを分けて捨てます。店内のゴミ箱も分別されていることが多いです。',
+      intro: '韓国ではゴミを一般ゴミ・食品ゴミ・缶びんプラスチックの3種類に分けて捨てます。店内のゴミ箱もこの3分類になっていることが多いです。',
       points: [
-        '残った汁物や食べ残しは指定の食品ゴミ口に捨ててください。',
-        'カップ麺の容器などプラスチックはプラスチック用に、包装フィルムはビニール用に捨ててください。',
+        '包装フィルムやナプキンなどは「一般ゴミ（General Waste）」口に捨ててください。',
+        '食べ残しは「食品ゴミ（Food Waste）」口に捨ててください。',
+        '缶・びん・プラスチック容器（カップ麺の容器含む）は「缶びんプラスチック（Can・Bottle・Plastic）」口に捨ててください。',
         '分からないときは適当に入れず、店員に聞いてください。',
       ],
       tip: '💡 イートインで食べた後は、席の片付けまでがマナーです。',
@@ -559,6 +563,9 @@ export default function CvsTipsView() {
         {tab === 'trash' && (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
             <p className="text-sm font-bold text-gray-800">{L.trash.title}</p>
+            <div className="relative w-full rounded-xl overflow-hidden bg-gray-50" style={{ aspectRatio: 1000 / 690 }}>
+              <Image src="/images/cvs-tips/trash-bins.png" alt={L.trash.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
+            </div>
             <p className="text-xs text-gray-600 leading-relaxed">{L.trash.intro}</p>
             <ul className="space-y-2">
               {L.trash.points.map((point, i) => (
