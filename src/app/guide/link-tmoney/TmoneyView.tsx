@@ -19,7 +19,7 @@ const LABEL: Record<Lang, {
   tabShop: string
   tabCheck: string
   expand: string
-  buy: { title: string; points: string[] }
+  buy: { title: string; points: string[]; phraseLabel: string; phrase: string; paymentTip: string; nextStep: string }
   topup: { title: string; steps: string[]; warning: string; sameLabel: string; samePhrase: string; differentLabel: string; amountLabel: string; phraseLabel: string; phraseTemplate: (amount: string) => string }
   use: { title: string; points: string[]; warning: string }
   shop: { title: string; points: string[] }
@@ -41,6 +41,10 @@ const LABEL: Record<Lang, {
         '카드 자체에는 잔액이 없어서, 구입 후 반드시 충전해야 사용할 수 있습니다.',
         '어떤 디자인이든 기능은 동일하니 아무거나 골라도 됩니다.',
       ],
+      phraseLabel: '점원에게 보여주세요',
+      phrase: '교통카드 구입하려고 합니다',
+      paymentTip: '💳 카드 결제도 가능합니다. 현금보다 카드 결제가 더 편합니다. 현금으로 낼 경우, 모니터에 표시된 금액만큼 한국 돈으로 내시면 됩니다.',
+      nextStep: '➡️ 구입했다면 다음은 충전입니다. [② 충전] 탭에서 방법을 확인하세요.',
     },
     topup: {
       title: '교통카드 충전',
@@ -97,6 +101,10 @@ const LABEL: Record<Lang, {
         'The card starts with no balance — you must top it up before using it.',
         'Any design works the same, so pick whichever is available.',
       ],
+      phraseLabel: 'Show this to the staff',
+      phrase: '교통카드 구입하려고 합니다 (I\'d like to buy a transit card)',
+      paymentTip: '💳 Card payment is accepted too, and it\'s more convenient than cash. If paying cash, just pay the amount shown on the screen in Korean won.',
+      nextStep: '➡️ Once you\'ve bought the card, the next step is topping it up. Check the [② Top Up] tab for how.',
     },
     topup: {
       title: 'Topping Up',
@@ -153,6 +161,10 @@ const LABEL: Record<Lang, {
         '卡内没有余额，购买后必须先充值才能使用。',
         '任何设计功能都相同，选哪个都可以。',
       ],
+      phraseLabel: '请出示给店员',
+      phrase: '교통카드 구입하려고 합니다（我想买一张交通卡）',
+      paymentTip: '💳 也可以刷卡支付，比现金更方便。如果用现金支付，按屏幕上显示的金额付韩元即可。',
+      nextStep: '➡️ 买好卡后，下一步是充值。请查看【②充值】标签了解方法。',
     },
     topup: {
       title: '交通卡充值',
@@ -209,6 +221,10 @@ const LABEL: Record<Lang, {
         'カード自体には残高がないため、購入後は必ずチャージしてから使用してください。',
         'デザインが違っても機能は同じなので、どれを選んでも構いません。',
       ],
+      phraseLabel: '店員に見せてください',
+      phrase: '교통카드 구입하려고 합니다（交通カードを購入したいです）',
+      paymentTip: '💳 カード払いも可能で、現金より便利です。現金で払う場合は、画面に表示された金額分の韓国ウォンを支払ってください。',
+      nextStep: '➡️ 購入したら次はチャージです。【②チャージ】タブで方法を確認してください。',
     },
     topup: {
       title: '交通カードのチャージ',
@@ -373,6 +389,10 @@ export default function TmoneyView() {
                   <li key={i} className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{p}</li>
                 ))}
               </ul>
+              <p className="text-xs text-gray-500 font-medium">{L.buy.phraseLabel}</p>
+              <PhraseButton phrase={L.buy.phrase} expandLabel={L.expand} />
+              <p className="text-xs text-emerald-700 bg-emerald-50 rounded-lg px-3 py-2 leading-relaxed">{L.buy.paymentTip}</p>
+              <p className="text-xs text-gray-600 bg-gray-50 rounded-lg px-3 py-2 leading-relaxed">{L.buy.nextStep}</p>
             </>
           )}
 
