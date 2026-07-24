@@ -426,15 +426,15 @@ export default function FeedbackView() {
         </button>
 
         {/* 카테고리 필터 */}
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="grid grid-cols-3 gap-2">
           <button onClick={() => setFilter('all')}
-            className={`shrink-0 text-xs px-3 py-1.5 rounded-full font-medium transition-colors
+            className={`text-xs px-2 py-1.5 rounded-full font-medium transition-colors truncate
               ${filter === 'all' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 border border-gray-200'}`}>
             {L.filterAll}
           </button>
           {CATEGORIES.map(c => (
             <button key={c.value} onClick={() => setFilter(c.value)}
-              className={`shrink-0 text-xs px-3 py-1.5 rounded-full font-medium transition-colors
+              className={`text-xs px-2 py-1.5 rounded-full font-medium transition-colors truncate
                 ${filter === c.value ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 border border-gray-200'}`}>
               {c.emoji} {c.label[lang]}
             </button>
