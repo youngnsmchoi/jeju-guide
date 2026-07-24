@@ -21,7 +21,7 @@ const LABEL: Record<Lang, {
   expand: string
   buy: { title: string; points: string[]; phraseLabel: string; phrase: string; paymentTip: string; nextStep: string }
   topup: { title: string; steps: string[]; warning: string; sameLabel: string; samePhrase: string; differentLabel: string; amountLabel: string; phraseLabel: string; phraseTemplate: (amount: string) => string }
-  use: { title: string; points: string[]; warning: string }
+  use: { title: string; points: string[]; transferTitle: string; transferYes: string; transferNo: string; warning: string }
   shop: { title: string; points: string[]; phraseLabel: string; phrase: string }
   check: { title: string; step1: string; step2: string; step3: string; phrase: string }
 }> = {
@@ -63,10 +63,13 @@ const LABEL: Record<Lang, {
     use: {
       title: '교통카드 사용',
       points: [
-        '버스: 탈 때 카드를 리더기에 태그하고, 내릴 때도 반드시 태그하세요. 하차 태그를 하면 전체 이동 거리로 계산되어 환승 할인이 적용되고, 안 하면 환승으로 인식되지 않아 다음 탑승이 별도 요금으로 계산되어 금액이 더 많아질 수 있습니다.',
+        '버스: 탈 때도, 내릴 때도 카드를 리더기에 태그하세요.',
         '지하철: 개찰구 통과 시 카드를 태그하면 됩니다.',
         '택시: 기사님께 카드 결제 의사를 밝히고, 차량 내 리더기에 카드를 태그하세요.',
       ],
+      transferTitle: '💡 하차 태그를 왜 해야 할까요?',
+      transferYes: '✅ 하차 태그를 하면 → 전체 이동 거리로 계산되어 환승 할인이 적용됩니다.',
+      transferNo: '❌ 하차 태그를 안 하면 → 환승으로 인식되지 않아 다음 탑승이 별도 요금으로 계산되어 더 비싸질 수 있습니다.',
       warning: '⚠️ 버스는 승차·하차 모두 태그해야 정상 요금이 적용됩니다. 정확한 요금·할인 조건은 지역·노선마다 다를 수 있습니다.',
     },
     shop: {
@@ -125,10 +128,13 @@ const LABEL: Record<Lang, {
     use: {
       title: 'Using the Card',
       points: [
-        'Bus: Tag the card on the reader when boarding, and tag again when getting off. Tagging when you get off lets the system calculate your full trip distance and apply the transfer discount. Skipping it means the system won\'t recognize your next ride as a transfer, so it gets charged separately as a new fare — which can add up to more.',
+        'Bus: Tag the card on the reader both when boarding and when getting off.',
         'Subway: Tag the card at the gate when entering.',
         'Taxi: Tell the driver you\'ll pay by card, then tag your card on the in-car reader.',
       ],
+      transferTitle: '💡 Why tag when getting off?',
+      transferYes: '✅ If you tag off → the system calculates your full trip distance and applies the transfer discount.',
+      transferNo: '❌ If you don\'t tag off → it won\'t be recognized as a transfer, so your next ride gets charged separately as a new fare, which can cost more.',
       warning: '⚠️ For buses, tag both when boarding and getting off for the correct fare. Exact fares and discount rules can vary by region and route.',
     },
     shop: {
@@ -187,10 +193,13 @@ const LABEL: Record<Lang, {
     use: {
       title: '使用交通卡',
       points: [
-        '公交车：上车时在读卡器上刷卡，下车时也必须刷卡。下车刷卡后，系统会按全程距离计算并享受换乘优惠；不刷卡的话，系统不会识别为换乘，下次乘车会被单独计费，总费用可能会更高。',
+        '公交车：上车时和下车时都要在读卡器上刷卡。',
         '地铁：进闸机时刷卡即可。',
         '出租车：告诉司机您要刷卡支付，然后在车内读卡器上刷卡。',
       ],
+      transferTitle: '💡 为什么下车也要刷卡？',
+      transferYes: '✅ 下车刷卡 → 系统会按全程距离计算，享受换乘优惠。',
+      transferNo: '❌ 不刷卡 → 不会被识别为换乘，下次乘车将单独计费，总费用可能更高。',
       warning: '⚠️ 乘坐公交车时，上车和下车都必须刷卡才能正确计费。具体费用和优惠条件可能因地区、路线而异。',
     },
     shop: {
@@ -249,10 +258,13 @@ const LABEL: Record<Lang, {
     use: {
       title: '交通カードの使用',
       points: [
-        'バス：乗車時にカードリーダーにタッチし、降車時にも必ずタッチしてください。降車時にタッチすると、全体の移動距離で計算されて乗り換え割引が適用されます。タッチしないと乗り換えと認識されず、次の乗車が別料金として計算され、合計金額が高くなることがあります。',
+        'バス：乗車時にも降車時にも、カードリーダーにタッチしてください。',
         '地下鉄：改札を通る際にカードをタッチしてください。',
         'タクシー：運転手にカード払いであることを伝え、車内のカードリーダーにタッチしてください。',
       ],
+      transferTitle: '💡 降車時にもタッチが必要な理由',
+      transferYes: '✅ 降車タッチをすると → 全体の移動距離で計算され、乗り換え割引が適用されます。',
+      transferNo: '❌ 降車タッチをしないと → 乗り換えと認識されず、次の乗車が別料金として計算され、高くなることがあります。',
       warning: '⚠️ バスは乗車時・降車時の両方でタッチしないと正しい料金になりません。正確な料金・割引条件は地域や路線によって異なる場合があります。',
     },
     shop: {
@@ -431,6 +443,11 @@ export default function TmoneyView() {
                   <li key={i} className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{p}</li>
                 ))}
               </ul>
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 space-y-1.5">
+                <p className="text-xs font-bold text-emerald-800">{L.use.transferTitle}</p>
+                <p className="text-xs text-emerald-700 leading-relaxed">{L.use.transferYes}</p>
+                <p className="text-xs text-red-600 leading-relaxed">{L.use.transferNo}</p>
+              </div>
               <p className="text-xs text-amber-600 bg-amber-50 rounded-xl px-3 py-2 leading-relaxed">{L.use.warning}</p>
             </>
           )}
