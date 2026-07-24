@@ -20,6 +20,7 @@ type FeedbackItem = {
 }
 
 const CATEGORIES = [
+  { value: 'mismatch', emoji: '🏪', label: { ko: '실제와 달라요', en: 'Different in Real Life', zh: '与实际不符', ja: '実際と違いました' } },
   { value: 'ask',     emoji: '🔍', label: { ko: '정보 문의', en: 'Ask a Question', zh: '信息咨询', ja: '情報問い合わせ' } },
   { value: 'bug',     emoji: '🐛', label: { ko: '오류 신고', en: 'Report a Bug',  zh: '错误报告', ja: 'バグ報告' } },
   { value: 'feature', emoji: '🆕', label: { ko: '기능 추가', en: 'Add a Feature', zh: '新增功能', ja: '機能追加' } },
@@ -27,6 +28,20 @@ const CATEGORIES = [
 ]
 
 const PLACEHOLDER_BY_CATEGORY: Record<string, { title: Record<Lang, string>; body: Record<Lang, string> }> = {
+  mismatch: {
+    title: {
+      ko: '예) 쓰레기통이 사이트 사진과 다르게 생겼어요',
+      en: 'e.g. The trash bins looked different from the site photo',
+      zh: '例如：垃圾桶和网站上的照片不一样',
+      ja: '例）ゴミ箱がサイトの写真と違う形でした',
+    },
+    body: {
+      ko: '예) 전자레인지 버튼 위치가 안내와 달랐어요. 실제로는 왼쪽에 있었어요.',
+      en: 'e.g. The microwave buttons were in a different spot than described. They were actually on the left.',
+      zh: '例如：微波炉按钮的位置和说明不一样，实际在左边。',
+      ja: '例）電子レンジのボタンの位置が説明と違いました。実際は左側にありました。',
+    },
+  },
   ask: {
     title: {
       ko: '예) 교통카드 충전 방법이 이해가 안 돼요',

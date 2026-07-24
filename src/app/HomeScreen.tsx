@@ -33,10 +33,10 @@ const START_HERE_LABEL: Record<Lang, string> = {
 const START_HERE_HREFS = ['/guide/link-payment', '/guide/link-money', '/guide/link-cvs-tips']
 
 const ASK_BANNER_LABEL: Record<Lang, { text: string; arrow: string }> = {
-  ko: { text: '찾는 정보가 없나요? 알려주세요', arrow: '→' },
-  en: { text: "Can't find what you need? Let us know", arrow: '→' },
-  zh: { text: '没找到您需要的信息？告诉我们', arrow: '→' },
-  ja: { text: '探している情報がない？教えてください', arrow: '→' },
+  ko: { text: '정보가 없거나 실제와 달랐나요? 알려주세요', arrow: '→' },
+  en: { text: "Missing info, or something different in real life? Let us know", arrow: '→' },
+  zh: { text: '信息缺失或与实际不符？告诉我们', arrow: '→' },
+  ja: { text: '情報がない、または実際と違った？教えてください', arrow: '→' },
 }
 
 const HERO: Record<Lang, { title: string; sub: string }> = {
