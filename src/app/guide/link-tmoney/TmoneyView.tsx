@@ -20,7 +20,7 @@ const LABEL: Record<Lang, {
   tabCheck: string
   expand: string
   buy: { title: string; points: string[] }
-  topup: { title: string; steps: string[]; warning: string; amountLabel: string; phraseLabel: string; phraseTemplate: (amount: string) => string }
+  topup: { title: string; steps: string[]; warning: string; sameLabel: string; samePhrase: string; differentLabel: string; amountLabel: string; phraseLabel: string; phraseTemplate: (amount: string) => string }
   use: { title: string; points: string[]; warning: string }
   shop: { title: string; points: string[] }
   check: { title: string; step1: string; step2: string; step3: string; phrase: string }
@@ -49,6 +49,9 @@ const LABEL: Record<Lang, {
         '최소 1,000원 단위로 충전됩니다.',
       ],
       warning: '⚠️ 참고: 티머니 잔액 충전은 현금만 가능합니다. 카드로는 충전할 수 없어요.',
+      sameLabel: '낸 돈과 충전 금액이 같으면',
+      samePhrase: '충전해주세요',
+      differentLabel: '충전할 금액이 다르면',
       amountLabel: '충전할 금액을 입력하세요 (원)',
       phraseLabel: '충전할 때 보여주세요',
       phraseTemplate: (amount) => `티머니 ${amount}원 충전해주세요`,
@@ -102,6 +105,9 @@ const LABEL: Record<Lang, {
         'Top-ups are in units of at least 1,000 won.',
       ],
       warning: '⚠️ Note: Top-ups can only be paid in cash. Card payment is not accepted for topping up.',
+      sameLabel: 'If the cash you\'re paying matches the top-up amount',
+      samePhrase: '충전해주세요 (Please top up my card)',
+      differentLabel: 'If the top-up amount is different',
       amountLabel: 'Enter the amount to top up (KRW)',
       phraseLabel: 'Show this when topping up',
       phraseTemplate: (amount) => `티머니 ${amount}원 충전해주세요 (Please top up ${amount} won on my T-money)`,
@@ -155,6 +161,9 @@ const LABEL: Record<Lang, {
         '最低以1,000韩元为单位充值。',
       ],
       warning: '⚠️ 请注意：交通卡充值只能使用现金，不支持刷卡充值。',
+      sameLabel: '如果您付的现金和要充值的金额相同',
+      samePhrase: '충전해주세요（请帮我充值）',
+      differentLabel: '如果充值金额不同',
       amountLabel: '请输入要充值的金额（韩元）',
       phraseLabel: '充值时请出示',
       phraseTemplate: (amount) => `티머니 ${amount}원 충전해주세요（请帮我充值${amount}韩元）`,
@@ -208,6 +217,9 @@ const LABEL: Record<Lang, {
         '最低1,000ウォン単位でチャージされます。',
       ],
       warning: '⚠️ 注意：チャージは現金のみ可能です。カードでのチャージはできません。',
+      sameLabel: '支払う現金とチャージ金額が同じ場合',
+      samePhrase: '충전해주세요（チャージしてください）',
+      differentLabel: 'チャージ金額が異なる場合',
       amountLabel: 'チャージする金額を入力してください（ウォン）',
       phraseLabel: 'チャージの際にお見せください',
       phraseTemplate: (amount) => `티머니 ${amount}원 충전해주세요（T-moneyに${amount}ウォンチャージしてください）`,
@@ -376,6 +388,9 @@ export default function TmoneyView() {
               <div className="relative w-full rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '815 / 1024' }}>
                 <Image src="/images/tmoney/card-reader.png" alt={L.topup.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
               </div>
+              <p className="text-xs text-gray-500 font-medium">{L.topup.sameLabel}</p>
+              <PhraseButton phrase={L.topup.samePhrase} expandLabel={L.expand} />
+              <p className="text-xs text-gray-500 font-medium">{L.topup.differentLabel}</p>
               <AmountPhraseButton amountLabel={L.topup.amountLabel} phraseLabel={L.topup.phraseLabel} phraseTemplate={L.topup.phraseTemplate} expandLabel={L.expand} />
             </>
           )}
