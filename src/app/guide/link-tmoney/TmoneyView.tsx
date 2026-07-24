@@ -22,7 +22,7 @@ const LABEL: Record<Lang, {
   buy: { title: string; points: string[]; phraseLabel: string; phrase: string; paymentTip: string; nextStep: string }
   topup: { title: string; steps: string[]; warning: string; sameLabel: string; samePhrase: string; differentLabel: string; amountLabel: string; phraseLabel: string; phraseTemplate: (amount: string) => string }
   use: { title: string; points: string[]; transferTitle: string; transferYes: string; transferNo: string; warning: string }
-  shop: { title: string; points: string[]; phraseLabel: string; phrase: string }
+  shop: { title: string; points: string[]; phrase: string; insufficientNote: string }
   check: { title: string; step1: string; step2: string; step3: string; phrase: string }
 }> = {
   ko: {
@@ -77,10 +77,9 @@ const LABEL: Record<Lang, {
       points: [
         '충전된 잔액으로 편의점 물건도 결제할 수 있습니다 (선불카드처럼 사용).',
         '카운터에서 카드를 리더기에 올리고, 아래 문장을 점원에게 보여주세요.',
-        '잔액이 부족하면 다른 결제수단(현금·카드)이 필요합니다.',
       ],
-      phraseLabel: '점원에게 보여주세요',
       phrase: '티머니로 결제할게요',
+      insufficientNote: '잔액이 부족하면 다른 결제수단(현금·카드)이 필요합니다.',
     },
     check: {
       title: '교통카드 잔액 확인',
@@ -142,10 +141,9 @@ const LABEL: Record<Lang, {
       points: [
         'Your balance can also be used to pay for convenience store items, like a prepaid card.',
         'At the counter, place your card on the reader and show the staff the phrase below.',
-        'If the balance is insufficient, you\'ll need another payment method (cash or card).',
       ],
-      phraseLabel: 'Show this to the staff',
       phrase: '티머니로 결제할게요 (I\'ll pay with T-money)',
+      insufficientNote: 'If the balance is insufficient, you\'ll need another payment method (cash or card).',
     },
     check: {
       title: 'Checking Your Balance',
@@ -207,10 +205,9 @@ const LABEL: Record<Lang, {
       points: [
         '卡内余额也可以用来支付便利店商品，就像预付卡一样。',
         '在柜台把卡放在读卡器上，把下面的句子出示给店员看。',
-        '如果余额不足，需要使用其他支付方式（现金或卡）。',
       ],
-      phraseLabel: '请出示给店员',
       phrase: '티머니로 결제할게요（我要用T-money支付）',
+      insufficientNote: '如果余额不足，需要使用其他支付方式（现金或卡）。',
     },
     check: {
       title: '查询交通卡余额',
@@ -272,10 +269,9 @@ const LABEL: Record<Lang, {
       points: [
         'チャージした残高でコンビニの商品も購入できます（プリペイドカードのように使えます）。',
         'レジでカードをリーダーに置き、下の文章を店員に見せてください。',
-        '残高が不足している場合は、他の支払い方法（現金・カード）が必要です。',
       ],
-      phraseLabel: '店員に見せてください',
       phrase: '티머니로 결제할게요（T-moneyで払います）',
+      insufficientNote: '残高が不足している場合は、他の支払い方法（現金・カード）が必要です。',
     },
     check: {
       title: '交通カードの残高確認',
@@ -460,8 +456,8 @@ export default function TmoneyView() {
                   <li key={i} className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{p}</li>
                 ))}
               </ul>
-              <p className="text-xs text-gray-500 font-medium">{L.shop.phraseLabel}</p>
               <PhraseButton phrase={L.shop.phrase} expandLabel={L.expand} />
+              <p className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{L.shop.insufficientNote}</p>
             </>
           )}
 
