@@ -23,7 +23,7 @@ const LABEL: Record<Lang, {
   topup: { title: string; steps: string[]; warning: string; amountLabel: string; phraseLabel: string; phraseTemplate: (amount: string) => string }
   use: { title: string; points: string[]; warning: string }
   shop: { title: string; points: string[] }
-  check: { title: string; steps: string[]; phraseLabel: string; phrase: string }
+  check: { title: string; step1: string; step2: string; step3: string; phraseLabel: string; phrase: string }
 }> = {
   ko: {
     title: '🚇 교통카드 안내',
@@ -72,11 +72,9 @@ const LABEL: Record<Lang, {
     },
     check: {
       title: '교통카드 잔액 확인',
-      steps: [
-        '편의점 카운터에서 교통카드를 점원에게 건네주세요.',
-        '아래 문장을 점원에게 보여주세요.',
-        '결제 단말기의 고객용 화면에 잔액이 표시됩니다.',
-      ],
+      step1: '편의점 카운터에서 카드리더기에 교통카드를 놓아주세요.',
+      step2: '아래 문장을 점원에게 보여주세요.',
+      step3: '결제 단말기의 고객용 화면에 잔액이 표시됩니다.',
       phraseLabel: '점원에게 보여주세요',
       phrase: '교통카드 잔액 확인해주세요',
     },
@@ -128,11 +126,9 @@ const LABEL: Record<Lang, {
     },
     check: {
       title: 'Checking Your Balance',
-      steps: [
-        'Hand your transit card to the staff at the convenience store counter.',
-        'Show them the phrase below.',
-        'Your balance will appear on the customer-facing screen of the payment terminal.',
-      ],
+      step1: 'At the convenience store counter, place your transit card on the card reader.',
+      step2: 'Show them the phrase below.',
+      step3: 'Your balance will appear on the customer-facing screen of the payment terminal.',
       phraseLabel: 'Show this to the staff',
       phrase: '교통카드 잔액 확인해주세요 (Please check my transit card balance)',
     },
@@ -184,11 +180,9 @@ const LABEL: Record<Lang, {
     },
     check: {
       title: '查询交通卡余额',
-      steps: [
-        '在便利店柜台把交通卡交给店员。',
-        '把下面的句子出示给店员看。',
-        '余额会显示在结账机的顾客端屏幕上。',
-      ],
+      step1: '在便利店柜台，把交通卡放在读卡器上。',
+      step2: '把下面的句子出示给店员看。',
+      step3: '余额会显示在结账机的顾客端屏幕上。',
       phraseLabel: '请出示给店员',
       phrase: '교통카드 잔액 확인해주세요（请帮我查询交通卡余额）',
     },
@@ -240,11 +234,9 @@ const LABEL: Record<Lang, {
     },
     check: {
       title: '交通カードの残高確認',
-      steps: [
-        'コンビニのレジで交通カードを店員に渡してください。',
-        '下の文章を店員に見せてください。',
-        '決済端末のお客様用画面に残高が表示されます。',
-      ],
+      step1: 'コンビニのレジでカードリーダーに交通カードを置いてください。',
+      step2: '下の文章を店員に見せてください。',
+      step3: '決済端末のお客様用画面に残高が表示されます。',
       phraseLabel: '店員に見せてください',
       phrase: '교통카드 잔액 확인해주세요（交通カードの残高を確認してください）',
     },
@@ -418,13 +410,17 @@ export default function TmoneyView() {
           {tab === 'check' && (
             <>
               <p className="text-sm font-bold text-gray-800">{L.check.title}</p>
-              <ol className="space-y-1.5 list-decimal list-inside">
-                {L.check.steps.map((s, i) => (
-                  <li key={i} className="text-xs text-gray-600 leading-relaxed">{s}</li>
-                ))}
-              </ol>
+              <p className="text-xs text-gray-600 leading-relaxed">1. {L.check.step1}</p>
+              <div className="relative w-full rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '815 / 1024' }}>
+                <Image src="/images/tmoney/check-card-reader.png" alt={L.check.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
+              </div>
+              <p className="text-xs text-gray-600 leading-relaxed">2. {L.check.step2}</p>
               <p className="text-xs text-gray-500 font-medium">{L.check.phraseLabel}</p>
               <PhraseButton phrase={L.check.phrase} expandLabel={L.expand} />
+              <p className="text-xs text-gray-600 leading-relaxed">3. {L.check.step3}</p>
+              <div className="relative w-full rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '1732 / 894' }}>
+                <Image src="/images/tmoney/check-monitor.png" alt={L.check.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
+              </div>
             </>
           )}
         </div>
