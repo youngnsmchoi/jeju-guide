@@ -3,13 +3,17 @@
 // 삼각김밥은 신상품 회전이 빠르고 편의점 브랜드마다 취급 상품이 달라 DB 목록 대신
 // 대표 예시 몇 개만 하드코딩하고, 실제 상품 정보는 매장에서 직접 확인하도록 안내
 
+import Image from 'next/image'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 
 const LABEL: Record<Lang, {
   intro: string
-  howToOpenLink: string
+  howToOpenTitle: string
+  howToOpenIntro: string
+  howToOpenSteps: string[]
+  howToOpenTip: string
   examplesTitle: string
   examplesNote: string
   howToCheckTitle: string
@@ -21,7 +25,14 @@ const LABEL: Record<Lang, {
 }> = {
   ko: {
     intro: '겉보기엔 다 비슷해 보이지만, 포장 뜯는 법을 모르면 밥이 흩어지고 김이 눅눅해집니다.',
-    howToOpenLink: '📦 포장 뜯는 법 (실물 사진으로 보기) →',
+    howToOpenTitle: '📦 포장 뜯는 법',
+    howToOpenIntro: '포장지에 ①②③ 번호가 있습니다. 순서대로 당기면 김과 밥이 분리되지 않아요.',
+    howToOpenSteps: [
+      '① 위쪽 테이프를 잡고 아래로 당기세요.',
+      '② 왼쪽 포장지를 왼쪽으로 당기세요.',
+      '③ 오른쪽 포장지를 오른쪽으로 당기세요.',
+    ],
+    howToOpenTip: '💡 천천히 당기면 김이 찢어지지 않아요.',
     examplesTitle: '🍙 대표 맛 예시',
     examplesNote: '편의점마다, 시기마다 파는 맛이 계속 바뀝니다. 아래는 거의 항상 볼 수 있는 스테디셀러 2가지입니다.',
     howToCheckTitle: '🔍 매장에서 직접 확인하는 법',
@@ -33,7 +44,14 @@ const LABEL: Record<Lang, {
   },
   en: {
     intro: 'They all look similar, but if you don\'t know how to unwrap it, the rice falls apart and the seaweed gets soggy.',
-    howToOpenLink: '📦 How to unwrap (see real photos) →',
+    howToOpenTitle: '📦 How to unwrap',
+    howToOpenIntro: 'The wrapper has numbers ①②③. Pull them in order and the seaweed stays crispy.',
+    howToOpenSteps: [
+      '① Pull the top tab downward.',
+      '② Pull the left side of the wrapper to the left.',
+      '③ Pull the right side of the wrapper to the right.',
+    ],
+    howToOpenTip: '💡 Pull slowly so the seaweed doesn\'t tear.',
     examplesTitle: '🍙 Popular examples',
     examplesNote: 'Flavors change constantly by store and season. Here are two steady sellers you\'ll almost always find.',
     howToCheckTitle: '🔍 How to check in-store',
@@ -45,7 +63,14 @@ const LABEL: Record<Lang, {
   },
   zh: {
     intro: '外观看起来都差不多，但如果不知道怎么拆包装，米饭会散开，海苔也会变软。',
-    howToOpenLink: '📦 拆包装方法（查看实物照片） →',
+    howToOpenTitle: '📦 拆包装方法',
+    howToOpenIntro: '包装上有①②③编号，按顺序撕开，海苔和米饭就不会分离。',
+    howToOpenSteps: [
+      '① 抓住上方胶带向下拉。',
+      '② 将左侧包装纸向左拉。',
+      '③ 将右侧包装纸向右拉。',
+    ],
+    howToOpenTip: '💡 慢慢拉，海苔就不会碎。',
     examplesTitle: '🍙 代表口味示例',
     examplesNote: '口味会因门店和季节不断变化。以下是几乎随时都能买到的长销款2种。',
     howToCheckTitle: '🔍 在门店直接确认的方法',
@@ -57,7 +82,14 @@ const LABEL: Record<Lang, {
   },
   ja: {
     intro: '見た目はどれも似ていますが、開け方を知らないとご飯が崩れたり海苔が湿ったりします。',
-    howToOpenLink: '📦 包装の開け方（実物写真で見る） →',
+    howToOpenTitle: '📦 包装の開け方',
+    howToOpenIntro: '包装に①②③の番号があります。順番に引っ張ると海苔がパリパリのまま食べられます。',
+    howToOpenSteps: [
+      '① 上のテープを持って下に引っ張る。',
+      '② 左側の包装を左に引っ張る。',
+      '③ 右側の包装を右に引っ張る。',
+    ],
+    howToOpenTip: '💡 ゆっくり引っ張ると海苔が破れません。',
     examplesTitle: '🍙 代表的な味の例',
     examplesNote: 'コンビニや時期によって味は常に変わります。以下はほぼいつでも見かける定番2種です。',
     howToCheckTitle: '🔍 店頭で自分で確認する方法',
@@ -113,13 +145,23 @@ export default function GimbapView() {
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <p className="text-sm text-gray-600 leading-relaxed">{L.intro}</p>
 
-        {/* 포장 뜯는 법 — 실물 사진 있는 link-cvs-tips로 연결 */}
-        <a
-          href="/guide/link-cvs-tips?tab=onigiri"
-          className="block bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-3 hover:bg-emerald-100 transition-colors"
-        >
-          <p className="text-sm font-bold text-emerald-800">{L.howToOpenLink}</p>
-        </a>
+        {/* 포장 뜯는 법 (실물 사진 + 스텝) */}
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-3">
+          <p className="text-sm font-bold text-gray-800">{L.howToOpenTitle}</p>
+          <div className="relative w-full rounded-xl overflow-hidden bg-gray-50" style={{ aspectRatio: 1000 / 960 }}>
+            <Image src="/images/cvs-tips/onigiri.png" alt={L.howToOpenTitle} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
+          </div>
+          <p className="text-xs text-gray-600 leading-relaxed">{L.howToOpenIntro}</p>
+          <ol className="space-y-2">
+            {L.howToOpenSteps.map((step, i) => (
+              <li key={i} className="flex gap-2 text-xs text-gray-700">
+                <span className="shrink-0 w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">{i + 1}</span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+          <p className="text-xs text-emerald-700 bg-emerald-50 rounded-xl px-3 py-2">{L.howToOpenTip}</p>
+        </div>
 
         {/* 대표 맛 예시 (하드코딩 2개) */}
         <div>

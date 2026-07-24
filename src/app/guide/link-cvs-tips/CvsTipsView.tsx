@@ -9,13 +9,12 @@ import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 
-type Tab = 'microwave' | 'onigiri' | 'toilet' | 'trash' | 'wifi' | 'common'
-const TABS: Tab[] = ['microwave', 'onigiri', 'toilet', 'trash', 'wifi', 'common']
+type Tab = 'microwave' | 'toilet' | 'trash' | 'wifi' | 'common'
+const TABS: Tab[] = ['microwave', 'toilet', 'trash', 'wifi', 'common']
 
 const LABEL: Record<Lang, {
   title: string
   tabMicrowave: string
-  tabOnigiri: string
   tabToilet: string
   tabTrash: string
   tabWifi: string
@@ -30,14 +29,6 @@ const LABEL: Record<Lang, {
     warning: string
     phraseLabel: string
     phrase: string
-  }
-  onigiri: {
-    title: string
-    intro: string
-    steps: string[]
-    tip: string
-    flavors: string
-    flavorList: string[]
   }
   toilet: {
     title: string
@@ -68,7 +59,6 @@ const LABEL: Record<Lang, {
   ko: {
     title: '편의점 꿀팁',
     tabMicrowave: '🔥 전자레인지',
-    tabOnigiri: '🍙 삼각김밥',
     tabToilet: '🚻 화장실',
     tabTrash: '🗑️ 쓰레기',
     tabWifi: '📶 와이파이',
@@ -96,18 +86,6 @@ const LABEL: Record<Lang, {
       warning: '⚠️ 알루미늄 용기·포일은 절대 넣지 마세요. 불이 날 수 있습니다.',
       phraseLabel: '점원에게 부탁할 때',
       phrase: '데워주세요',
-    },
-    onigiri: {
-      title: '🍙 삼각김밥 뜯는 법',
-      intro: '포장지에 ①②③ 번호가 있습니다. 순서대로 당기면 김과 밥이 분리되지 않아요.',
-      steps: [
-        '① 위쪽 테이프를 잡고 아래로 당기세요.',
-        '② 왼쪽 포장지를 왼쪽으로 당기세요.',
-        '③ 오른쪽 포장지를 오른쪽으로 당기세요.',
-      ],
-      tip: '💡 천천히 당기면 김이 찢어지지 않아요.',
-      flavors: '인기 종류',
-      flavorList: ['참치마요 (Tuna Mayo)', '불고기 (Bulgogi)', '명란 (Pollock Roe)', '스팸 (Spam)'],
     },
     toilet: {
       title: '🚻 화장실 이용',
@@ -157,7 +135,6 @@ const LABEL: Record<Lang, {
   en: {
     title: 'CVS Tips',
     tabMicrowave: '🔥 Microwave',
-    tabOnigiri: '🍙 Onigiri',
     tabToilet: '🚻 Toilet',
     tabTrash: '🗑️ Trash',
     tabWifi: '📶 Wi-Fi',
@@ -185,18 +162,6 @@ const LABEL: Record<Lang, {
       warning: '⚠️ Never put aluminum containers or foil inside. It can cause a fire.',
       phraseLabel: 'Ask the staff',
       phrase: '데워주세요 (Please heat this up)',
-    },
-    onigiri: {
-      title: '🍙 How to open an onigiri',
-      intro: 'The wrapper has numbers ①②③. Pull them in order and the seaweed stays crispy.',
-      steps: [
-        '① Pull the top tab downward.',
-        '② Pull the left side of the wrapper to the left.',
-        '③ Pull the right side of the wrapper to the right.',
-      ],
-      tip: '💡 Pull slowly so the seaweed doesn\'t tear.',
-      flavors: 'Popular flavors',
-      flavorList: ['참치마요 Tuna Mayo', '불고기 Bulgogi', '명란 Pollock Roe', '스팸 Spam'],
     },
     toilet: {
       title: '🚻 Using the toilet',
@@ -246,7 +211,6 @@ const LABEL: Record<Lang, {
   zh: {
     title: '便利店小贴士',
     tabMicrowave: '🔥 微波炉',
-    tabOnigiri: '🍙 三角饭团',
     tabToilet: '🚻 洗手间',
     tabTrash: '🗑️ 垃圾分类',
     tabWifi: '📶 WiFi',
@@ -274,18 +238,6 @@ const LABEL: Record<Lang, {
       warning: '⚠️ 绝对不能放铝制容器或锡纸，可能引起火灾。',
       phraseLabel: '请店员帮忙时',
       phrase: '데워주세요（请帮我加热）',
-    },
-    onigiri: {
-      title: '🍙 三角饭团拆法',
-      intro: '包装上有①②③编号，按顺序撕开，海苔和米饭就不会分离。',
-      steps: [
-        '① 抓住上方胶带向下拉。',
-        '② 将左侧包装纸向左拉。',
-        '③ 将右侧包装纸向右拉。',
-      ],
-      tip: '💡 慢慢拉，海苔就不会碎。',
-      flavors: '热门口味',
-      flavorList: ['참치마요 金枪鱼蛋黄酱', '불고기 烤牛肉', '명란 明太鱼子', '스팸 午餐肉'],
     },
     toilet: {
       title: '🚻 洗手间使用',
@@ -335,7 +287,6 @@ const LABEL: Record<Lang, {
   ja: {
     title: 'コンビニお役立ち情報',
     tabMicrowave: '🔥 電子レンジ',
-    tabOnigiri: '🍙 おにぎり',
     tabToilet: '🚻 トイレ',
     tabTrash: '🗑️ ゴミ分別',
     tabWifi: '📶 Wi-Fi',
@@ -363,18 +314,6 @@ const LABEL: Record<Lang, {
       warning: '⚠️ アルミ容器やアルミホイルは絶対に入れないでください。火災の原因になります。',
       phraseLabel: '店員に頼むとき',
       phrase: '데워주세요（温めてください）',
-    },
-    onigiri: {
-      title: '🍙 おにぎりの開け方',
-      intro: '包装に①②③の番号があります。順番に引っ張ると海苔がパリパリのまま食べられます。',
-      steps: [
-        '① 上のテープを持って下に引っ張る。',
-        '② 左側の包装を左に引っ張る。',
-        '③ 右側の包装を右に引っ張る。',
-      ],
-      tip: '💡 ゆっくり引っ張ると海苔が破れません。',
-      flavors: '人気の種類',
-      flavorList: ['참치마요 ツナマヨ', '불고기 プルコギ', '명란 明太子', '스팸 スパム'],
     },
     toilet: {
       title: '🚻 トイレの利用',
@@ -457,7 +396,6 @@ export default function CvsTipsView() {
 
   const tabLabel = (t: Tab): string => ({
     microwave: L.tabMicrowave,
-    onigiri: L.tabOnigiri,
     toilet: L.tabToilet,
     trash: L.tabTrash,
     wifi: L.tabWifi,
@@ -516,33 +454,6 @@ export default function CvsTipsView() {
             </div>
             <p className="text-xs text-gray-500 font-medium">{L.microwave.phraseLabel}</p>
             <PhraseButton phrase={L.microwave.phrase} expandLabel={L.expand} />
-          </div>
-        )}
-
-        {tab === 'onigiri' && (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
-            <p className="text-sm font-bold text-gray-800">{L.onigiri.title}</p>
-            <div className="relative w-full rounded-xl overflow-hidden bg-gray-50" style={{ aspectRatio: 1000 / 960 }}>
-              <Image src="/images/cvs-tips/onigiri.png" alt={L.onigiri.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
-            </div>
-            <p className="text-xs text-gray-600 leading-relaxed">{L.onigiri.intro}</p>
-            <ol className="space-y-2">
-              {L.onigiri.steps.map((step, i) => (
-                <li key={i} className="flex gap-2 text-xs text-gray-700">
-                  <span className="shrink-0 w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">{i + 1}</span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ol>
-            <p className="text-xs text-emerald-700 bg-emerald-50 rounded-xl px-3 py-2">{L.onigiri.tip}</p>
-            <div>
-              <p className="text-xs text-gray-500 font-medium mb-2">{L.onigiri.flavors}</p>
-              <div className="flex flex-wrap gap-2">
-                {L.onigiri.flavorList.map((f, i) => (
-                  <span key={i} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-lg">{f}</span>
-                ))}
-              </div>
-            </div>
           </div>
         )}
 
