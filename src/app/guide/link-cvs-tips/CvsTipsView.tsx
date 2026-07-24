@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useSearchParams } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
@@ -450,7 +451,9 @@ function PhraseButton({ phrase, expandLabel }: { phrase: string; expandLabel: st
 export default function CvsTipsView() {
   const { lang } = useLang()
   const L = LABEL[lang]
-  const [tab, setTab] = useState<Tab>('microwave')
+  const searchParams = useSearchParams()
+  const initialTab = TABS.includes(searchParams.get('tab') as Tab) ? (searchParams.get('tab') as Tab) : 'microwave'
+  const [tab, setTab] = useState<Tab>(initialTab)
 
   const tabLabel = (t: Tab): string => ({
     microwave: L.tabMicrowave,

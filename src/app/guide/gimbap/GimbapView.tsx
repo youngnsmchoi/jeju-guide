@@ -9,8 +9,7 @@ import NavBar from '@/components/NavBar'
 
 const LABEL: Record<Lang, {
   intro: string
-  howToOpenTitle: string
-  howToOpenSteps: string[]
+  howToOpenLink: string
   examplesTitle: string
   examplesNote: string
   howToCheckTitle: string
@@ -22,12 +21,7 @@ const LABEL: Record<Lang, {
 }> = {
   ko: {
     intro: '겉보기엔 다 비슷해 보이지만, 포장 뜯는 법을 모르면 밥이 흩어지고 김이 눅눅해집니다.',
-    howToOpenTitle: '📦 포장 뜯는 법 (3단계)',
-    howToOpenSteps: [
-      '포장 앞면에 적힌 숫자 순서(①→②→③)를 확인하세요.',
-      '① 스티커를 먼저 떼어내고, ② 비닐을 양쪽으로 잡아당겨 벗겨냅니다.',
-      '③ 마지막 비닐을 아래로 당겨 빼면 김이 밥을 감싼 채로 완성됩니다.',
-    ],
+    howToOpenLink: '📦 포장 뜯는 법 (실물 사진으로 보기) →',
     examplesTitle: '🍙 대표 맛 예시',
     examplesNote: '편의점마다, 시기마다 파는 맛이 계속 바뀝니다. 아래는 거의 항상 볼 수 있는 스테디셀러 2가지입니다.',
     howToCheckTitle: '🔍 매장에서 직접 확인하는 법',
@@ -39,12 +33,7 @@ const LABEL: Record<Lang, {
   },
   en: {
     intro: 'They all look similar, but if you don\'t know how to unwrap it, the rice falls apart and the seaweed gets soggy.',
-    howToOpenTitle: '📦 How to unwrap (3 steps)',
-    howToOpenSteps: [
-      'Check the numbers printed on the front (①→②→③).',
-      '① Peel off the sticker first, ② pull the plastic apart from both sides.',
-      '③ Pull the last strip of plastic down and out — the seaweed wraps around the rice automatically.',
-    ],
+    howToOpenLink: '📦 How to unwrap (see real photos) →',
     examplesTitle: '🍙 Popular examples',
     examplesNote: 'Flavors change constantly by store and season. Here are two steady sellers you\'ll almost always find.',
     howToCheckTitle: '🔍 How to check in-store',
@@ -56,12 +45,7 @@ const LABEL: Record<Lang, {
   },
   zh: {
     intro: '外观看起来都差不多，但如果不知道怎么拆包装，米饭会散开，海苔也会变软。',
-    howToOpenTitle: '📦 拆包装方法（3步）',
-    howToOpenSteps: [
-      '确认包装正面印刷的数字顺序（①→②→③）。',
-      '① 先撕掉贴纸，② 把两侧的塑料膜向外拉开。',
-      '③ 最后把剩下的塑料膜向下抽出，海苔就会自动包裹住米饭。',
-    ],
+    howToOpenLink: '📦 拆包装方法（查看实物照片） →',
     examplesTitle: '🍙 代表口味示例',
     examplesNote: '口味会因门店和季节不断变化。以下是几乎随时都能买到的长销款2种。',
     howToCheckTitle: '🔍 在门店直接确认的方法',
@@ -73,12 +57,7 @@ const LABEL: Record<Lang, {
   },
   ja: {
     intro: '見た目はどれも似ていますが、開け方を知らないとご飯が崩れたり海苔が湿ったりします。',
-    howToOpenTitle: '📦 包装の開け方（3ステップ）',
-    howToOpenSteps: [
-      'パッケージ正面の数字の順番（①→②→③）を確認します。',
-      '① シールを先にはがし、② 両側のフィルムを引っ張って剥がします。',
-      '③ 最後のフィルムを下に引き抜くと、海苔がご飯を包んだ状態で完成します。',
-    ],
+    howToOpenLink: '📦 包装の開け方（実物写真で見る） →',
     examplesTitle: '🍙 代表的な味の例',
     examplesNote: 'コンビニや時期によって味は常に変わります。以下はほぼいつでも見かける定番2種です。',
     howToCheckTitle: '🔍 店頭で自分で確認する方法',
@@ -134,18 +113,13 @@ export default function GimbapView() {
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <p className="text-sm text-gray-600 leading-relaxed">{L.intro}</p>
 
-        {/* 포장 뜯는 법 */}
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
-          <p className="text-sm font-bold text-gray-800">{L.howToOpenTitle}</p>
-          <ol className="space-y-2">
-            {L.howToOpenSteps.map((step, i) => (
-              <li key={i} className="flex gap-2 text-sm text-gray-600">
-                <span className="shrink-0 w-5 h-5 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center text-xs font-bold">{i + 1}</span>
-                <span>{step}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
+        {/* 포장 뜯는 법 — 실물 사진 있는 link-cvs-tips로 연결 */}
+        <a
+          href="/guide/link-cvs-tips?tab=onigiri"
+          className="block bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-3 hover:bg-emerald-100 transition-colors"
+        >
+          <p className="text-sm font-bold text-emerald-800">{L.howToOpenLink}</p>
+        </a>
 
         {/* 대표 맛 예시 (하드코딩 2개) */}
         <div>
