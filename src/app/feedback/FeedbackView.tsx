@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
+import { COUNTRY_NAMES } from '@/lib/countryNames'
 import NavBar from '@/components/NavBar'
 
 type FeedbackItem = {
@@ -149,7 +150,7 @@ const LABEL: Record<Lang, {
     nicknameLabel: '닉네임 (선택)',
     nicknamePlaceholder: '미입력 시 익명',
     countryLabel: '국가 (선택)',
-    countryPlaceholder: '예) Japan, USA...',
+    countryPlaceholder: '국가명을 입력해 검색하세요 (예: Japan)',
     submit: '제출하기',
     submitting: '제출 중...',
     doneTitle: '감사합니다!',
@@ -177,7 +178,7 @@ const LABEL: Record<Lang, {
     nicknameLabel: 'Nickname (optional)',
     nicknamePlaceholder: 'Anonymous if blank',
     countryLabel: 'Country (optional)',
-    countryPlaceholder: 'e.g. Japan, USA...',
+    countryPlaceholder: 'Type to search (e.g. Japan)',
     submit: 'Submit',
     submitting: 'Submitting...',
     doneTitle: 'Thank you!',
@@ -205,7 +206,7 @@ const LABEL: Record<Lang, {
     nicknameLabel: '昵称（可选）',
     nicknamePlaceholder: '不填则显示匿名',
     countryLabel: '国家（可选）',
-    countryPlaceholder: '例如：Japan, USA...',
+    countryPlaceholder: '输入国家名搜索（例如：Japan）',
     submit: '提交',
     submitting: '提交中...',
     doneTitle: '感谢您！',
@@ -233,7 +234,7 @@ const LABEL: Record<Lang, {
     nicknameLabel: 'ニックネーム（任意）',
     nicknamePlaceholder: '未入力は匿名',
     countryLabel: '国（任意）',
-    countryPlaceholder: '例）Japan, USA...',
+    countryPlaceholder: '国名を入力して検索（例：Japan）',
     submit: '送信',
     submitting: '送信中...',
     doneTitle: 'ありがとうございます！',
@@ -394,8 +395,11 @@ export default function FeedbackView() {
           <div>
             <label className="text-xs font-bold text-gray-700 mb-1 block">{L.countryLabel}</label>
             <input value={country} onChange={e => setCountry(e.target.value)}
-              placeholder={L.countryPlaceholder}
+              placeholder={L.countryPlaceholder} list="country-options"
               className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-300" />
+            <datalist id="country-options">
+              {COUNTRY_NAMES.map(name => <option key={name} value={name} />)}
+            </datalist>
           </div>
 
           <button onClick={handleSubmit}
