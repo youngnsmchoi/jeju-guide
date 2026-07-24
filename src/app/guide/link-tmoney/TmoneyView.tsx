@@ -63,11 +63,11 @@ const LABEL: Record<Lang, {
     use: {
       title: '교통카드 사용',
       points: [
-        '버스: 탈 때 카드를 리더기에 태그하고, 내릴 때도 반드시 태그하세요. 하차 태그를 안 하면 환승 할인이 안 되고 다음 탑승 시 요금이 더 나올 수 있습니다.',
+        '버스: 탈 때 카드를 리더기에 태그하고, 내릴 때도 반드시 태그하세요. 하차 태그를 하면 전체 이동 거리로 계산되어 환승 할인이 적용되고, 안 하면 환승으로 인식되지 않아 다음 탑승이 별도 요금으로 계산되어 금액이 더 많아질 수 있습니다.',
         '지하철: 개찰구 통과 시 카드를 태그하면 됩니다.',
         '택시: 기사님께 카드 결제 의사를 밝히고, 차량 내 리더기에 카드를 태그하세요.',
       ],
-      warning: '⚠️ 버스는 승차·하차 모두 태그해야 정상 요금이 적용됩니다.',
+      warning: '⚠️ 버스는 승차·하차 모두 태그해야 정상 요금이 적용됩니다. 정확한 요금·할인 조건은 지역·노선마다 다를 수 있습니다.',
     },
     shop: {
       title: '교통카드로 편의점 물품 구입',
@@ -123,11 +123,11 @@ const LABEL: Record<Lang, {
     use: {
       title: 'Using the Card',
       points: [
-        'Bus: Tag the card on the reader when boarding, and tag again when getting off. Skipping the exit tag means no transfer discount and possibly a higher fare next ride.',
+        'Bus: Tag the card on the reader when boarding, and tag again when getting off. Tagging when you get off lets the system calculate your full trip distance and apply the transfer discount. Skipping it means the system won\'t recognize your next ride as a transfer, so it gets charged separately as a new fare — which can add up to more.',
         'Subway: Tag the card at the gate when entering.',
         'Taxi: Tell the driver you\'ll pay by card, then tag your card on the in-car reader.',
       ],
-      warning: '⚠️ For buses, tag both when boarding and getting off for the correct fare.',
+      warning: '⚠️ For buses, tag both when boarding and getting off for the correct fare. Exact fares and discount rules can vary by region and route.',
     },
     shop: {
       title: 'Paying for Store Items with the Card',
@@ -183,11 +183,11 @@ const LABEL: Record<Lang, {
     use: {
       title: '使用交通卡',
       points: [
-        '公交车：上车时在读卡器上刷卡，下车时也必须刷卡。不刷卡下车会导致无法享受换乘优惠，下次乘车可能被收取更高费用。',
+        '公交车：上车时在读卡器上刷卡，下车时也必须刷卡。下车刷卡后，系统会按全程距离计算并享受换乘优惠；不刷卡的话，系统不会识别为换乘，下次乘车会被单独计费，总费用可能会更高。',
         '地铁：进闸机时刷卡即可。',
         '出租车：告诉司机您要刷卡支付，然后在车内读卡器上刷卡。',
       ],
-      warning: '⚠️ 乘坐公交车时，上车和下车都必须刷卡才能正确计费。',
+      warning: '⚠️ 乘坐公交车时，上车和下车都必须刷卡才能正确计费。具体费用和优惠条件可能因地区、路线而异。',
     },
     shop: {
       title: '用交通卡在便利店购物',
@@ -243,11 +243,11 @@ const LABEL: Record<Lang, {
     use: {
       title: '交通カードの使用',
       points: [
-        'バス：乗車時にカードリーダーにタッチし、降車時にも必ずタッチしてください。降車時のタッチを忘れると乗り換え割引が適用されず、次回乗車時に高い料金になることがあります。',
+        'バス：乗車時にカードリーダーにタッチし、降車時にも必ずタッチしてください。降車時にタッチすると、全体の移動距離で計算されて乗り換え割引が適用されます。タッチしないと乗り換えと認識されず、次の乗車が別料金として計算され、合計金額が高くなることがあります。',
         '地下鉄：改札を通る際にカードをタッチしてください。',
         'タクシー：運転手にカード払いであることを伝え、車内のカードリーダーにタッチしてください。',
       ],
-      warning: '⚠️ バスは乗車時・降車時の両方でタッチしないと正しい料金になりません。',
+      warning: '⚠️ バスは乗車時・降車時の両方でタッチしないと正しい料金になりません。正確な料金・割引条件は地域や路線によって異なる場合があります。',
     },
     shop: {
       title: '交通カードでコンビニ商品を購入',
