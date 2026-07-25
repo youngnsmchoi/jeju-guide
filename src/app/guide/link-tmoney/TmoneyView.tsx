@@ -1,5 +1,5 @@
 'use client'
-// 교통카드(T-money) 안내 — 구입·충전·사용·편의점 결제 4단계
+// 교통카드(T-money) 안내 — 구입·충전·사용·편의점 결제 5단계
 
 import { useState } from 'react'
 import Image from 'next/image'
