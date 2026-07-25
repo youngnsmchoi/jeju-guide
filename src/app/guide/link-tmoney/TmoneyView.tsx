@@ -421,7 +421,7 @@ export default function TmoneyView() {
                 ))}
               </ol>
               <p className="text-xs text-red-700 bg-red-50 rounded-lg px-3 py-2">{L.topup.warning}</p>
-              <div className="relative w-full rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '815 / 1024' }}>
+              <div className="relative w-full rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '1654 / 2400' }}>
                 <Image src="/images/tmoney/card-reader.png" alt={L.topup.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
               </div>
               <p className="text-xs text-gray-500 font-medium">{L.topup.sameLabel}</p>
@@ -456,6 +456,9 @@ export default function TmoneyView() {
                   <li key={i} className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{p}</li>
                 ))}
               </ul>
+              <div className="relative w-full rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '1654 / 2400' }}>
+                <Image src="/images/tmoney/card-reader.png" alt={L.shop.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
+              </div>
               <PhraseButton phrase={L.shop.phrase} expandLabel={L.expand} />
               <p className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{L.shop.insufficientNote}</p>
             </>
