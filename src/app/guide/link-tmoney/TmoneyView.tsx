@@ -20,9 +20,9 @@ const LABEL: Record<Lang, {
   tabCheck: string
   expand: string
   buy: { title: string; points: string[]; phraseLabel: string; phrase: string; paymentTip: string; nextStep: string }
-  topup: { title: string; steps: string[]; warning: string; sameLabel: string; samePhrase: string; differentLabel: string; amountLabel: string; phraseLabel: string; phraseTemplate: (amount: string) => string }
+  topup: { title: string; steps: string[]; warning: string; cardPositionNote: string; sameLabel: string; samePhrase: string; differentLabel: string; amountLabel: string; phraseLabel: string; phraseTemplate: (amount: string) => string }
   use: { title: string; points: string[]; transferTitle: string; transferYes: string; transferNo: string; warning: string }
-  shop: { title: string; points: string[]; phrase: string; insufficientNote: string }
+  shop: { title: string; points: string[]; cardPositionNote: string; phrase: string; insufficientNote: string }
   check: { title: string; step1: string; step2: string; step3: string; phrase: string }
 }> = {
   ko: {
@@ -53,6 +53,7 @@ const LABEL: Record<Lang, {
         '최소 1,000원 단위로 충전됩니다.',
       ],
       warning: '⚠️ 참고: 티머니 잔액 충전은 현금만 가능합니다. 카드로는 충전할 수 없어요.',
+      cardPositionNote: '👇 아래 사진처럼, IC 카드 슬롯 위에 티머니 카드를 올려놓으세요.',
       sameLabel: '낸 돈과 충전 금액이 같으면',
       samePhrase: '충전해주세요',
       differentLabel: '충전할 금액이 다르면',
@@ -78,6 +79,7 @@ const LABEL: Record<Lang, {
         '충전된 잔액으로 편의점 물건도 결제할 수 있습니다 (선불카드처럼 사용).',
         '카운터에서 카드를 리더기에 올리고, 아래 문장을 점원에게 보여주세요.',
       ],
+      cardPositionNote: '👇 아래 사진처럼, IC 카드 슬롯 위에 티머니 카드를 올려놓으세요.',
       phrase: '티머니로 결제할게요',
       insufficientNote: '잔액이 부족하면 다른 결제수단(현금·카드)이 필요합니다.',
     },
@@ -117,6 +119,7 @@ const LABEL: Record<Lang, {
         'Top-ups are in units of at least 1,000 won.',
       ],
       warning: '⚠️ Note: Top-ups can only be paid in cash. Card payment is not accepted for topping up.',
+      cardPositionNote: '👇 As shown in the photo below, place your T-money card on the IC card slot.',
       sameLabel: 'If the cash you\'re paying matches the top-up amount',
       samePhrase: '충전해주세요 (Please top up my card)',
       differentLabel: 'If the top-up amount is different',
@@ -142,6 +145,7 @@ const LABEL: Record<Lang, {
         'Your balance can also be used to pay for convenience store items, like a prepaid card.',
         'At the counter, place your card on the reader and show the staff the phrase below.',
       ],
+      cardPositionNote: '👇 As shown in the photo below, place your T-money card on the IC card slot.',
       phrase: '티머니로 결제할게요 (I\'ll pay with T-money)',
       insufficientNote: 'If the balance is insufficient, you\'ll need another payment method (cash or card).',
     },
@@ -181,6 +185,7 @@ const LABEL: Record<Lang, {
         '最低以1,000韩元为单位充值。',
       ],
       warning: '⚠️ 请注意：交通卡充值只能使用现金，不支持刷卡充值。',
+      cardPositionNote: '👇 请像下方照片一样，把交通卡放在IC卡插槽上。',
       sameLabel: '如果您付的现金和要充值的金额相同',
       samePhrase: '충전해주세요（请帮我充值）',
       differentLabel: '如果充值金额不同',
@@ -206,6 +211,7 @@ const LABEL: Record<Lang, {
         '卡内余额也可以用来支付便利店商品，就像预付卡一样。',
         '在柜台把卡放在读卡器上，把下面的句子出示给店员看。',
       ],
+      cardPositionNote: '👇 请像下方照片一样，把交通卡放在IC卡插槽上。',
       phrase: '티머니로 결제할게요（我要用T-money支付）',
       insufficientNote: '如果余额不足，需要使用其他支付方式（现金或卡）。',
     },
@@ -245,6 +251,7 @@ const LABEL: Record<Lang, {
         '最低1,000ウォン単位でチャージされます。',
       ],
       warning: '⚠️ 注意：チャージは現金のみ可能です。カードでのチャージはできません。',
+      cardPositionNote: '👇 下の写真のように、ICカードスロットの上にT-moneyカードを置いてください。',
       sameLabel: '支払う現金とチャージ金額が同じ場合',
       samePhrase: '충전해주세요（チャージしてください）',
       differentLabel: 'チャージ金額が異なる場合',
@@ -270,6 +277,7 @@ const LABEL: Record<Lang, {
         'チャージした残高でコンビニの商品も購入できます（プリペイドカードのように使えます）。',
         'レジでカードをリーダーに置き、下の文章を店員に見せてください。',
       ],
+      cardPositionNote: '👇 下の写真のように、ICカードスロットの上にT-moneyカードを置いてください。',
       phrase: '티머니로 결제할게요（T-moneyで払います）',
       insufficientNote: '残高が不足している場合は、他の支払い方法（現金・カード）が必要です。',
     },
@@ -421,8 +429,9 @@ export default function TmoneyView() {
                 ))}
               </ol>
               <p className="text-xs text-red-700 bg-red-50 rounded-lg px-3 py-2">{L.topup.warning}</p>
-              <div className="relative w-full max-w-[240px] mx-auto rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '1654 / 1850' }}>
-                <Image src="/images/tmoney/card-reader.png" alt={L.topup.title} fill className="object-contain" sizes="240px" />
+              <p className="text-xs text-gray-600 leading-relaxed">{L.topup.cardPositionNote}</p>
+              <div className="relative w-full max-w-[180px] mx-auto rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '1654 / 2400' }}>
+                <Image src="/images/tmoney/card-reader.png" alt={L.topup.title} fill className="object-contain" sizes="180px" />
               </div>
               <p className="text-xs text-gray-500 font-medium">{L.topup.sameLabel}</p>
               <PhraseButton phrase={L.topup.samePhrase} expandLabel={L.expand} />
@@ -456,8 +465,9 @@ export default function TmoneyView() {
                   <li key={i} className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{p}</li>
                 ))}
               </ul>
-              <div className="relative w-full max-w-[240px] mx-auto rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '1654 / 1850' }}>
-                <Image src="/images/tmoney/card-reader.png" alt={L.shop.title} fill className="object-contain" sizes="240px" />
+              <p className="text-xs text-gray-600 leading-relaxed">{L.shop.cardPositionNote}</p>
+              <div className="relative w-full max-w-[180px] mx-auto rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '1654 / 2400' }}>
+                <Image src="/images/tmoney/card-reader.png" alt={L.shop.title} fill className="object-contain" sizes="180px" />
               </div>
               <PhraseButton phrase={L.shop.phrase} expandLabel={L.expand} />
               <p className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{L.shop.insufficientNote}</p>
