@@ -5,6 +5,7 @@ import { useLang } from '@/context/LangContext'
 import type { JulGimbapItem, Lang } from '@/lib/types'
 import { getJulGimbapField } from '@/lib/types'
 import NavBar from '@/components/NavBar'
+import FoodQrSection from '@/components/FoodQrSection'
 
 const LABEL: Record<Lang, {
   intro: string
@@ -66,6 +67,11 @@ export default function JulGimbapView({ items }: { items: JulGimbapItem[] }) {
         >
           <p className="text-sm font-bold text-amber-800">{L.ingredientsLink}</p>
         </a>
+
+        {/* QR코드로 상세 정보 확인하기 */}
+        <div className="pt-2">
+          <FoodQrSection />
+        </div>
 
         {/* 줄김밥 종류 목록 */}
         <div className="pt-2">
