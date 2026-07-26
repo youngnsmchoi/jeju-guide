@@ -23,7 +23,7 @@ const LABEL: Record<Lang, {
   topup: { title: string; steps: string[]; warning: string; cardPositionNote: string; sameLabel: string; samePhrase: string; differentLabel: string; amountLabel: string; phraseLabel: string; phraseTemplate: (amount: string) => string }
   use: { title: string; points: string[]; transferTitle: string; transferYes: string; transferNo: string; warning: string }
   shop: { title: string; points: string[]; cardPositionNote: string; phrase: string; insufficientNote: string }
-  check: { title: string; step1: string; step2: string; step3: string; phrase: string }
+  check: { title: string; step1: string; cardPositionNote: string; step2: string; step3: string; phrase: string }
 }> = {
   ko: {
     title: '🚇 교통카드 안내',
@@ -86,6 +86,7 @@ const LABEL: Record<Lang, {
     check: {
       title: '교통카드 잔액 확인',
       step1: '편의점 카운터에서 카드리더기에 교통카드를 놓아주세요.',
+      cardPositionNote: '👇 아래 사진처럼, IC 카드 슬롯 위에 티머니 카드를 올려놓으세요.',
       step2: '아래 문장을 점원에게 보여주세요.',
       step3: '결제 단말기의 고객용 화면에 잔액이 표시됩니다. 화면에 보이는 큰 숫자(예: 11,460원)가 카드 잔액입니다.',
       phrase: '교통카드 잔액 확인해주세요',
@@ -152,6 +153,7 @@ const LABEL: Record<Lang, {
     check: {
       title: 'Checking Your Balance',
       step1: 'At the convenience store counter, place your transit card on the card reader.',
+      cardPositionNote: '👇 As shown in the photo below, place your T-money card on the IC card slot.',
       step2: 'Show them the phrase below.',
       step3: 'Your balance will appear on the customer-facing screen of the payment terminal. The large number shown (e.g. 11,460원, meaning 11,460 won) is your card balance.',
       phrase: '교통카드 잔액 확인해주세요 (Please check my transit card balance)',
@@ -218,6 +220,7 @@ const LABEL: Record<Lang, {
     check: {
       title: '查询交通卡余额',
       step1: '在便利店柜台，把交通卡放在读卡器上。',
+      cardPositionNote: '👇 请像下方照片一样，把交通卡放在IC卡插槽上。',
       step2: '把下面的句子出示给店员看。',
       step3: '余额会显示在结账机的顾客端屏幕上。屏幕上显示的大数字（例如11,460원，即11,460韩元）就是您的卡内余额。',
       phrase: '교통카드 잔액 확인해주세요（请帮我查询交通卡余额）',
@@ -284,6 +287,7 @@ const LABEL: Record<Lang, {
     check: {
       title: '交通カードの残高確認',
       step1: 'コンビニのレジでカードリーダーに交通カードを置いてください。',
+      cardPositionNote: '👇 下の写真のように、ICカードスロットの上にT-moneyカードを置いてください。',
       step2: '下の文章を店員に見せてください。',
       step3: '決済端末のお客様用画面に残高が表示されます。画面に表示される大きな数字（例：11,460원、11,460ウォンという意味）がカードの残高です。',
       phrase: '교통카드 잔액 확인해주세요（交通カードの残高を確認してください）',
@@ -478,8 +482,9 @@ export default function TmoneyView() {
             <>
               <p className="text-sm font-bold text-gray-800">{L.check.title}</p>
               <p className="text-xs text-gray-600 leading-relaxed">1. {L.check.step1}</p>
-              <div className="relative w-full rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '815 / 1024' }}>
-                <Image src="/images/tmoney/check-card-reader.png" alt={L.check.title} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
+              <p className="text-xs text-gray-600 leading-relaxed">{L.check.cardPositionNote}</p>
+              <div className="relative w-full max-w-[180px] mx-auto rounded-xl overflow-hidden border border-gray-100" style={{ aspectRatio: '3060 / 4080' }}>
+                <Image src="/images/tmoney/check-card-reader.png" alt={L.check.title} fill className="object-contain" sizes="180px" />
               </div>
               <p className="text-xs text-gray-600 leading-relaxed">2. {L.check.step2}</p>
               <PhraseButton phrase={L.check.phrase} expandLabel={L.expand} />
