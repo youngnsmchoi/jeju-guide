@@ -1,5 +1,5 @@
 'use client'
-// 삼각김밥·줄김밥·도시락 공통 — 포장지 QR코드(FOOD QR) 읽는 법 안내
+// 편의점 먹거리 허브 공통 — 삼각김밥·김밥·도시락 포장지 QR코드(FOOD QR) 읽는 법 안내
 // 실제 상품(급식대가뉴정석도시락) 화면을 예시로 각 항목의 의미를 설명
 
 import { useLang } from '@/context/LangContext'

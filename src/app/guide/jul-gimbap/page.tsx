@@ -1,4 +1,4 @@
-// 편의점 줄김밥 가이드 페이지 — 종류별 구성 안내
+// 편의점 김밥 가이드 페이지 — 종류별 구성 안내
 import { supabase } from '@/lib/supabase'
 import type { JulGimbapItem } from '@/lib/types'
 import JulGimbapView from './JulGimbapView'

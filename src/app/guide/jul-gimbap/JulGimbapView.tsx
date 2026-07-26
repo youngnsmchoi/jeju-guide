@@ -1,11 +1,10 @@
 'use client'
-// 편의점 줄김밥 가이드 — 종류별 구성/정보 카드
+// 편의점 김밥 가이드 — 종류별 구성/정보 카드
 
 import { useLang } from '@/context/LangContext'
 import type { JulGimbapItem, Lang } from '@/lib/types'
 import { getJulGimbapField } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import FoodQrSection from '@/components/FoodQrSection'
 
 const LABEL: Record<Lang, {
   intro: string
@@ -18,7 +17,7 @@ const LABEL: Record<Lang, {
   ko: {
     intro: '삼각김밥보다 크고 든든한 한 끼용 김밥입니다. 속 재료에 따라 맛이 크게 달라집니다.',
     ingredientsLink: '⚠️ 알레르기·할랄·채식 여부가 걱정되면 먼저 확인하세요 →',
-    typesTitle: '🍙 줄김밥 종류',
+    typesTitle: '🍙 김밥 종류',
     typesNote: '아래는 편의점에서 흔히 볼 수 있는 대표 유형입니다. 매장·시기에 따라 실제 상품명과 구성은 다를 수 있어요.',
     compositionLabel: '구성',
     priceUnknown: '가격 확인 중',
@@ -68,12 +67,7 @@ export default function JulGimbapView({ items }: { items: JulGimbapItem[] }) {
           <p className="text-sm font-bold text-amber-800">{L.ingredientsLink}</p>
         </a>
 
-        {/* QR코드로 상세 정보 확인하기 */}
-        <div className="pt-2">
-          <FoodQrSection />
-        </div>
-
-        {/* 줄김밥 종류 목록 */}
+        {/* 김밥 종류 목록 */}
         <div className="pt-2">
           <p className="text-base font-bold text-gray-900">{L.typesTitle}</p>
           <p className="text-xs text-gray-400 mt-1 leading-relaxed">{L.typesNote}</p>

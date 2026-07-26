@@ -1,11 +1,12 @@
 'use client'
-// 편의점 먹거리 허브 — 삼각김밥/줄김밥/도시락/핫바/디저트 카드 모음
+// 편의점 먹거리 허브 — 삼각김밥/김밥/도시락/핫바/디저트 카드 모음
 // 순서는 가볍게 시작(김밥류) → 한 끼(도시락) → 사이드(핫바) → 디저트 흐름
 
 import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
+import FoodQrSection from '@/components/FoodQrSection'
 
 const LABEL: Record<Lang, { title: string; intro: string }> = {
   ko: { title: '편의점 먹거리', intro: '라면 말고도 편의점엔 먹을 게 많습니다. 종류별로 골라보세요.' },
@@ -22,7 +23,7 @@ type Card = {
   cardClass: string
 }
 
-const CARDS: Card[] = [
+const MEAL_CARDS: Card[] = [
   {
     emoji: '🍙',
     title: { ko: '삼각김밥', en: 'Triangle Gimbap', zh: '饭团', ja: 'おにぎり' },
@@ -37,7 +38,7 @@ const CARDS: Card[] = [
   },
   {
     emoji: '🍙',
-    title: { ko: '줄김밥', en: 'Gimbap Roll', zh: '紫菜卷', ja: '海苔巻き' },
+    title: { ko: '김밥', en: 'Gimbap Roll', zh: '紫菜卷', ja: '海苔巻き' },
     desc: {
       ko: '삼각김밥보다 든든한 한 끼 · 종류별 구성',
       en: 'A heartier meal than triangle gimbap · what\'s inside',
@@ -59,6 +60,9 @@ const CARDS: Card[] = [
     href: '/guide/dosirak',
     cardClass: 'bg-blue-50 border-blue-100',
   },
+]
+
+const OTHER_CARDS: Card[] = [
   {
     emoji: '🍢',
     title: { ko: '핫바', en: 'Hotbar', zh: '关东煮/串', ja: 'ホットバー' },
@@ -90,6 +94,24 @@ export default function StoreFoodView() {
   const router = useRouter()
   const L = LABEL[lang]
 
+  const renderCard = (card: Card) => (
+    <div
+      key={card.href}
+      onClick={() => router.push(card.href)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={e => { if (e.key === 'Enter') router.push(card.href) }}
+      className={`rounded-2xl border px-4 py-4 flex items-center gap-3 cursor-pointer active:opacity-70 transition-all ${card.cardClass}`}
+    >
+      <span className="text-3xl shrink-0">{card.emoji}</span>
+      <div className="min-w-0 flex-1">
+        <p className="text-base font-bold text-gray-900">{card.title[lang]}</p>
+        <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{card.desc[lang]}</p>
+      </div>
+      <span className="text-gray-300 text-lg shrink-0">›</span>
+    </div>
+  )
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavBar />
@@ -98,23 +120,16 @@ export default function StoreFoodView() {
         <p className="text-sm text-gray-600 leading-relaxed">{L.intro}</p>
 
         <div className="space-y-3">
-          {CARDS.map(card => (
-            <div
-              key={card.href}
-              onClick={() => router.push(card.href)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={e => { if (e.key === 'Enter') router.push(card.href) }}
-              className={`rounded-2xl border px-4 py-4 flex items-center gap-3 cursor-pointer active:opacity-70 transition-all ${card.cardClass}`}
-            >
-              <span className="text-3xl shrink-0">{card.emoji}</span>
-              <div className="min-w-0 flex-1">
-                <p className="text-base font-bold text-gray-900">{card.title[lang]}</p>
-                <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{card.desc[lang]}</p>
-              </div>
-              <span className="text-gray-300 text-lg shrink-0">›</span>
-            </div>
-          ))}
+          {MEAL_CARDS.map(renderCard)}
+        </div>
+
+        {/* 삼각김밥·김밥·도시락 공통 — QR코드로 상세 정보 확인하기 */}
+        <div className="pt-2">
+          <FoodQrSection />
+        </div>
+
+        <div className="space-y-3">
+          {OTHER_CARDS.map(renderCard)}
         </div>
       </main>
     </div>

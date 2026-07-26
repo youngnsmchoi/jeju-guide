@@ -137,7 +137,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
 
   const MENU = [
     { tab: 'ramen' as Tab,        label: '라면 관리',  icon: '🍜' },
-    { tab: 'julGimbap' as Tab,    label: '줄김밥',     icon: '🍙' },
+    { tab: 'julGimbap' as Tab,    label: '김밥',     icon: '🍙' },
     { tab: 'dosirak' as Tab,      label: '도시락',     icon: '🍱' },
     { tab: 'hotbar' as Tab,       label: '핫바',       icon: '🍢' },
     { tab: 'snacks' as Tab,       label: '디저트/간식', icon: '🍭' },

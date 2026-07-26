@@ -7,7 +7,6 @@ import Image from 'next/image'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import FoodQrSection from '@/components/FoodQrSection'
 
 const LABEL: Record<Lang, {
   intro: string
@@ -195,11 +194,6 @@ export default function GimbapView() {
         >
           <p className="text-sm font-bold text-amber-800">{L.ingredientsLink}</p>
         </a>
-
-        {/* QR코드로 상세 정보 확인하기 */}
-        <div className="pt-2">
-          <FoodQrSection />
-        </div>
 
         {/* 자주 보이는 한글 단어 */}
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">

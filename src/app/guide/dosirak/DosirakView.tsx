@@ -5,7 +5,6 @@ import { useLang } from '@/context/LangContext'
 import type { DosirakItem, Lang } from '@/lib/types'
 import { getDosirakField } from '@/lib/types'
 import NavBar from '@/components/NavBar'
-import FoodQrSection from '@/components/FoodQrSection'
 
 const LABEL: Record<Lang, {
   intro: string
@@ -105,11 +104,6 @@ export default function DosirakView({ items }: { items: DosirakItem[] }) {
               </li>
             ))}
           </ol>
-        </div>
-
-        {/* QR코드로 상세 정보 확인하기 */}
-        <div className="pt-2">
-          <FoodQrSection />
         </div>
 
         {/* 도시락 종류 목록 */}

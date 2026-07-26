@@ -1,5 +1,5 @@
 'use client'
-// 줄김밥 항목(jul_gimbap_items) 관리 — 목록, 추가/수정/삭제
+// 김밥 항목(jul_gimbap_items) 관리 — 목록, 추가/수정/삭제
 
 import { useState, useEffect, useRef } from 'react'
 import type { JulGimbapItem, Lang } from '@/lib/types'
@@ -89,7 +89,7 @@ export default function JulGimbapAdmin() {
       {!form && (
         <div className="bg-white rounded-2xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-sm font-semibold text-gray-700">줄김밥 목록</p>
+            <p className="text-sm font-semibold text-gray-700">김밥 목록</p>
             <button
               onClick={startNew}
               className="bg-emerald-600 text-white text-sm px-4 py-2 rounded-xl hover:bg-emerald-700 transition-colors"
