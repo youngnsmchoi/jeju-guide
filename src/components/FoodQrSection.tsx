@@ -275,7 +275,7 @@ export default function FoodQrSection() {
   const [tab, setTab] = useState<InfoTab>('nutrition')
 
   return (
-    <div className="space-y-3">
+    <div className="bg-gray-50 border border-gray-200 rounded-2xl p-3 space-y-3">
       <p className="text-base font-bold text-gray-900">{L.title}</p>
 
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-1.5">
@@ -333,11 +333,14 @@ export default function FoodQrSection() {
             <p className="text-[11px] text-gray-400 px-4 py-2 leading-relaxed">{L.nutritionFootnote}</p>
           </div>
 
-          <div className="bg-gray-50 rounded-xl px-3 py-2 space-y-1">
-            <p className="text-xs text-red-600">{L.legendCaution}</p>
-            <p className="text-xs text-emerald-600">{L.legendGood}</p>
-            <p className="text-xs text-gray-500">{L.legendNeutral}</p>
-          </div>
+          <details className="bg-white rounded-xl border border-gray-200 px-3 py-2">
+            <summary className="text-xs font-medium text-gray-500 cursor-pointer">{L.legendCaution.split(':')[0]} / {L.legendGood.split(':')[0]} / {L.legendNeutral.split(':')[0]}</summary>
+            <div className="space-y-1 pt-2">
+              <p className="text-xs text-red-600">{L.legendCaution}</p>
+              <p className="text-xs text-emerald-600">{L.legendGood}</p>
+              <p className="text-xs text-gray-500">{L.legendNeutral}</p>
+            </div>
+          </details>
 
           <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 leading-relaxed">{L.cautionTip}</p>
         </>

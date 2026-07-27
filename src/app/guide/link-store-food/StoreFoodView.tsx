@@ -8,11 +8,11 @@ import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 import FoodQrSection from '@/components/FoodQrSection'
 
-const LABEL: Record<Lang, { title: string; intro: string }> = {
-  ko: { title: '편의점 먹거리', intro: '라면 말고도 편의점엔 먹을 게 많습니다. 종류별로 골라보세요.' },
-  en: { title: 'Convenience Store Food', intro: 'There\'s more than ramen at the convenience store. Pick a category.' },
-  zh: { title: '便利店美食', intro: '便利店里不只有拉面，还有很多好吃的。按种类挑选吧。' },
-  ja: { title: 'コンビニグルメ', intro: 'ラーメン以外にもコンビニには美味しいものがたくさん。カテゴリーから選んでみましょう。' },
+const LABEL: Record<Lang, { title: string; intro: string; pickCategory: string }> = {
+  ko: { title: '편의점 먹거리', intro: '라면 말고도 편의점엔 먹을 게 많습니다. 종류별로 골라보세요.', pickCategory: '🍽️ 종류 선택하기' },
+  en: { title: 'Convenience Store Food', intro: 'There\'s more than ramen at the convenience store. Pick a category.', pickCategory: '🍽️ Pick a Category' },
+  zh: { title: '便利店美食', intro: '便利店里不只有拉面，还有很多好吃的。按种类挑选吧。', pickCategory: '🍽️ 选择种类' },
+  ja: { title: 'コンビニグルメ', intro: 'ラーメン以外にもコンビニには美味しいものがたくさん。カテゴリーから選んでみましょう。', pickCategory: '🍽️ カテゴリーを選ぶ' },
 }
 
 type Card = {
@@ -121,6 +121,8 @@ export default function StoreFoodView() {
 
         {/* 삼각김밥·김밥·도시락 공통 — QR코드로 상세 정보 확인하기 (셋 다 해당되어 맨 위 배치) */}
         <FoodQrSection />
+
+        <p className="text-base font-bold text-gray-900 pt-2">{L.pickCategory}</p>
 
         <div className="space-y-3">
           {MEAL_CARDS.map(renderCard)}
