@@ -10,6 +10,7 @@ import NavBar from '@/components/NavBar'
 
 const LABEL: Record<Lang, {
   intro: string
+  microwaveLink: string
   howToOpenTitle: string
   howToOpenIntro: string
   howToOpenSteps: string[]
@@ -25,6 +26,7 @@ const LABEL: Record<Lang, {
 }> = {
   ko: {
     intro: '겉보기엔 다 비슷해 보이지만, 포장 뜯는 법을 모르면 밥이 흩어지고 김이 눅눅해집니다.',
+    microwaveLink: '🔥 전자레인지로 데우는 법 (편의점 꿀팁에서 보기) →',
     howToOpenTitle: '📦 포장 뜯는 법',
     howToOpenIntro: '포장지에 ①②③ 번호가 있습니다. 순서대로 당기면 김과 밥이 분리되지 않아요.',
     howToOpenSteps: [
@@ -33,8 +35,8 @@ const LABEL: Record<Lang, {
       '③ 오른쪽 포장지를 오른쪽으로 당기세요.',
     ],
     howToOpenTip: '💡 천천히 당기면 김이 찢어지지 않아요.',
-    examplesTitle: '🍙 대표 맛 예시',
-    examplesNote: '편의점마다, 시기마다 파는 맛이 계속 바뀝니다. 아래는 거의 항상 볼 수 있는 스테디셀러 2가지입니다.',
+    examplesTitle: '🍙 맛 카테고리로 골라보기',
+    examplesNote: '맛 이름은 나라마다 낯설어도, "안 매운 맛 / 익숙한 고기맛 / 매운맛" 이 3가지 기준은 어디서나 통합니다.',
     howToCheckTitle: '🔍 매장에서 직접 확인하는 법',
     priceCheckTitle: '💰 가격 확인',
     priceCheckDesc: '포장 앞면 하단 또는 매대에 붙은 가격표에 표시되어 있습니다. 대부분 ₩1,500~₩2,000 사이입니다.',
@@ -44,6 +46,7 @@ const LABEL: Record<Lang, {
   },
   en: {
     intro: 'They all look similar, but if you don\'t know how to unwrap it, the rice falls apart and the seaweed gets soggy.',
+    microwaveLink: '🔥 How to heat it up (see CVS Tips) →',
     howToOpenTitle: '📦 How to unwrap',
     howToOpenIntro: 'The wrapper has numbers ①②③. Pull them in order and the seaweed stays crispy.',
     howToOpenSteps: [
@@ -52,8 +55,8 @@ const LABEL: Record<Lang, {
       '③ Pull the right side of the wrapper to the right.',
     ],
     howToOpenTip: '💡 Pull slowly so the seaweed doesn\'t tear.',
-    examplesTitle: '🍙 Popular examples',
-    examplesNote: 'Flavors change constantly by store and season. Here are two steady sellers you\'ll almost always find.',
+    examplesTitle: '🍙 Pick by Flavor Category',
+    examplesNote: 'Flavor names vary by country, but "mild / familiar meat / spicy" works as a universal guide anywhere.',
     howToCheckTitle: '🔍 How to check in-store',
     priceCheckTitle: '💰 Checking the price',
     priceCheckDesc: 'Printed on the bottom front of the package or on the shelf price tag. Most cost between ₩1,500-₩2,000.',
@@ -63,6 +66,7 @@ const LABEL: Record<Lang, {
   },
   zh: {
     intro: '外观看起来都差不多，但如果不知道怎么拆包装，米饭会散开，海苔也会变软。',
+    microwaveLink: '🔥 微波炉加热方法（在便利店小贴士中查看）→',
     howToOpenTitle: '📦 拆包装方法',
     howToOpenIntro: '包装上有①②③编号，按顺序撕开，海苔和米饭就不会分离。',
     howToOpenSteps: [
@@ -71,8 +75,8 @@ const LABEL: Record<Lang, {
       '③ 将右侧包装纸向右拉。',
     ],
     howToOpenTip: '💡 慢慢拉，海苔就不会碎。',
-    examplesTitle: '🍙 代表口味示例',
-    examplesNote: '口味会因门店和季节不断变化。以下是几乎随时都能买到的长销款2种。',
+    examplesTitle: '🍙 按口味分类挑选',
+    examplesNote: '口味名称各国不同，但"不辣/熟悉的肉味/辣味"这3个标准放之四海皆准。',
     howToCheckTitle: '🔍 在门店直接确认的方法',
     priceCheckTitle: '💰 确认价格',
     priceCheckDesc: '标注在包装正面下方或货架价签上，大多在₩1,500~₩2,000之间。',
@@ -82,6 +86,7 @@ const LABEL: Record<Lang, {
   },
   ja: {
     intro: '見た目はどれも似ていますが、開け方を知らないとご飯が崩れたり海苔が湿ったりします。',
+    microwaveLink: '🔥 電子レンジで温める方法（コンビニお役立ち情報で見る）→',
     howToOpenTitle: '📦 包装の開け方',
     howToOpenIntro: '包装に①②③の番号があります。順番に引っ張ると海苔がパリパリのまま食べられます。',
     howToOpenSteps: [
@@ -90,8 +95,8 @@ const LABEL: Record<Lang, {
       '③ 右側の包装を右に引っ張る。',
     ],
     howToOpenTip: '💡 ゆっくり引っ張ると海苔が破れません。',
-    examplesTitle: '🍙 代表的な味の例',
-    examplesNote: 'コンビニや時期によって味は常に変わります。以下はほぼいつでも見かける定番2種です。',
+    examplesTitle: '🍙 味のカテゴリーから選ぶ',
+    examplesNote: '味の名前は国によって馴染みがなくても、「辛くない味 / 馴染みのある肉の味 / 辛い味」という3つの基準はどこでも通じます。',
     howToCheckTitle: '🔍 店頭で自分で確認する方法',
     priceCheckTitle: '💰 価格の確認',
     priceCheckDesc: 'パッケージ正面下部、または棚の価格タグに表示されています。ほとんどが₩1,500〜₩2,000の間です。',
@@ -101,27 +106,53 @@ const LABEL: Record<Lang, {
   },
 }
 
-type Example = { emoji: string; name: Record<Lang, string>; desc: Record<Lang, string> }
+type FlavorCategory = {
+  emoji: string
+  dotClass: string
+  name: Record<Lang, string>
+  conceptName: string
+  menu: Record<Lang, string>
+  desc: Record<Lang, string>
+}
 
-const EXAMPLES: Example[] = [
+const FLAVOR_CATEGORIES: FlavorCategory[] = [
   {
-    emoji: '🐟',
-    name: { ko: '참치마요', en: 'Tuna Mayo', zh: '金枪鱼蛋黄酱', ja: 'ツナマヨ' },
+    emoji: '🟢',
+    dotClass: 'bg-emerald-500',
+    name: { ko: '부드럽고 안 매운 맛', en: 'Mild & Creamy', zh: '温和不辣', ja: 'マイルドでクリーミーな味' },
+    conceptName: 'Mild & Creamy',
+    menu: { ko: '참치마요', en: 'Tuna Mayo', zh: '金枪鱼蛋黄酱', ja: 'ツナマヨ' },
     desc: {
-      ko: '참치와 마요네즈를 버무린 속. 짜지 않고 부드러워 가장 무난한 맛.',
-      en: 'Tuna mixed with mayonnaise. Mild and creamy — the safest first pick.',
-      zh: '金枪鱼拌蛋黄酱馅料，口味温和不咸，是最容易接受的口味。',
-      ja: 'ツナとマヨネーズを和えた具材。塩気が少なくまろやかで一番食べやすい味。',
+      ko: '실패 확률 0%, 누구나 좋아하는 고소하고 부드러운 마요네즈 베이스.',
+      en: 'A safe first pick — creamy, mild mayonnaise-based flavor almost everyone likes.',
+      zh: '几乎不会踩雷，口感温和的蛋黄酱风味，大众都喜欢。',
+      ja: '失敗ゼロ、誰でも好きなまろやかなマヨネーズベース。',
     },
   },
   {
-    emoji: '🌶️',
-    name: { ko: '전주비빔', en: 'Jeonju Bibim', zh: '全州拌饭', ja: '全州ビビン' },
+    emoji: '🟡',
+    dotClass: 'bg-amber-400',
+    name: { ko: '익숙한 고기·불고기 맛', en: 'Savory Meat', zh: '熟悉的肉类/烤肉味', ja: '馴染みのある肉・プルコギ味' },
+    conceptName: 'Savory Meat',
+    menu: { ko: '소고기, 스팸, 불고기 등', en: 'Beef, Spam, bulgogi, etc.', zh: '牛肉、午餐肉、烤肉等', ja: '牛肉、スパム、プルコギなど' },
     desc: {
-      ko: '고추장 양념 나물밥. 매콤달콤한 맛으로, 매운맛에 거부감 없는 사람에게 추천.',
-      en: 'Rice mixed with gochujang and seasoned vegetables. Recommend only if you can handle mild spice.',
-      zh: '拌有辣椒酱和蔬菜的米饭，微辣，能吃辣的人推荐尝试。',
-      ja: 'コチュジャンで和えたナムル入りご飯。辛さが平気な方向け。',
+      ko: '외국인에게도 익숙한 달콤짭짤한 간장 소스 베이스.',
+      en: 'A sweet-and-savory soy sauce base that feels familiar to most foreign visitors.',
+      zh: '甜咸交织的酱油风味，外国游客也容易接受。',
+      ja: '外国人にも馴染みやすい甘辛い醤油ベース。',
+    },
+  },
+  {
+    emoji: '🔴',
+    dotClass: 'bg-red-500',
+    name: { ko: '한국의 매콤한 맛 (도전용)', en: 'Korean Spicy', zh: '韩式辣味（挑战款）', ja: '韓国の辛い味（挑戦用）' },
+    conceptName: 'Korean Spicy',
+    menu: { ko: '제육, 전주비빔, 김치참치 등', en: 'Spicy pork, Jeonju bibim, kimchi tuna, etc.', zh: '辣炒猪肉、全州拌饭、泡菜金枪鱼等', ja: 'チェユク、全州ビビン、キムチツナなど' },
+    desc: {
+      ko: '한국의 매운맛에 도전해보고 싶은 분께 추천 🌶️',
+      en: 'For adventurous eaters who want to try real Korean spice 🌶️',
+      zh: '推荐给想挑战韩式辣味的冒险者 🌶️',
+      ja: '韓国の辛さに挑戦したい方におすすめ 🌶️',
     },
   },
 ]
@@ -145,11 +176,18 @@ export default function GimbapView() {
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <p className="text-sm text-gray-600 leading-relaxed">{L.intro}</p>
 
+        <a
+          href="/guide/link-cvs-tips?tab=microwave"
+          className="block bg-orange-50 border border-orange-200 rounded-2xl px-4 py-3 hover:bg-orange-100 transition-colors"
+        >
+          <p className="text-sm font-bold text-orange-800">{L.microwaveLink}</p>
+        </a>
+
         {/* 포장 뜯는 법 (실물 사진 + 스텝) */}
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-3">
           <p className="text-sm font-bold text-gray-800">{L.howToOpenTitle}</p>
-          <div className="relative w-full rounded-xl overflow-hidden bg-gray-50" style={{ aspectRatio: 1000 / 960 }}>
-            <Image src="/images/cvs-tips/onigiri.png" alt={L.howToOpenTitle} fill className="object-contain" sizes="(max-width: 512px) 100vw, 512px" />
+          <div className="relative w-full max-w-[160px] mx-auto rounded-xl overflow-hidden bg-gray-50" style={{ aspectRatio: 1000 / 960 }}>
+            <Image src="/images/cvs-tips/onigiri.png" alt={L.howToOpenTitle} fill className="object-contain" sizes="160px" />
           </div>
           <p className="text-xs text-gray-600 leading-relaxed">{L.howToOpenIntro}</p>
           <ol className="space-y-2">
@@ -163,18 +201,20 @@ export default function GimbapView() {
           <p className="text-xs text-emerald-700 bg-emerald-50 rounded-xl px-3 py-2">{L.howToOpenTip}</p>
         </div>
 
-        {/* 대표 맛 예시 (하드코딩 2개) */}
+        {/* 맛 카테고리 3단계 (부드러운 맛 / 익숙한 고기맛 / 매운맛) */}
         <div>
           <p className="text-base font-bold text-gray-900 mb-1">{L.examplesTitle}</p>
           <p className="text-xs text-gray-400 mb-3 leading-relaxed">{L.examplesNote}</p>
           <div className="space-y-2">
-            {EXAMPLES.map((ex, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 flex gap-3 items-start">
-                <span className="text-2xl shrink-0">{ex.emoji}</span>
-                <div>
-                  <p className="text-sm font-bold text-gray-900">{ex.name[lang]}</p>
-                  <p className="text-xs text-gray-500 leading-relaxed mt-0.5">{ex.desc[lang]}</p>
+            {FLAVOR_CATEGORIES.map((cat, i) => (
+              <div key={i} className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${cat.dotClass}`} />
+                  <p className="text-sm font-bold text-gray-900">{cat.name[lang]}</p>
+                  {lang !== 'en' && <span className="text-xs text-gray-300">({cat.conceptName})</span>}
                 </div>
+                <p className="text-xs font-medium text-gray-700">{cat.menu[lang]}</p>
+                <p className="text-xs text-gray-500 leading-relaxed">{cat.desc[lang]}</p>
               </div>
             ))}
           </div>
