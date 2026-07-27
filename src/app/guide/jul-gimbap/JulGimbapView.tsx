@@ -5,6 +5,13 @@ import { useLang } from '@/context/LangContext'
 import type { JulGimbapItem, Lang } from '@/lib/types'
 import { getJulGimbapField } from '@/lib/types'
 import NavBar from '@/components/NavBar'
+import FlavorCategoryList, { buildFlavorCategories } from '@/components/FlavorCategoryList'
+
+const FLAVOR_CATEGORIES = buildFlavorCategories({
+  mild: { ko: '참치김밥', en: 'Tuna Gimbap', zh: '金枪鱼紫菜卷', ja: 'ツナ海苔巻き' },
+  meat: { ko: '진짜 소불고기김밥, 치즈김밥 등', en: 'Beef bulgogi gimbap, cheese gimbap, etc.', zh: '真烤牛肉紫菜卷、芝士紫菜卷等', ja: '本物の牛プルコギ海苔巻き、チーズ海苔巻きなど' },
+  spicy: { ko: '전주비빔김밥 등', en: 'Jeonju bibim gimbap, etc.', zh: '全州拌饭紫菜卷等', ja: '全州ビビン海苔巻きなど' },
+})
 
 const LABEL: Record<Lang, {
   intro: string
@@ -58,6 +65,9 @@ export default function JulGimbapView({ items }: { items: JulGimbapItem[] }) {
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <p className="text-sm text-gray-600 leading-relaxed">{L.intro}</p>
+
+        {/* 맛 카테고리 3단계 (부드러운 맛 / 익숙한 고기맛 / 매운맛) */}
+        <FlavorCategoryList categories={FLAVOR_CATEGORIES} />
 
         {/* 성분 확인 링크 */}
         <a

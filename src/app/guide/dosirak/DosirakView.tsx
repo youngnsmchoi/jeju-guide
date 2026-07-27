@@ -5,6 +5,13 @@ import { useLang } from '@/context/LangContext'
 import type { DosirakItem, Lang } from '@/lib/types'
 import { getDosirakField } from '@/lib/types'
 import NavBar from '@/components/NavBar'
+import FlavorCategoryList, { buildFlavorCategories } from '@/components/FlavorCategoryList'
+
+const FLAVOR_CATEGORIES = buildFlavorCategories({
+  mild: { ko: '치킨마요 도시락', en: 'Chicken Mayo Bento', zh: '鸡肉蛋黄酱便当', ja: 'チキンマヨ弁当' },
+  meat: { ko: '돈까스 도시락 등', en: 'Pork cutlet (donkatsu) bento, etc.', zh: '炸猪排便当等', ja: 'とんかつ弁当など' },
+  spicy: { ko: '제육볶음 도시락, 비빔밥 도시락 등', en: 'Spicy stir-fried pork bento, bibimbap bento, etc.', zh: '辣炒猪肉便当、拌饭便当等', ja: 'チェユクポックム弁当、ビビンバ弁当など' },
+})
 
 const LABEL: Record<Lang, {
   intro: string
@@ -84,6 +91,9 @@ export default function DosirakView({ items }: { items: DosirakItem[] }) {
 
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <p className="text-sm text-gray-600 leading-relaxed">{L.intro}</p>
+
+        {/* 맛 카테고리 3단계 (부드러운 맛 / 익숙한 고기맛 / 매운맛) */}
+        <FlavorCategoryList categories={FLAVOR_CATEGORIES} />
 
         {/* 성분 확인 링크 */}
         <a
