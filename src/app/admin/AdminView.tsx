@@ -195,7 +195,7 @@ export default function AdminView({ categories }: { categories: Category[] }) {
   return (
     <div className="min-h-screen flex bg-gray-100">
       {/* PC 사이드바 */}
-      <aside className="hidden md:flex flex-col w-56 bg-emerald-700 shrink-0 sticky top-0 h-screen">
+      <aside className="hidden md:flex flex-col w-56 bg-emerald-700 shrink-0 sticky top-0 h-screen z-10">
         <Sidebar />
       </aside>
 
