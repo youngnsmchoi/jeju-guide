@@ -2,8 +2,12 @@
 // 편의점 먹거리 허브 공통 — 삼각김밥·김밥·도시락 포장지 QR코드(FOOD QR) 읽는 법 안내
 // 실제 상품(급식대가뉴정석도시락) 화면을 예시로 각 항목의 의미를 설명
 
+import { useState } from 'react'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
+
+type InfoTab = 'nutrition' | 'ingredients' | 'allergen' | 'safety' | 'contact' | 'storage'
+const INFO_TABS: InfoTab[] = ['nutrition', 'ingredients', 'allergen', 'safety', 'contact', 'storage']
 
 const EXAMPLE_URL = 'https://foodqr.kr/01/08801771034643?92=01'
 
@@ -19,9 +23,18 @@ const NUTRIENT_ROWS: NutrientRow[] = [
 
 const LABEL: Record<Lang, {
   title: string
-  intro: string
+  step1Title: string
+  step1Desc: string
+  step2Title: string
+  step2Desc: string
   linkLabel: string
   exampleNote: string
+  tabNutrition: string
+  tabIngredients: string
+  tabAllergen: string
+  tabSafety: string
+  tabContact: string
+  tabStorage: string
   nutritionTitle: string
   nutritionKcal: string
   nutritionFootnote: string
@@ -47,9 +60,18 @@ const LABEL: Record<Lang, {
 }> = {
   ko: {
     title: '📱 QR코드로 상세 정보 확인하기',
-    intro: '삼각김밥·김밥·도시락 포장지에는 QR코드가 있습니다. 스캔하면 영양표시·원재료명·알레르기 등 상세 정보가 나오는 사이트로 연결됩니다. 한국어만 지원되니, 번역 앱(파파고/구글 번역)의 카메라 기능으로 화면을 비추면 번역해서 볼 수 있어요.',
+    step1Title: '① 번역 앱으로 상품 바로 스캔하기',
+    step1Desc: '파파고·구글 번역 카메라로 포장지를 비추면, 그 자리에서 바로 한글이 번역됩니다. 빠르게 훑어볼 때 좋습니다.',
+    step2Title: '② 포장지 QR코드 스캔하기',
+    step2Desc: '삼각김밥·김밥·도시락 포장지에는 QR코드가 있습니다. 스캔하면 영양표시·원재료명·알레르기 등 상세 정보가 나오는 사이트로 연결됩니다. 이 사이트도 한국어만 지원되니, 번역 앱 카메라로 화면을 다시 비추면 번역해서 볼 수 있어요.',
     linkLabel: '🔗 아래 링크는 예시 화면입니다 (실제로는 각 상품 포장지의 QR코드를 스캔하세요) →',
     exampleNote: '아래는 실제 도시락 상품(급식대가뉴정석도시락) 페이지를 예시로 각 항목의 의미를 설명한 것입니다.',
+    tabNutrition: '영양표시',
+    tabIngredients: '원재료명',
+    tabAllergen: '알레르기 유발물질 표기',
+    tabSafety: '소비자 안전을 위한 주의사항',
+    tabContact: '문의처',
+    tabStorage: '보관방법 또는 취급방법',
     nutritionTitle: '영양표시',
     nutritionKcal: 'kcal',
     nutritionFootnote: '1일 영양성분 기준치에 대한 비율(%)은 2,000kcal 기준이므로 개인의 필요 열량에 따라 다를 수 있습니다.',
@@ -86,9 +108,18 @@ const LABEL: Record<Lang, {
   },
   en: {
     title: '📱 Check Detailed Info via QR Code',
-    intro: 'Triangle kimbap, gimbap, and bento packages have a QR code printed on them. Scanning it takes you to a site with detailed nutrition facts, ingredients, and allergen info. It\'s Korean-only, so use a translation app (Papago/Google Translate) camera feature to translate the screen.',
+    step1Title: '① Scan the product directly with a translation app',
+    step1Desc: 'Point Papago or Google Translate\'s camera at the package to translate the Korean text on the spot. Good for a quick check.',
+    step2Title: '② Scan the QR code on the package',
+    step2Desc: 'Triangle kimbap, gimbap, and bento packages have a QR code printed on them. Scanning it takes you to a site with detailed nutrition facts, ingredients, and allergen info. That site is Korean-only too, so point your translation app\'s camera at the screen again to translate it.',
     linkLabel: '🔗 The link below is a sample screen (in real life, scan the QR code on each product\'s package) →',
     exampleNote: 'Below, we use a real bento product page (Geupsikdaega New Jeongseok Bento) as an example to explain what each section means.',
+    tabNutrition: 'Nutrition Facts',
+    tabIngredients: 'Ingredients',
+    tabAllergen: 'Allergen Labeling',
+    tabSafety: 'Consumer Safety Precautions',
+    tabContact: 'Contact Information',
+    tabStorage: 'Storage / Handling',
     nutritionTitle: 'Nutrition Facts',
     nutritionKcal: 'kcal',
     nutritionFootnote: 'The %Daily Value is based on a 2,000 kcal diet, so it may vary depending on your individual calorie needs.',
@@ -125,9 +156,18 @@ const LABEL: Record<Lang, {
   },
   zh: {
     title: '📱 用QR码查询详细信息',
-    intro: '三角饭团、紫菜卷、便当的包装上都印有QR码。扫描后会连接到显示营养成分、原材料、过敏原等详细信息的网站。该网站只支持韩语，可以用翻译App（Papago/谷歌翻译）的相机功能对准屏幕翻译查看。',
+    step1Title: '① 用翻译App直接扫描商品',
+    step1Desc: '用Papago或谷歌翻译的相机对准包装，即可当场翻译韩文。适合快速查看。',
+    step2Title: '② 扫描包装上的QR码',
+    step2Desc: '三角饭团、紫菜卷、便当的包装上都印有QR码。扫描后会连接到显示营养成分、原材料、过敏原等详细信息的网站。该网站也只支持韩语，可以再次用翻译App的相机对准屏幕翻译查看。',
     linkLabel: '🔗 下方链接为示例画面（实际请扫描各商品包装上的QR码）→',
     exampleNote: '以下以真实便当商品页面（급식대가뉴정석도시락）为例，说明各项目的含义。',
+    tabNutrition: '营养标示',
+    tabIngredients: '原材料名称',
+    tabAllergen: '过敏原标示',
+    tabSafety: '消费者安全注意事项',
+    tabContact: '咨询处',
+    tabStorage: '保管方法或处理方法',
     nutritionTitle: '营养标示',
     nutritionKcal: 'kcal',
     nutritionFootnote: '1日营养成分基准值比例(%)以2,000kcal为基准，可能因个人所需热量而有所不同。',
@@ -164,9 +204,18 @@ const LABEL: Record<Lang, {
   },
   ja: {
     title: '📱 QRコードで詳細情報を確認',
-    intro: 'おにぎり・海苔巻き・弁当のパッケージにはQRコードが印刷されています。スキャンすると栄養成分・原材料名・アレルギー情報などの詳細が見られるサイトにつながります。韓国語のみ対応なので、翻訳アプリ(Papago/Google翻訳)のカメラ機能を画面にかざすと翻訳して見られます。',
+    step1Title: '① 翻訳アプリで商品を直接スキャン',
+    step1Desc: 'Papagoやgoogle翻訳のカメラをパッケージにかざすと、その場で韓国語が翻訳されます。手早く確認したいときに便利です。',
+    step2Title: '② パッケージのQRコードをスキャン',
+    step2Desc: 'おにぎり・海苔巻き・弁当のパッケージにはQRコードが印刷されています。スキャンすると栄養成分・原材料名・アレルギー情報などの詳細が見られるサイトにつながります。このサイトも韓国語のみ対応なので、翻訳アプリのカメラで画面をもう一度かざすと翻訳して見られます。',
     linkLabel: '🔗 下のリンクはサンプル画面です（実際は各商品パッケージのQRコードをスキャンしてください）→',
     exampleNote: '以下は実際の弁当商品ページ（급식대가뉴정석도시락）を例に、各項目の意味を説明したものです。',
+    tabNutrition: '栄養表示',
+    tabIngredients: '原材料名',
+    tabAllergen: 'アレルギー物質表示',
+    tabSafety: '消費者安全のための注意事項',
+    tabContact: 'お問い合わせ先',
+    tabStorage: '保管方法または取扱方法',
     nutritionTitle: '栄養表示',
     nutritionKcal: 'kcal',
     nutritionFootnote: '1日栄養成分基準値に対する比率(%)は2,000kcal基準のため、個人の必要熱量により異なる場合があります。',
@@ -209,14 +258,35 @@ function levelClass(level: NutrientRow['level']) {
   return 'text-gray-700'
 }
 
+function tabLabel(L: (typeof LABEL)[Lang], tab: InfoTab): string {
+  return {
+    nutrition: L.tabNutrition,
+    ingredients: L.tabIngredients,
+    allergen: L.tabAllergen,
+    safety: L.tabSafety,
+    contact: L.tabContact,
+    storage: L.tabStorage,
+  }[tab]
+}
+
 export default function FoodQrSection() {
   const { lang } = useLang()
   const L = LABEL[lang]
+  const [tab, setTab] = useState<InfoTab>('nutrition')
 
   return (
     <div className="space-y-3">
       <p className="text-base font-bold text-gray-900">{L.title}</p>
-      <p className="text-xs text-gray-600 leading-relaxed">{L.intro}</p>
+
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-1.5">
+        <p className="text-sm font-bold text-gray-800">{L.step1Title}</p>
+        <p className="text-xs text-gray-600 leading-relaxed">{L.step1Desc}</p>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-1.5">
+        <p className="text-sm font-bold text-gray-800">{L.step2Title}</p>
+        <p className="text-xs text-gray-600 leading-relaxed">{L.step2Desc}</p>
+      </div>
 
       <a
         href={EXAMPLE_URL}
@@ -230,74 +300,94 @@ export default function FoodQrSection() {
 
       <p className="text-xs text-gray-400 leading-relaxed">{L.exampleNote}</p>
 
-      {/* 영양표시 — foodqr.kr 실물 스타일 재현 */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="bg-gray-900 text-white px-4 py-2 flex items-center justify-between">
-          <span className="text-sm font-bold">{L.nutritionTitle}</span>
-          <span className="text-sm font-bold">735{L.nutritionKcal}</span>
-        </div>
-        <div className="divide-y divide-gray-100">
-          {NUTRIENT_ROWS.map((row, i) => (
-            <div key={i} className="px-4 py-2 flex items-center justify-between text-xs">
-              <div className="text-gray-700">
-                <span>{row.label} {row.value}</span>
-                {row.sub && <span className="block text-gray-400 pl-2">{row.sub} {row.subValue}</span>}
-              </div>
-              {row.percent && <span className={`font-bold ${levelClass(row.level)}`}>{row.percent}</span>}
+      {/* 가로 스크롤 탭 */}
+      <div className="flex gap-1.5 overflow-x-auto pb-1">
+        {INFO_TABS.map(t => (
+          <button key={t} onClick={() => setTab(t)}
+            className={`shrink-0 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors whitespace-nowrap
+              ${tab === t ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-300'}`}>
+            {tabLabel(L, t)}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'nutrition' && (
+        <>
+          {/* 영양표시 — foodqr.kr 실물 스타일 재현 */}
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-gray-900 text-white px-4 py-2 flex items-center justify-between">
+              <span className="text-sm font-bold">{L.nutritionTitle}</span>
+              <span className="text-sm font-bold">735{L.nutritionKcal}</span>
             </div>
-          ))}
+            <div className="divide-y divide-gray-100">
+              {NUTRIENT_ROWS.map((row, i) => (
+                <div key={i} className="px-4 py-2 flex items-center justify-between text-xs">
+                  <div className="text-gray-700">
+                    <span>{row.label} {row.value}</span>
+                    {row.sub && <span className="block text-gray-400 pl-2">{row.sub} {row.subValue}</span>}
+                  </div>
+                  {row.percent && <span className={`font-bold ${levelClass(row.level)}`}>{row.percent}</span>}
+                </div>
+              ))}
+            </div>
+            <p className="text-[11px] text-gray-400 px-4 py-2 leading-relaxed">{L.nutritionFootnote}</p>
+          </div>
+
+          <div className="bg-gray-50 rounded-xl px-3 py-2 space-y-1">
+            <p className="text-xs text-red-600">{L.legendCaution}</p>
+            <p className="text-xs text-emerald-600">{L.legendGood}</p>
+            <p className="text-xs text-gray-500">{L.legendNeutral}</p>
+          </div>
+
+          <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 leading-relaxed">{L.cautionTip}</p>
+        </>
+      )}
+
+      {tab === 'ingredients' && (
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
+          <p className="text-sm font-bold text-gray-800">{L.ingredientsTitle}</p>
+          <p className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{L.ingredientsExample}</p>
+          <p className="text-xs text-gray-500 leading-relaxed">{L.ingredientsDesc}</p>
         </div>
-        <p className="text-[11px] text-gray-400 px-4 py-2 leading-relaxed">{L.nutritionFootnote}</p>
-      </div>
+      )}
 
-      <div className="bg-gray-50 rounded-xl px-3 py-2 space-y-1">
-        <p className="text-xs text-red-600">{L.legendCaution}</p>
-        <p className="text-xs text-emerald-600">{L.legendGood}</p>
-        <p className="text-xs text-gray-500">{L.legendNeutral}</p>
-      </div>
-
-      <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 leading-relaxed">{L.cautionTip}</p>
-
-      {/* 원재료명 */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
-        <p className="text-sm font-bold text-gray-800">{L.ingredientsTitle}</p>
-        <p className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{L.ingredientsExample}</p>
-        <p className="text-xs text-gray-500 leading-relaxed">{L.ingredientsDesc}</p>
-      </div>
-
-      {/* 알레르기 유발물질 표기 */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
-        <p className="text-sm font-bold text-gray-800">{L.allergenTitle}</p>
-        <p className="text-xs text-amber-800 leading-relaxed bg-amber-50 rounded-lg px-3 py-2">{L.allergenExample}</p>
-        <p className="text-xs text-gray-500 leading-relaxed">{L.allergenDesc}</p>
-      </div>
-
-      {/* 소비자 안전을 위한 주의사항 */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
-        <p className="text-sm font-bold text-gray-800">{L.safetyTitle}</p>
-        <ul className="space-y-1">
-          {L.safetyExample.map((line, i) => (
-            <li key={i} className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{line}</li>
-          ))}
-        </ul>
-        <p className="text-xs text-gray-500 leading-relaxed">{L.safetyDesc}</p>
-      </div>
-
-      {/* 문의처 */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
-        <p className="text-sm font-bold text-gray-800">{L.contactTitle}</p>
-        <div className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2 space-y-0.5">
-          {L.contactExample.map((line, i) => <p key={i}>{line}</p>)}
+      {tab === 'allergen' && (
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
+          <p className="text-sm font-bold text-gray-800">{L.allergenTitle}</p>
+          <p className="text-xs text-amber-800 leading-relaxed bg-amber-50 rounded-lg px-3 py-2">{L.allergenExample}</p>
+          <p className="text-xs text-gray-500 leading-relaxed">{L.allergenDesc}</p>
         </div>
-        <p className="text-xs text-gray-500 leading-relaxed">{L.contactDesc}</p>
-      </div>
+      )}
 
-      {/* 보관방법 또는 취급방법 */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
-        <p className="text-sm font-bold text-gray-800">{L.storageTitle}</p>
-        <p className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{L.storageExample}</p>
-        <p className="text-xs text-gray-500 leading-relaxed">{L.storageDesc}</p>
-      </div>
+      {tab === 'safety' && (
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
+          <p className="text-sm font-bold text-gray-800">{L.safetyTitle}</p>
+          <ul className="space-y-1">
+            {L.safetyExample.map((line, i) => (
+              <li key={i} className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{line}</li>
+            ))}
+          </ul>
+          <p className="text-xs text-gray-500 leading-relaxed">{L.safetyDesc}</p>
+        </div>
+      )}
+
+      {tab === 'contact' && (
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
+          <p className="text-sm font-bold text-gray-800">{L.contactTitle}</p>
+          <div className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2 space-y-0.5">
+            {L.contactExample.map((line, i) => <p key={i}>{line}</p>)}
+          </div>
+          <p className="text-xs text-gray-500 leading-relaxed">{L.contactDesc}</p>
+        </div>
+      )}
+
+      {tab === 'storage' && (
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
+          <p className="text-sm font-bold text-gray-800">{L.storageTitle}</p>
+          <p className="text-xs text-gray-600 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">{L.storageExample}</p>
+          <p className="text-xs text-gray-500 leading-relaxed">{L.storageDesc}</p>
+        </div>
+      )}
     </div>
   )
 }

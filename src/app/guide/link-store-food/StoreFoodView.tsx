@@ -119,13 +119,11 @@ export default function StoreFoodView() {
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <p className="text-sm text-gray-600 leading-relaxed">{L.intro}</p>
 
+        {/* 삼각김밥·김밥·도시락 공통 — QR코드로 상세 정보 확인하기 (셋 다 해당되어 맨 위 배치) */}
+        <FoodQrSection />
+
         <div className="space-y-3">
           {MEAL_CARDS.map(renderCard)}
-        </div>
-
-        {/* 삼각김밥·김밥·도시락 공통 — QR코드로 상세 정보 확인하기 */}
-        <div className="pt-2">
-          <FoodQrSection />
         </div>
 
         <div className="space-y-3">
