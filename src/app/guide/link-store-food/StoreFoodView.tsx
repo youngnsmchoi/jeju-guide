@@ -37,8 +37,8 @@ const MEAL_CARDS: Card[] = [
     cardClass: 'bg-emerald-50 border-emerald-100',
   },
   {
-    emoji: '🍙',
-    title: { ko: '김밥', en: 'Gimbap Roll', zh: '紫菜卷', ja: '海苔巻き' },
+    emoji: '🍣',
+    title: { ko: '줄김밥', en: 'Gimbap Roll', zh: '紫菜卷', ja: '海苔巻き' },
     desc: {
       ko: '삼각김밥보다 든든한 한 끼 · 종류별 구성',
       en: 'A heartier meal than triangle gimbap · what\'s inside',
