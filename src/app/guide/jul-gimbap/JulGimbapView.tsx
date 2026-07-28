@@ -17,6 +17,8 @@ const LABEL: Record<Lang, {
   intro: string
   howToOpenTitle: string
   howToOpenSteps: string[]
+  priceCheckTitle: string
+  priceCheckDesc: string
   ingredientsLink: string
 }> = {
   ko: {
@@ -26,6 +28,8 @@ const LABEL: Record<Lang, {
       '포장지 상단이나 하단의 절취선을 찾아 가볍게 잡아당겨 벗기세요.',
       '전자레인지에 데울 땐 겉 포장지를 살짝 뜯은 상태로 30~40초만 데우세요. 밥이 촉촉해지고 속 재료의 풍미가 살아납니다.',
     ],
+    priceCheckTitle: '💰 가격 확인',
+    priceCheckDesc: '포장 앞면 하단 또는 매대에 붙은 가격표에 표시되어 있습니다. 대략 ₩2,500~₩4,000 사이입니다.',
     ingredientsLink: '⚠️ 알레르기·할랄·채식 여부가 걱정되면 먼저 확인하세요 →',
   },
   en: {
@@ -35,6 +39,8 @@ const LABEL: Record<Lang, {
       'Find the perforated line at the top or bottom of the wrapper and gently pull it open.',
       'To microwave, leave the outer wrapper slightly open and heat for just 30-40 seconds. This keeps the rice moist and brings out the filling\'s flavor.',
     ],
+    priceCheckTitle: '💰 Checking the price',
+    priceCheckDesc: 'Printed on the bottom front of the package or on the shelf price tag. Roughly ₩2,500-₩4,000.',
     ingredientsLink: '⚠️ Worried about allergens, halal, or vegetarian status? Check first →',
   },
   zh: {
@@ -44,6 +50,8 @@ const LABEL: Record<Lang, {
       '找到包装上下方的切割线，轻轻拉开。',
       '用微波炉加热时，外包装稍微撕开一点，只加热30~40秒即可，米饭会更湿润，馅料风味也会更好。',
     ],
+    priceCheckTitle: '💰 价格确认',
+    priceCheckDesc: '标注在包装正面下方或货架价格标签上。大约在₩2,500~₩4,000之间。',
     ingredientsLink: '⚠️ 担心过敏原、清真或素食问题？请先确认 →',
   },
   ja: {
@@ -53,6 +61,8 @@ const LABEL: Record<Lang, {
       '包装の上下にあるミシン目を見つけて、軽く引っ張って開けてください。',
       '電子レンジで温める場合は、外側の包装を少し開けた状態で30〜40秒だけ温めてください。ご飯がしっとりし、具材の風味も引き立ちます。',
     ],
+    priceCheckTitle: '💰 価格確認',
+    priceCheckDesc: 'パッケージ正面下部または棚の価格表に表示されています。だいたい₩2,500〜₩4,000程度です。',
     ingredientsLink: '⚠️ アレルギー・ハラール・ベジタリアンが気になる方はまず確認 →',
   },
 }
@@ -91,6 +101,12 @@ export default function JulGimbapView() {
 
         {/* 맛 카테고리 3단계 (부드러운 맛 / 익숙한 고기맛 / 매운맛) */}
         <FlavorCategoryList categories={FLAVOR_CATEGORIES} />
+
+        {/* 가격 확인 */}
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-1">
+          <p className="text-sm font-bold text-gray-800">{L.priceCheckTitle}</p>
+          <p className="text-xs text-gray-500 leading-relaxed">{L.priceCheckDesc}</p>
+        </div>
 
         {/* 성분 확인 링크 */}
         <a
