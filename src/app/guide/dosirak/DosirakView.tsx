@@ -26,6 +26,8 @@ const LABEL: Record<Lang, {
   intro: string
   howToHeatTitle: string
   howToHeatSteps: string[]
+  priceCheckTitle: string
+  priceCheckDesc: string
   ingredientsLink: string
 }> = {
   ko: {
@@ -36,6 +38,8 @@ const LABEL: Record<Lang, {
       '별도 소스 봉지가 있다면 반드시 먼저 꺼내세요 (전자레인지에 넣으면 안 됩니다).',
       '전자레인지에 표시된 시간(보통 1~2분) 동안 데운 뒤, 소스를 다시 뿌려 드세요.',
     ],
+    priceCheckTitle: '💰 가격 확인',
+    priceCheckDesc: '포장 앞면 하단 또는 매대에 붙은 가격표에 표시되어 있습니다. 대략 ₩4,000~₩7,000 사이입니다.',
     ingredientsLink: '⚠️ 알레르기·할랄·채식 여부가 걱정되면 먼저 확인하세요 →',
   },
   en: {
@@ -46,6 +50,8 @@ const LABEL: Record<Lang, {
       'If there\'s a separate sauce packet, take it out first (never microwave it).',
       'Heat for the time printed on the label (usually 1-2 min), then pour the sauce back on.',
     ],
+    priceCheckTitle: '💰 Checking the price',
+    priceCheckDesc: 'Printed on the bottom front of the package or on the shelf price tag. Roughly ₩4,000-₩7,000.',
     ingredientsLink: '⚠️ Worried about allergens, halal, or vegetarian status? Check first →',
   },
   zh: {
@@ -56,6 +62,8 @@ const LABEL: Record<Lang, {
       '如果有单独的酱料包，请务必先取出（不可放入微波炉加热）。',
       '按标签上标注的时间（通常1~2分钟）加热后，再淋上酱料食用。',
     ],
+    priceCheckTitle: '💰 价格确认',
+    priceCheckDesc: '标注在包装正面下方或货架价格标签上。大约在₩4,000~₩7,000之间。',
     ingredientsLink: '⚠️ 担心过敏原、清真或素食问题？请先确认 →',
   },
   ja: {
@@ -66,6 +74,8 @@ const LABEL: Record<Lang, {
       '別添えのソース袋がある場合は必ず先に取り出してください（電子レンジに入れないでください）。',
       '表示された時間（通常1〜2分）温めた後、ソースをかけてお召し上がりください。',
     ],
+    priceCheckTitle: '💰 価格確認',
+    priceCheckDesc: 'パッケージ正面下部または棚の価格表に表示されています。だいたい₩4,000〜₩7,000程度です。',
     ingredientsLink: '⚠️ アレルギー・ハラール・ベジタリアンが気になる方はまず確認 →',
   },
 }
@@ -83,6 +93,12 @@ export default function DosirakView() {
 
         {/* 맛 카테고리 3단계 (부드러운 맛 / 익숙한 고기맛 / 매운맛) */}
         <FlavorCategoryList categories={FLAVOR_CATEGORIES} />
+
+        {/* 가격 확인 */}
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-1">
+          <p className="text-sm font-bold text-gray-800">{L.priceCheckTitle}</p>
+          <p className="text-xs text-gray-500 leading-relaxed">{L.priceCheckDesc}</p>
+        </div>
 
         {/* 성분 확인 링크 */}
         <a
