@@ -8,6 +8,7 @@ import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 import FlavorCategoryList, { buildFlavorCategories } from '@/components/FlavorCategoryList'
+import WordGlossary, { type GlossaryWord } from '@/components/WordGlossary'
 
 const LABEL: Record<Lang, {
   intro: string
@@ -20,8 +21,6 @@ const LABEL: Record<Lang, {
   priceCheckTitle: string
   priceCheckDesc: string
   ingredientsLink: string
-  wordsTitle: string
-  wordsNote: string
 }> = {
   ko: {
     intro: '겉보기엔 다 비슷해 보이지만, 포장 뜯는 법을 모르면 밥이 흩어지고 김이 눅눅해집니다.',
@@ -38,8 +37,6 @@ const LABEL: Record<Lang, {
     priceCheckTitle: '💰 가격 확인',
     priceCheckDesc: '포장 앞면 하단 또는 매대에 붙은 가격표에 표시되어 있습니다. 대부분 ₩1,500~₩2,000 사이입니다.',
     ingredientsLink: '⚠️ 알레르기·할랄·채식 여부가 걱정되면 먼저 확인하세요 →',
-    wordsTitle: '📖 포장에서 자주 보이는 한글 단어',
-    wordsNote: '맛 이름 앞에 붙는 이 단어들만 알아도 대략적인 맛을 짐작할 수 있습니다.',
   },
   en: {
     intro: 'They all look similar, but if you don\'t know how to unwrap it, the rice falls apart and the seaweed gets soggy.',
@@ -56,8 +53,6 @@ const LABEL: Record<Lang, {
     priceCheckTitle: '💰 Checking the price',
     priceCheckDesc: 'Printed on the bottom front of the package or on the shelf price tag. Most cost between ₩1,500-₩2,000.',
     ingredientsLink: '⚠️ Worried about allergens, halal, or vegetarian status? Check first →',
-    wordsTitle: '📖 Common Korean words on the package',
-    wordsNote: 'Knowing these words in front of the flavor name gives you a rough idea of the taste.',
   },
   zh: {
     intro: '外观看起来都差不多，但如果不知道怎么拆包装，米饭会散开，海苔也会变软。',
@@ -74,8 +69,6 @@ const LABEL: Record<Lang, {
     priceCheckTitle: '💰 确认价格',
     priceCheckDesc: '标注在包装正面下方或货架价签上，大多在₩1,500~₩2,000之间。',
     ingredientsLink: '⚠️ 担心过敏原、清真或素食问题？请先确认 →',
-    wordsTitle: '📖 包装上常见的韩文单词',
-    wordsNote: '了解这些出现在口味名称前的单词，就能大致推测出味道。',
   },
   ja: {
     intro: '見た目はどれも似ていますが、開け方を知らないとご飯が崩れたり海苔が湿ったりします。',
@@ -92,8 +85,6 @@ const LABEL: Record<Lang, {
     priceCheckTitle: '💰 価格の確認',
     priceCheckDesc: 'パッケージ正面下部、または棚の価格タグに表示されています。ほとんどが₩1,500〜₩2,000の間です。',
     ingredientsLink: '⚠️ アレルギー・ハラール・ベジタリアンが気になる方はまず確認 →',
-    wordsTitle: '📖 パッケージでよく見る韓国語単語',
-    wordsNote: '味の名前の前につくこれらの単語を知っておくと、おおよその味が想像できます。',
   },
 }
 
@@ -103,7 +94,7 @@ const FLAVOR_CATEGORIES = buildFlavorCategories({
   spicy: { ko: '제육, 전주비빔, 김치참치 등', en: 'Spicy pork, Jeonju bibim, kimchi tuna, etc.', zh: '辣炒猪肉、全州拌饭、泡菜金枪鱼等', ja: 'チェユク、全州ビビン、キムチツナなど' },
 })
 
-const WORDS: { word: string; meaning: Record<Lang, string> }[] = [
+const WORDS: GlossaryWord[] = [
   { word: '참치', meaning: { ko: '참치 (생선)', en: 'Tuna (fish)', zh: '金枪鱼', ja: 'ツナ（魚）' } },
   { word: '매운/매콤', meaning: { ko: '매운맛', en: 'Spicy', zh: '辣味', ja: '辛い' } },
   { word: '불고기', meaning: { ko: '간장 양념 고기', en: 'Soy-marinated meat', zh: '酱油腌制的肉', ja: '醤油ダレの肉' } },
@@ -165,19 +156,7 @@ export default function GimbapView() {
           <p className="text-sm font-bold text-amber-800">{L.ingredientsLink}</p>
         </a>
 
-        {/* 자주 보이는 한글 단어 */}
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 space-y-2">
-          <p className="text-sm font-bold text-gray-800">{L.wordsTitle}</p>
-          <p className="text-xs text-gray-400 leading-relaxed">{L.wordsNote}</p>
-          <div className="flex flex-wrap gap-2 pt-1">
-            {WORDS.map((w, i) => (
-              <span key={i} className="text-xs bg-gray-50 border border-gray-100 rounded-full px-3 py-1.5">
-                <span className="font-bold text-gray-800">{w.word}</span>
-                <span className="text-gray-400"> · {w.meaning[lang]}</span>
-              </span>
-            ))}
-          </div>
-        </div>
+        <WordGlossary words={WORDS} />
       </main>
     </div>
   )

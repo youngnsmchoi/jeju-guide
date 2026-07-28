@@ -6,12 +6,22 @@ import type { DosirakItem, Lang } from '@/lib/types'
 import { getDosirakField } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 import FlavorCategoryList, { buildFlavorCategories } from '@/components/FlavorCategoryList'
+import WordGlossary, { type GlossaryWord } from '@/components/WordGlossary'
 
 const FLAVOR_CATEGORIES = buildFlavorCategories({
   mild: { ko: '치킨마요 도시락', en: 'Chicken Mayo Bento', zh: '鸡肉蛋黄酱便当', ja: 'チキンマヨ弁当' },
   meat: { ko: '돈까스 도시락 등', en: 'Pork cutlet (donkatsu) bento, etc.', zh: '炸猪排便当等', ja: 'とんかつ弁当など' },
   spicy: { ko: '제육볶음 도시락, 비빔밥 도시락 등', en: 'Spicy stir-fried pork bento, bibimbap bento, etc.', zh: '辣炒猪肉便当、拌饭便当等', ja: 'チェユクポックム弁当、ビビンバ弁当など' },
 })
+
+const WORDS: GlossaryWord[] = [
+  { word: '마요', meaning: { ko: '마요네즈 소스', en: 'Mayonnaise sauce', zh: '蛋黄酱', ja: 'マヨネーズソース' } },
+  { word: '제육', meaning: { ko: '고추장 양념 돼지고기 볶음', en: 'Gochujang-marinated stir-fried pork', zh: '辣椒酱炒猪肉', ja: 'コチュジャン炒め豚肉' } },
+  { word: '까스', meaning: { ko: '튀김옷 입혀 튀긴 고기 (돈까스 등)', en: 'Breaded and fried meat (e.g. pork cutlet)', zh: '裹粉油炸的肉（如炸猪排）', ja: '衣をつけて揚げた肉（とんかつなど）' } },
+  { word: '구이', meaning: { ko: '구운 생선·고기', en: 'Grilled fish or meat', zh: '烤鱼/烤肉', ja: '焼いた魚・肉' } },
+  { word: '비빔밥', meaning: { ko: '나물과 고추장을 비벼 먹는 밥', en: 'Rice mixed with vegetables and gochujang', zh: '拌菜和辣椒酱拌饭', ja: 'ナムルとコチュジャンを混ぜて食べるご飯' } },
+  { word: '매운/매콤', meaning: { ko: '매운맛', en: 'Spicy', zh: '辣味', ja: '辛い' } },
+]
 
 const LABEL: Record<Lang, {
   intro: string
@@ -148,6 +158,8 @@ export default function DosirakView({ items }: { items: DosirakItem[] }) {
             </div>
           </div>
         ))}
+
+        <WordGlossary words={WORDS} />
       </main>
     </div>
   )
