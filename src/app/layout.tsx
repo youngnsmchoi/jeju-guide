@@ -7,14 +7,18 @@ import { LangProvider } from '@/context/LangContext'
 const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.koreacvsguide.com'),
   title: 'Korea Convenience Store Guide',
   description: "Real answers for when you're stuck at a Korean convenience store. Payment, ramen cooking, T-money and more.",
+  alternates: {
+    canonical: 'https://www.koreacvsguide.com',
+  },
   openGraph: {
     title: 'Korea Convenience Store Guide',
     description: "Real answers for when you're stuck at a Korean convenience store.",
-    url: 'https://jeju-guide-two.vercel.app',
+    url: 'https://www.koreacvsguide.com',
     siteName: 'Korea Convenience Store Guide',
-    images: [{ url: 'https://jeju-guide-two.vercel.app/og-image.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://www.koreacvsguide.com/og-image.png', width: 1200, height: 630 }],
     locale: 'en_US',
     type: 'website',
   },
@@ -22,7 +26,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Korea Convenience Store Guide',
     description: "Real answers for when you're stuck at a Korean convenience store.",
-    images: ['https://jeju-guide-two.vercel.app/og-image.png'],
+    images: ['https://www.koreacvsguide.com/og-image.png'],
   },
 }
 
