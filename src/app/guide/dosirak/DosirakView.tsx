@@ -2,8 +2,7 @@
 // 편의점 도시락 가이드 — 데우는 법 안내 + 종류별 구성/정보 카드
 
 import { useLang } from '@/context/LangContext'
-import type { DosirakItem, Lang } from '@/lib/types'
-import { getDosirakField } from '@/lib/types'
+import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 import FlavorCategoryList, { buildFlavorCategories } from '@/components/FlavorCategoryList'
 import WordGlossary, { type GlossaryWord } from '@/components/WordGlossary'
@@ -28,10 +27,6 @@ const LABEL: Record<Lang, {
   howToHeatTitle: string
   howToHeatSteps: string[]
   ingredientsLink: string
-  typesTitle: string
-  typesNote: string
-  compositionLabel: string
-  priceUnknown: string
 }> = {
   ko: {
     intro: '도시락은 종류마다 구성이 달라서, 뭐가 들었는지 미리 알고 고르면 훨씬 만족스럽습니다.',
@@ -42,10 +37,6 @@ const LABEL: Record<Lang, {
       '전자레인지에 표시된 시간(보통 1~2분) 동안 데운 뒤, 소스를 다시 뿌려 드세요.',
     ],
     ingredientsLink: '⚠️ 알레르기·할랄·채식 여부가 걱정되면 먼저 확인하세요 →',
-    typesTitle: '🍱 도시락 종류',
-    typesNote: '아래는 편의점에서 흔히 볼 수 있는 대표 유형입니다. 매장·시기에 따라 실제 상품명과 구성은 다를 수 있어요.',
-    compositionLabel: '구성',
-    priceUnknown: '가격 확인 중',
   },
   en: {
     intro: 'Each bento has different contents, so knowing what\'s inside beforehand makes for a better choice.',
@@ -56,10 +47,6 @@ const LABEL: Record<Lang, {
       'Heat for the time printed on the label (usually 1-2 min), then pour the sauce back on.',
     ],
     ingredientsLink: '⚠️ Worried about allergens, halal, or vegetarian status? Check first →',
-    typesTitle: '🍱 Bento Types',
-    typesNote: 'These are common types found at convenience stores. Actual product names and contents may vary by store and season.',
-    compositionLabel: 'What\'s inside',
-    priceUnknown: 'Price TBD',
   },
   zh: {
     intro: '每种便当的构成都不同，提前了解里面有什么，选起来会更满意。',
@@ -70,10 +57,6 @@ const LABEL: Record<Lang, {
       '按标签上标注的时间（通常1~2分钟）加热后，再淋上酱料食用。',
     ],
     ingredientsLink: '⚠️ 担心过敏原、清真或素食问题？请先确认 →',
-    typesTitle: '🍱 便当种类',
-    typesNote: '以下是便利店常见的代表类型，实际商品名称和构成可能因门店、季节而异。',
-    compositionLabel: '内含',
-    priceUnknown: '价格待确认',
   },
   ja: {
     intro: '弁当は種類ごとに中身が違うので、事前に知っておくとより満足のいく選択ができます。',
@@ -84,14 +67,10 @@ const LABEL: Record<Lang, {
       '表示された時間（通常1〜2分）温めた後、ソースをかけてお召し上がりください。',
     ],
     ingredientsLink: '⚠️ アレルギー・ハラール・ベジタリアンが気になる方はまず確認 →',
-    typesTitle: '🍱 弁当の種類',
-    typesNote: '以下はコンビニでよく見かける代表的なタイプです。実際の商品名や内容は店舗・時期により異なる場合があります。',
-    compositionLabel: '内容',
-    priceUnknown: '価格確認中',
   },
 }
 
-export default function DosirakView({ items }: { items: DosirakItem[] }) {
+export default function DosirakView() {
   const { lang } = useLang()
   const L = LABEL[lang]
 
@@ -125,39 +104,6 @@ export default function DosirakView({ items }: { items: DosirakItem[] }) {
             ))}
           </ol>
         </div>
-
-        {/* 도시락 종류 목록 */}
-        <div className="pt-2">
-          <p className="text-base font-bold text-gray-900">{L.typesTitle}</p>
-          <p className="text-xs text-gray-400 mt-1 leading-relaxed">{L.typesNote}</p>
-        </div>
-        {items.map(item => (
-          <div key={item.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            {item.image_url && (
-              <img src={item.image_url} alt="" className="w-full h-40 object-cover" />
-            )}
-            <div className="p-4 space-y-2">
-              <div className="flex items-center justify-between">
-                <h2 className="text-base font-bold text-gray-900">{getDosirakField(item, 'name', lang)}</h2>
-                <span className="text-sm font-semibold text-gray-800">
-                  {item.price_krw ? `₩${item.price_krw.toLocaleString()}` : L.priceUnknown}
-                </span>
-              </div>
-              <p className="text-sm text-gray-600 leading-relaxed">{getDosirakField(item, 'flavor_desc', lang)}</p>
-              {getDosirakField(item, 'composition', lang) && (
-                <p className="text-xs text-gray-500 leading-relaxed bg-gray-50 rounded-lg px-2.5 py-1.5">
-                  <span className="font-semibold">{L.compositionLabel}: </span>
-                  {getDosirakField(item, 'composition', lang)}
-                </p>
-              )}
-              {getDosirakField(item, 'allergen_note', lang) && (
-                <p className="text-xs text-gray-400 leading-relaxed border-t border-gray-50 pt-2">
-                  {getDosirakField(item, 'allergen_note', lang)}
-                </p>
-              )}
-            </div>
-          </div>
-        ))}
 
         <WordGlossary words={WORDS} />
       </main>
