@@ -6,6 +6,10 @@ const BASE_URL = 'https://www.koreacvsguide.com'
 
 const STATIC_ROUTES = [
   '',
+  '/ko',
+  '/en',
+  '/zh',
+  '/ja',
   '/guide/dosirak',
   '/guide/gimbap',
   '/guide/hotbar',
@@ -28,10 +32,11 @@ const STATIC_ROUTES = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { data: items } = await supabase.from('jeju_items').select('slug')
 
+  const LANG_ROUTES = ['/ko', '/en', '/zh', '/ja']
   const staticEntries = STATIC_ROUTES.map((route) => ({
     url: `${BASE_URL}${route}`,
     changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1 : 0.8,
+    priority: route === '' ? 1 : LANG_ROUTES.includes(route) ? 0.9 : 0.8,
   }))
 
   const dynamicEntries = (items ?? []).map(({ slug }) => ({
