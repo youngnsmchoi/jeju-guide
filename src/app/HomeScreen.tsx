@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import LangSelector from '@/components/LangSelector'
+import SearchBox from '@/components/SearchBox'
 
 const FAVORITES_KEY = 'home_favorites'
 const DEFAULT_FAVORITES = [
@@ -365,6 +366,8 @@ export default function HomeScreen() {
 
       {/* 그룹별 섹션 카드 */}
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
+        <SearchBox lang={lang} />
+
         {myMenuSections.length > 0 && (
           <div className="bg-emerald-50 rounded-2xl border border-emerald-200 shadow-sm p-4">
             <p className="text-xs font-bold mb-3 text-emerald-700">{MY_MENU_LABEL[lang]}</p>
