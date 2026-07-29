@@ -97,6 +97,11 @@ const DB_TABLES: { table: string; href: string; group: Record<Lang, string> }[] 
   { table: 'snack_items', href: '/guide/snacks', group: { ko: '편의점 먹거리', en: 'CVS Food', zh: '便利店美食', ja: 'コンビニグルメ' } },
 ]
 
+// 검색 결과를 클릭했을 때 이동한 페이지가 검색 시점과 같은 언어로 열리도록 lang 파라미터를 붙인다
+function withLang(href: string, lang: Lang): string {
+  return href.includes('?') ? `${href}&lang=${lang}` : `${href}?lang=${lang}`
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const q = (searchParams.get('q') ?? '').trim().toLowerCase()
@@ -108,7 +113,7 @@ export async function GET(req: Request) {
 
   for (const page of STATIC_PAGES[lang] ?? STATIC_PAGES.en) {
     if (page.name.toLowerCase().includes(q) || page.desc.toLowerCase().includes(q)) {
-      results.push({ name: page.name, href: page.href, group: page.group })
+      results.push({ name: page.name, href: withLang(page.href, lang), group: page.group })
     }
   }
 
@@ -121,7 +126,7 @@ export async function GET(req: Request) {
         if (name && name.toLowerCase().includes(q)) {
           // ramen_items는 목록 페이지가 ?q= 파라미터로 자동 필터링을 지원 (필터링 언어와 동일한 이름 사용)
           const itemHref = table === 'ramen_items' ? `${href}?q=${encodeURIComponent(name)}` : href
-          results.push({ name, href: itemHref, group: group[lang] ?? group.en })
+          results.push({ name, href: withLang(itemHref, lang), group: group[lang] ?? group.en })
         }
       }
     })

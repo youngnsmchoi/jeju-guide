@@ -317,6 +317,9 @@ export default function HomeScreen() {
   const router = useRouter()
   const [favorites, setFavorites] = useState<string[] | null>(null)
 
+  // 가이드 페이지로 이동할 때 현재 언어를 전달해서, 이동한 페이지도 같은 언어로 열리게 한다
+  const navigate = (href: string) => router.push(href.includes('?') ? `${href}&lang=${lang}` : `${href}?lang=${lang}`)
+
   useEffect(() => {
     try {
       const raw = localStorage.getItem(FAVORITES_KEY)
@@ -379,7 +382,7 @@ export default function HomeScreen() {
                   lang={lang}
                   isFavorite
                   variant="list"
-                  onNavigate={() => router.push(section.href!)}
+                  onNavigate={() => navigate(section.href!)}
                   onToggleFavorite={() => toggleFavorite(section.href!)}
                   comingSoonLabel={COMING_SOON[lang]}
                 />
@@ -395,10 +398,10 @@ export default function HomeScreen() {
               {startHereSections.map((section, i) => (
                 <div
                   key={section.href}
-                  onClick={() => router.push(section.href!)}
+                  onClick={() => navigate(section.href!)}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={e => { if (e.key === 'Enter') router.push(section.href!) }}
+                  onKeyDown={e => { if (e.key === 'Enter') navigate(section.href!) }}
                   className="rounded-xl border border-slate-200 bg-white active:opacity-70 px-3 py-2.5 flex items-center gap-2 text-left transition-all cursor-pointer">
                   <span className="shrink-0 w-5 h-5 rounded-full bg-slate-500 text-white text-xs font-bold flex items-center justify-center">{i + 1}</span>
                   <p className="flex-1 text-xs text-gray-900 leading-snug min-w-0 truncate">
@@ -412,10 +415,10 @@ export default function HomeScreen() {
         )}
 
         <div
-          onClick={() => router.push('/feedback')}
+          onClick={() => navigate('/feedback')}
           role="button"
           tabIndex={0}
-          onKeyDown={e => { if (e.key === 'Enter') router.push('/feedback') }}
+          onKeyDown={e => { if (e.key === 'Enter') navigate('/feedback') }}
           className="rounded-2xl border border-amber-300 bg-amber-50 active:opacity-70 px-4 py-3 flex items-center justify-between gap-2 text-left transition-all cursor-pointer">
           <p className="text-sm font-bold text-amber-800">{ASK_BANNER_LABEL[lang].text}</p>
           <span className="shrink-0 text-amber-700 text-lg">{ASK_BANNER_LABEL[lang].arrow}</span>
@@ -436,7 +439,7 @@ export default function HomeScreen() {
                     section={section}
                     lang={lang}
                     isFavorite={false}
-                    onNavigate={() => section.href && router.push(section.href)}
+                    onNavigate={() => section.href && navigate(section.href)}
                     onToggleFavorite={() => section.href && toggleFavorite(section.href)}
                     comingSoonLabel={COMING_SOON[lang]}
                     cardClass={group.cardClass}
