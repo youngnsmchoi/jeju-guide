@@ -39,11 +39,27 @@ const ASK_BANNER_LABEL: Record<Lang, { text: string; arrow: string }> = {
   ja: { text: '情報がない、または実際と違った？教えてください', arrow: '→' },
 }
 
-const HERO: Record<Lang, { title: string; sub: string }> = {
-  ko: { title: 'Korea Convenience Store Guide', sub: '한국 편의점 이용, 막힐 때 바로 찾아보는 실전 가이드' },
-  en: { title: 'Korea Convenience Store Guide', sub: "Real answers for when you're stuck at a Korean convenience store" },
-  zh: { title: 'Korea Convenience Store Guide', sub: '在韩国便利店遇到问题时，随时查看的实用指南' },
-  ja: { title: 'Korea Convenience Store Guide', sub: '韓国のコンビニで困ったとき、すぐに使える実践ガイド' },
+const HERO: Record<Lang, { title: string; sub: string; summary: string }> = {
+  ko: {
+    title: 'Korea Convenience Store Guide',
+    sub: '한국 편의점 이용, 막힐 때 바로 찾아보는 실전 가이드',
+    summary: '결제 방법 · 한국 화폐 · 라면 조리법 · 교통카드(T-money) · 삼각김밥·김밥·도시락 · 할인 정보까지, 외국인을 위한 한국 편의점 이용법을 안내합니다.',
+  },
+  en: {
+    title: 'Korea Convenience Store Guide',
+    sub: "Real answers for when you're stuck at a Korean convenience store",
+    summary: 'Payment methods, Korean currency, ramen cooking, T-money transit cards, triangle kimbap & bento, and discount tips — everything foreign travelers need at a Korean convenience store.',
+  },
+  zh: {
+    title: 'Korea Convenience Store Guide',
+    sub: '在韩国便利店遇到问题时，随时查看的实用指南',
+    summary: '支付方式、韩元货币、拉面煮法、T-money交通卡、饭团紫菜卷便当、优惠信息，为外国游客介绍韩国便利店使用方法。',
+  },
+  ja: {
+    title: 'Korea Convenience Store Guide',
+    sub: '韓国のコンビニで困ったとき、すぐに使える実践ガイド',
+    summary: '支払い方法、韓国のお金、ラーメンの作り方、T-money交通カード、おにぎり・海苔巻き・弁当、割引情報まで、外国人観光客のための韓国コンビニ利用ガイドです。',
+  },
 }
 
 const COMING_SOON: Record<Lang, string> = {
@@ -332,6 +348,7 @@ export default function HomeScreen() {
       <div className="bg-emerald-700 text-white text-center py-6 px-4 space-y-2">
         <h2 className="text-lg font-bold leading-snug">{HERO[lang].title}</h2>
         <p className="text-xs text-emerald-200">{HERO[lang].sub}</p>
+        <p className="text-xs text-emerald-100 leading-relaxed max-w-md mx-auto">{HERO[lang].summary}</p>
       </div>
 
       {/* 그룹별 섹션 카드 */}
