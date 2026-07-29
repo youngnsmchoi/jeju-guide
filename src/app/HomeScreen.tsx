@@ -347,7 +347,11 @@ export default function HomeScreen() {
       {/* 헤더 */}
       <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <h1 className="text-sm font-bold text-gray-800">{HERO[lang].title}</h1>
+          <button
+            onClick={() => router.push('/')}
+            className="text-sm font-bold text-gray-800 hover:text-emerald-700 transition-colors">
+            {HERO[lang].title}
+          </button>
           <LangSelector />
         </div>
       </header>
