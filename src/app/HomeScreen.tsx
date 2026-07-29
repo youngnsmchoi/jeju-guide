@@ -69,6 +69,14 @@ const COMING_SOON: Record<Lang, string> = {
   ja: '準備中',
 }
 
+const CONTACT_EMAIL = 'yehyang1004@gmail.com'
+const CONTACT_LABEL: Record<Lang, string> = {
+  ko: '문의',
+  en: 'Contact',
+  zh: '联系我们',
+  ja: 'お問い合わせ',
+}
+
 
 type Section = {
   emoji: string
@@ -431,6 +439,12 @@ export default function HomeScreen() {
             </div>
           )
         })}
+
+        <p className="text-center text-xs text-gray-300 pt-2">
+          <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-gray-400 transition-colors">
+            {CONTACT_LABEL[lang]}: {CONTACT_EMAIL}
+          </a>
+        </p>
       </main>
     </div>
   )
