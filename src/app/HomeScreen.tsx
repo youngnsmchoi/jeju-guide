@@ -31,6 +31,13 @@ const START_HERE_LABEL: Record<Lang, string> = {
   ja: '初めての方はこの順番で',
 }
 
+const PHRASES_CARD_LABEL: Record<Lang, { title: string; desc: string }> = {
+  ko: { title: '🗣️ 이 말이 필요할 때', desc: '말하지 않아도 됩니다. 화면을 점원에게 보여주세요.' },
+  en: { title: '🗣️ Show This to Staff', desc: "No need to speak — just show the screen." },
+  zh: { title: '🗣️ 这句话需要时', desc: '不用开口说话，把屏幕给店员看就可以了。' },
+  ja: { title: '🗣️ この言葉が必要なとき', desc: '話さなくても大丈夫。画面を見せるだけでOKです。' },
+}
+
 const START_HERE_HREFS = ['/guide/link-payment', '/guide/link-money', '/guide/link-cvs-tips']
 
 const ASK_BANNER_LABEL: Record<Lang, { text: string; arrow: string }> = {
@@ -370,6 +377,16 @@ export default function HomeScreen() {
       {/* 그룹별 섹션 카드 */}
       <main className="flex-1 max-w-lg mx-auto w-full px-4 py-5 space-y-4">
         <SearchBox lang={lang} />
+
+        <div
+          onClick={() => navigate('/guide/link-phrases')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={e => { if (e.key === 'Enter') navigate('/guide/link-phrases') }}
+          className="rounded-2xl border border-emerald-300 bg-emerald-50 active:opacity-70 px-4 py-3 cursor-pointer transition-all">
+          <p className="text-sm font-bold text-emerald-800">{PHRASES_CARD_LABEL[lang].title}</p>
+          <p className="text-xs text-emerald-700 mt-0.5">{PHRASES_CARD_LABEL[lang].desc}</p>
+        </div>
 
         {myMenuSections.length > 0 && (
           <div className="bg-emerald-50 rounded-2xl border border-emerald-200 shadow-sm p-4">

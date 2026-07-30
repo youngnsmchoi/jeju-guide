@@ -8,6 +8,7 @@ import { useSearchParams } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
+import PhraseButton from '@/components/PhraseButton'
 
 type Tab = 'microwave' | 'toilet' | 'trash' | 'wifi' | 'common'
 const TABS: Tab[] = ['microwave', 'toilet', 'trash', 'wifi', 'common']
@@ -362,30 +363,6 @@ const LABEL: Record<Lang, {
   },
 }
 
-function PhraseButton({ phrase, expandLabel }: { phrase: string; expandLabel: string }) {
-  const [overlay, setOverlay] = useState(false)
-  return (
-    <>
-      <div className="bg-white rounded-xl border border-emerald-200 px-4 py-3 flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-gray-900">{phrase}</p>
-        <button onClick={() => setOverlay(true)}
-          className="shrink-0 text-xs bg-emerald-600 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-700 transition-colors">
-          {expandLabel}
-        </button>
-      </div>
-      {overlay && (
-        <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center px-8"
-          onClick={() => setOverlay(false)}>
-          <p className="text-5xl font-bold text-gray-900 text-center leading-tight">{phrase}</p>
-          <button onClick={() => setOverlay(false)}
-            className="absolute top-6 right-6 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 text-xl hover:bg-gray-200">
-            ✕
-          </button>
-        </div>
-      )}
-    </>
-  )
-}
 
 export default function CvsTipsView() {
   const { lang } = useLang()

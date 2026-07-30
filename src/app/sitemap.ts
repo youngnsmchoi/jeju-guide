@@ -19,6 +19,7 @@ const STATIC_ROUTES = [
   '/guide/link-country-picks',
   '/guide/link-cvs-tips',
   '/guide/link-ingredients',
+  '/guide/link-phrases',
   '/guide/link-money',
   '/guide/link-payment',
   '/guide/link-ramen',
