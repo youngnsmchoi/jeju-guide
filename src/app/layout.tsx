@@ -1,6 +1,7 @@
 // 전체 레이아웃 — 언어 Provider 포함
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { LangProvider } from '@/context/LangContext'
 
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${geist.variable} h-full`}>
       <body className="min-h-full bg-gray-50 antialiased">
         <LangProvider>{children}</LangProvider>
+        <Analytics />
       </body>
     </html>
   )
