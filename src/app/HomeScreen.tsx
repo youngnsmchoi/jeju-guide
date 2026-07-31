@@ -24,6 +24,14 @@ const MY_MENU_LABEL: Record<Lang, string> = {
   ja: '⭐ お気に入り',
 }
 
+const MAX_FAVORITES = 5
+const FAVORITES_LIMIT_MESSAGE: Record<Lang, string> = {
+  ko: `즐겨찾기는 최대 ${MAX_FAVORITES}개까지 담을 수 있어요. 다른 항목을 빼고 다시 시도해주세요.`,
+  en: `You can save up to ${MAX_FAVORITES} favorites. Remove one before adding another.`,
+  zh: `收藏最多可保存${MAX_FAVORITES}个。请先移除一个再添加。`,
+  ja: `お気に入りは最大${MAX_FAVORITES}件まで保存できます。他の項目を外してから追加してください。`,
+}
+
 const START_HERE_LABEL: Record<Lang, string> = {
   ko: '처음이라면 이 순서로',
   en: 'New here? Start with these',
@@ -36,6 +44,33 @@ const PHRASES_CARD_LABEL: Record<Lang, { title: string; desc: string }> = {
   en: { title: '🗣️ Show This to Staff', desc: "No need to speak — just show the screen." },
   zh: { title: '🗣️ 这句话需要时', desc: '不用开口说话，把屏幕给店员看就可以了。' },
   ja: { title: '🗣️ この言葉が必要なとき', desc: '話さなくても大丈夫。画面を見せるだけでOKです。' },
+}
+
+const OFFLINE_SAVE_LABEL: Record<Lang, { idle: string; saving: string; done: string; desc: string }> = {
+  ko: {
+    idle: '📥 오프라인 대비 저장',
+    saving: '저장 중...',
+    done: '✓ 오프라인 저장됨',
+    desc: '여행 중 인터넷이 안 될 수도 있어요. 즐겨찾기를 미리 저장해두세요.',
+  },
+  en: {
+    idle: '📥 Save for Offline',
+    saving: 'Saving...',
+    done: '✓ Saved for offline',
+    desc: 'You may lose internet while traveling. Save your favorites in advance.',
+  },
+  zh: {
+    idle: '📥 离线保存',
+    saving: '保存中...',
+    done: '✓ 已离线保存',
+    desc: '旅行途中可能没有网络，请提前保存收藏页面。',
+  },
+  ja: {
+    idle: '📥 オフライン用に保存',
+    saving: '保存中...',
+    done: '✓ オフライン保存済み',
+    desc: '旅行中にネットが使えないこともあります。お気に入りを事前に保存しておきましょう。',
+  },
 }
 
 const START_HERE_HREFS = ['/guide/link-payment', '/guide/link-money', '/guide/link-cvs-tips']
@@ -323,6 +358,7 @@ export default function HomeScreen() {
   const { lang } = useLang()
   const router = useRouter()
   const [favorites, setFavorites] = useState<string[] | null>(null)
+  const [offlineStatus, setOfflineStatus] = useState<'idle' | 'saving' | 'done'>('idle')
 
   // 가이드 페이지로 이동할 때 현재 언어를 전달해서, 이동한 페이지도 같은 언어로 열리게 한다
   const navigate = (href: string) => router.push(href.includes('?') ? `${href}&lang=${lang}` : `${href}?lang=${lang}`)
@@ -336,8 +372,38 @@ export default function HomeScreen() {
     }
   }, [])
 
+  const saveForOffline = async () => {
+    if (!('serviceWorker' in navigator)) return
+    setOfflineStatus('saving')
+    try {
+      await navigator.serviceWorker.register('/sw.js')
+      const targets = favorites ?? DEFAULT_FAVORITES
+      // 숨은 iframe으로 각 즐겨찾기 페이지를 실제로 열어서, 서비스워커가 그 과정의
+      // 모든 요청(HTML, 이미지 등)을 자동으로 캐시에 담도록 한다
+      await Promise.all(targets.map(href => new Promise<void>((resolve) => {
+        const iframe = document.createElement('iframe')
+        // 화면 밖으로 배치 (display:none이면 이미지 lazy-loading이 트리거되지 않아 캐싱이 누락됨)
+        // 페이지 전체 길이만큼 iframe을 키워서, 아래쪽에 있는 이미지도 "뷰포트 안"으로 인식되게 함
+        iframe.style.position = 'fixed'
+        iframe.style.left = '-9999px'
+        iframe.style.width = '390px'
+        iframe.style.height = '12000px'
+        iframe.src = href.includes('?') ? `${href}&lang=${lang}` : `${href}?lang=${lang}`
+        iframe.onload = () => { setTimeout(() => { iframe.remove(); resolve() }, 2000) }
+        document.body.appendChild(iframe)
+      })))
+      setOfflineStatus('done')
+    } catch {
+      setOfflineStatus('idle')
+    }
+  }
+
   const toggleFavorite = (href: string) => {
     const current = favorites ?? DEFAULT_FAVORITES
+    if (!current.includes(href) && current.length >= MAX_FAVORITES) {
+      alert(FAVORITES_LIMIT_MESSAGE[lang])
+      return
+    }
     const next = current.includes(href)
       ? current.filter(h => h !== href)
       : [...current, href]
@@ -386,6 +452,18 @@ export default function HomeScreen() {
           className="rounded-2xl border border-emerald-300 bg-emerald-50 active:opacity-70 px-4 py-3 cursor-pointer transition-all">
           <p className="text-sm font-bold text-emerald-800">{PHRASES_CARD_LABEL[lang].title}</p>
           <p className="text-xs text-emerald-700 mt-0.5">{PHRASES_CARD_LABEL[lang].desc}</p>
+        </div>
+
+        <div className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 space-y-2">
+          <p className="text-xs text-blue-700 leading-relaxed">{OFFLINE_SAVE_LABEL[lang].desc}</p>
+          <button
+            onClick={saveForOffline}
+            disabled={offlineStatus !== 'idle'}
+            className="w-full bg-blue-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-70">
+            {offlineStatus === 'idle' && OFFLINE_SAVE_LABEL[lang].idle}
+            {offlineStatus === 'saving' && OFFLINE_SAVE_LABEL[lang].saving}
+            {offlineStatus === 'done' && OFFLINE_SAVE_LABEL[lang].done}
+          </button>
         </div>
 
         {myMenuSections.length > 0 && (
