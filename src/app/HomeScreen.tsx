@@ -46,30 +46,65 @@ const PHRASES_CARD_LABEL: Record<Lang, { title: string; desc: string }> = {
   ja: { title: '🗣️ この言葉が必要なとき', desc: '話さなくても大丈夫。画面を見せるだけでOKです。' },
 }
 
-const OFFLINE_SAVE_LABEL: Record<Lang, { idle: string; saving: string; done: string; desc: string }> = {
+const OFFLINE_SAVE_LABEL: Record<Lang, {
+  title: string
+  shortReason: string
+  fullReason: string
+  idle: string
+  saving: string
+  savedAt: (date: string) => string
+  note: string
+  deleteBtn: string
+  deleting: string
+  deleted: string
+}> = {
   ko: {
-    idle: '📥 오프라인 대비 저장',
+    title: '📥 인터넷 안 될 때도 보기',
+    shortReason: '여행 중 와이파이가 안 터질 수도 있어요',
+    fullReason: '외국에서 오신 분들은 한국 유심이 없거나 와이파이가 안 되면 인터넷을 아예 못 쓸 수 있어요. 그럴 때도 아래 즐겨찾기 페이지는 미리 저장해두면 인터넷 없이 볼 수 있어요.',
+    idle: '지금 저장하기',
     saving: '저장 중...',
-    done: '✓ 오프라인 저장됨',
-    desc: '여행 중 인터넷이 안 될 수도 있어요. 즐겨찾기를 미리 저장해두세요.',
+    savedAt: (date) => `${date}에 저장됨`,
+    note: '저장한 내용은 삭제하기 전까지 계속 남아있어요. 다시 누르면 최신 내용으로 새로 저장돼요.',
+    deleteBtn: '🗑️ 저장 내용 삭제',
+    deleting: '삭제 중...',
+    deleted: '저장된 내용을 삭제했어요',
   },
   en: {
-    idle: '📥 Save for Offline',
+    title: '📥 View Even Without Internet',
+    shortReason: 'Wi-Fi may not work everywhere while traveling',
+    fullReason: "Travelers without a Korean SIM or Wi-Fi access may have no internet at all. Save your favorite pages in advance so you can still view them without internet.",
+    idle: 'Save Now',
     saving: 'Saving...',
-    done: '✓ Saved for offline',
-    desc: 'You may lose internet while traveling. Save your favorites in advance.',
+    savedAt: (date) => `Saved on ${date}`,
+    note: 'Saved data stays until you delete it. Tap again anytime to refresh it with the latest content.',
+    deleteBtn: '🗑️ Delete Saved Data',
+    deleting: 'Deleting...',
+    deleted: 'Saved data deleted',
   },
   zh: {
-    idle: '📥 离线保存',
+    title: '📥 没有网络也能看',
+    shortReason: '旅行途中Wi-Fi可能连不上',
+    fullReason: '没有韩国电话卡或Wi-Fi的游客可能完全无法上网。请提前保存收藏页面，这样即使没有网络也能查看。',
+    idle: '立即保存',
     saving: '保存中...',
-    done: '✓ 已离线保存',
-    desc: '旅行途中可能没有网络，请提前保存收藏页面。',
+    savedAt: (date) => `保存于 ${date}`,
+    note: '保存的内容会一直保留，直到您删除为止。再次点击可更新为最新内容。',
+    deleteBtn: '🗑️ 删除保存内容',
+    deleting: '删除中...',
+    deleted: '已删除保存的内容',
   },
   ja: {
-    idle: '📥 オフライン用に保存',
+    title: '📥 ネットがなくても見られる',
+    shortReason: '旅行中Wi-Fiが使えないこともあります',
+    fullReason: '韓国のSIMやWi-Fiがない旅行者は、ネットが全く使えないことがあります。お気に入りページを事前に保存しておけば、ネットなしでも見ることができます。',
+    idle: '今すぐ保存',
     saving: '保存中...',
-    done: '✓ オフライン保存済み',
-    desc: '旅行中にネットが使えないこともあります。お気に入りを事前に保存しておきましょう。',
+    savedAt: (date) => `${date}に保存済み`,
+    note: '保存した内容は削除するまでそのまま残ります。再度タップすると最新の内容に更新されます。',
+    deleteBtn: '🗑️ 保存内容を削除',
+    deleting: '削除中...',
+    deleted: '保存内容を削除しました',
   },
 }
 
@@ -354,11 +389,15 @@ const GROUPS: Group[] = [
   },
 ]
 
+const OFFLINE_SAVED_AT_KEY = 'offline_saved_at'
+
 export default function HomeScreen() {
   const { lang } = useLang()
   const router = useRouter()
   const [favorites, setFavorites] = useState<string[] | null>(null)
-  const [offlineStatus, setOfflineStatus] = useState<'idle' | 'saving' | 'done'>('idle')
+  const [offlineStatus, setOfflineStatus] = useState<'idle' | 'saving' | 'done' | 'deleting'>('idle')
+  const [savedAt, setSavedAt] = useState<string | null>(null)
+  const [offlineOpen, setOfflineOpen] = useState(false)
 
   // 가이드 페이지로 이동할 때 현재 언어를 전달해서, 이동한 페이지도 같은 언어로 열리게 한다
   const navigate = (href: string) => router.push(href.includes('?') ? `${href}&lang=${lang}` : `${href}?lang=${lang}`)
@@ -370,13 +409,19 @@ export default function HomeScreen() {
     } catch {
       setFavorites(DEFAULT_FAVORITES)
     }
+    const savedRaw = localStorage.getItem(OFFLINE_SAVED_AT_KEY)
+    if (savedRaw) { setSavedAt(savedRaw); setOfflineStatus('done') }
   }, [])
 
   const saveForOffline = async () => {
     if (!('serviceWorker' in navigator)) return
     setOfflineStatus('saving')
     try {
-      await navigator.serviceWorker.register('/sw.js')
+      const registration = await navigator.serviceWorker.register('/sw.js')
+      await navigator.serviceWorker.ready
+      // 다시 저장할 때는 예전 캐시를 지우고 새로 채운다 (계속 쌓이는 것 방지)
+      await Promise.all(['offline-favorites-v1', 'offline-favorites-meta'].map(name => caches.delete(name)))
+
       const targets = favorites ?? DEFAULT_FAVORITES
       // 숨은 iframe으로 각 즐겨찾기 페이지를 실제로 열어서, 서비스워커가 그 과정의
       // 모든 요청(HTML, 이미지 등)을 자동으로 캐시에 담도록 한다
@@ -392,9 +437,40 @@ export default function HomeScreen() {
         iframe.onload = () => { setTimeout(() => { iframe.remove(); resolve() }, 2000) }
         document.body.appendChild(iframe)
       })))
+
+      registration.active?.postMessage({ type: 'MARK_SAVED' })
+      const now = new Date().toLocaleDateString(lang === 'ko' ? 'ko-KR' : lang === 'zh' ? 'zh-CN' : lang === 'ja' ? 'ja-JP' : 'en-US')
+      localStorage.setItem(OFFLINE_SAVED_AT_KEY, now)
+      setSavedAt(now)
       setOfflineStatus('done')
     } catch {
       setOfflineStatus('idle')
+    }
+  }
+
+  const deleteOfflineData = async () => {
+    if (!('serviceWorker' in navigator)) return
+    setOfflineStatus('deleting')
+    try {
+      const registration = await navigator.serviceWorker.getRegistration()
+      if (registration?.active) {
+        await new Promise<void>((resolve) => {
+          const handler = (event: MessageEvent) => {
+            if (event.data?.type === 'CLEAR_DONE') {
+              navigator.serviceWorker.removeEventListener('message', handler)
+              resolve()
+            }
+          }
+          navigator.serviceWorker.addEventListener('message', handler)
+          registration.active!.postMessage({ type: 'CLEAR_CACHE' })
+        })
+      }
+      localStorage.removeItem(OFFLINE_SAVED_AT_KEY)
+      setSavedAt(null)
+      setOfflineStatus('idle')
+      alert(OFFLINE_SAVE_LABEL[lang].deleted)
+    } catch {
+      setOfflineStatus('done')
     }
   }
 
@@ -454,16 +530,41 @@ export default function HomeScreen() {
           <p className="text-xs text-emerald-700 mt-0.5">{PHRASES_CARD_LABEL[lang].desc}</p>
         </div>
 
-        <div className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 space-y-2">
-          <p className="text-xs text-blue-700 leading-relaxed">{OFFLINE_SAVE_LABEL[lang].desc}</p>
+        <div className="rounded-2xl border border-blue-200 bg-blue-50 overflow-hidden">
           <button
-            onClick={saveForOffline}
-            disabled={offlineStatus !== 'idle'}
-            className="w-full bg-blue-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-70">
-            {offlineStatus === 'idle' && OFFLINE_SAVE_LABEL[lang].idle}
-            {offlineStatus === 'saving' && OFFLINE_SAVE_LABEL[lang].saving}
-            {offlineStatus === 'done' && OFFLINE_SAVE_LABEL[lang].done}
+            onClick={() => setOfflineOpen(o => !o)}
+            className="w-full text-left px-4 py-3">
+            <p className="text-sm font-bold text-blue-800">{OFFLINE_SAVE_LABEL[lang].title} <span className="text-blue-400">{offlineOpen ? '▲' : '▼'}</span></p>
+            <p className="text-xs text-blue-600 mt-0.5">{OFFLINE_SAVE_LABEL[lang].shortReason}</p>
           </button>
+
+          {offlineOpen && (
+            <div className="px-4 pb-4 space-y-2">
+              <p className="text-xs text-blue-700 leading-relaxed">{OFFLINE_SAVE_LABEL[lang].fullReason}</p>
+
+              {savedAt && offlineStatus !== 'saving' && (
+                <p className="text-xs font-semibold text-blue-800">{OFFLINE_SAVE_LABEL[lang].savedAt(savedAt)}</p>
+              )}
+
+              <button
+                onClick={saveForOffline}
+                disabled={offlineStatus === 'saving' || offlineStatus === 'deleting'}
+                className="w-full bg-blue-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-70">
+                {offlineStatus === 'saving' ? OFFLINE_SAVE_LABEL[lang].saving : OFFLINE_SAVE_LABEL[lang].idle}
+              </button>
+
+              {savedAt && (
+                <button
+                  onClick={deleteOfflineData}
+                  disabled={offlineStatus === 'saving' || offlineStatus === 'deleting'}
+                  className="w-full bg-white text-red-600 border border-red-200 text-sm font-semibold py-2.5 rounded-xl hover:bg-red-50 transition-colors disabled:opacity-70">
+                  {offlineStatus === 'deleting' ? OFFLINE_SAVE_LABEL[lang].deleting : OFFLINE_SAVE_LABEL[lang].deleteBtn}
+                </button>
+              )}
+
+              <p className="text-[11px] text-blue-500 leading-relaxed">{OFFLINE_SAVE_LABEL[lang].note}</p>
+            </div>
+          )}
         </div>
 
         {myMenuSections.length > 0 && (
