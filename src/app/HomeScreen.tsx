@@ -50,6 +50,7 @@ const OFFLINE_SAVE_LABEL: Record<Lang, {
   title: string
   shortReason: string
   fullReason: string
+  favoriteRule: string
   idle: string
   saving: string
   savedAt: (date: string) => string
@@ -62,6 +63,7 @@ const OFFLINE_SAVE_LABEL: Record<Lang, {
     title: '📥 인터넷 안 될 때도 보기',
     shortReason: '여행 중 와이파이가 안 터질 수도 있어요',
     fullReason: '외국에서 오신 분들은 한국 유심이 없거나 와이파이가 안 되면 인터넷을 아예 못 쓸 수 있어요. 그럴 때도 아래 즐겨찾기 페이지는 미리 저장해두면 인터넷 없이 볼 수 있어요.',
+    favoriteRule: `⭐ 즐겨찾기(최대 ${MAX_FAVORITES}개)에 담긴 페이지만 저장돼요. 즐겨찾기는 별표 아이콘으로 추가·삭제할 수 있어요.`,
     idle: '지금 저장하기',
     saving: '저장 중...',
     savedAt: (date) => `${date}에 저장됨`,
@@ -74,6 +76,7 @@ const OFFLINE_SAVE_LABEL: Record<Lang, {
     title: '📥 View Even Without Internet',
     shortReason: 'Wi-Fi may not work everywhere while traveling',
     fullReason: "Travelers without a Korean SIM or Wi-Fi access may have no internet at all. Save your favorite pages in advance so you can still view them without internet.",
+    favoriteRule: `⭐ Only pages in your Favorites (up to ${MAX_FAVORITES}) are saved. Use the star icon to add or remove favorites.`,
     idle: 'Save Now',
     saving: 'Saving...',
     savedAt: (date) => `Saved on ${date}`,
@@ -86,6 +89,7 @@ const OFFLINE_SAVE_LABEL: Record<Lang, {
     title: '📥 没有网络也能看',
     shortReason: '旅行途中Wi-Fi可能连不上',
     fullReason: '没有韩国电话卡或Wi-Fi的游客可能完全无法上网。请提前保存收藏页面，这样即使没有网络也能查看。',
+    favoriteRule: `⭐ 只会保存收藏（最多${MAX_FAVORITES}个）中的页面。可以用星标图标添加或删除收藏。`,
     idle: '立即保存',
     saving: '保存中...',
     savedAt: (date) => `保存于 ${date}`,
@@ -98,6 +102,7 @@ const OFFLINE_SAVE_LABEL: Record<Lang, {
     title: '📥 ネットがなくても見られる',
     shortReason: '旅行中Wi-Fiが使えないこともあります',
     fullReason: '韓国のSIMやWi-Fiがない旅行者は、ネットが全く使えないことがあります。お気に入りページを事前に保存しておけば、ネットなしでも見ることができます。',
+    favoriteRule: `⭐ お気に入り（最大${MAX_FAVORITES}件）に入っているページだけ保存されます。お気に入りは星アイコンで追加・削除できます。`,
     idle: '今すぐ保存',
     saving: '保存中...',
     savedAt: (date) => `${date}に保存済み`,
@@ -541,6 +546,7 @@ export default function HomeScreen() {
           {offlineOpen && (
             <div className="px-4 pb-4 space-y-2">
               <p className="text-xs text-blue-700 leading-relaxed">{OFFLINE_SAVE_LABEL[lang].fullReason}</p>
+              <p className="text-xs text-blue-600 leading-relaxed">{OFFLINE_SAVE_LABEL[lang].favoriteRule}</p>
 
               {savedAt && offlineStatus !== 'saving' && (
                 <p className="text-xs font-semibold text-blue-800">{OFFLINE_SAVE_LABEL[lang].savedAt(savedAt)}</p>
