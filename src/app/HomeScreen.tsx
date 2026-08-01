@@ -427,6 +427,10 @@ export default function HomeScreen() {
       // 다시 저장할 때는 예전 캐시를 지우고 새로 채운다 (계속 쌓이는 것 방지)
       await Promise.all(['offline-favorites-v1', 'offline-favorites-meta'].map(name => caches.delete(name)))
 
+      // 이 시점부터 발생하는 요청만 캐시에 담기도록 서비스워커에 신호를 보낸다
+      // (평소에는 방문하는 페이지가 자동으로 캐시되지 않도록 하기 위함)
+      registration.active?.postMessage({ type: 'START_CAPTURE' })
+
       const targets = favorites ?? DEFAULT_FAVORITES
       // 숨은 iframe으로 각 즐겨찾기 페이지를 실제로 열어서, 서비스워커가 그 과정의
       // 모든 요청(HTML, 이미지 등)을 자동으로 캐시에 담도록 한다
@@ -443,6 +447,7 @@ export default function HomeScreen() {
         document.body.appendChild(iframe)
       })))
 
+      registration.active?.postMessage({ type: 'STOP_CAPTURE' })
       registration.active?.postMessage({ type: 'MARK_SAVED' })
       const now = new Date().toLocaleDateString(lang === 'ko' ? 'ko-KR' : lang === 'zh' ? 'zh-CN' : lang === 'ja' ? 'ja-JP' : 'en-US')
       localStorage.setItem(OFFLINE_SAVED_AT_KEY, now)

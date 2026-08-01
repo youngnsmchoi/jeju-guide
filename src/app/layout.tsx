@@ -1,10 +1,11 @@
 // 전체 레이아웃 — 언어 Provider 포함
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist } from 'next/font/google'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { LangProvider } from '@/context/LangContext'
+import ServiceWorkerRegister from '@/components/ServiceWorkerRegister'
 
 const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 
@@ -16,6 +17,11 @@ export const metadata: Metadata = {
   description: "Real answers for when you're stuck at a Korean convenience store. Payment, ramen cooking, T-money and more.",
   alternates: {
     canonical: 'https://www.koreacvsguide.com',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'CVS Guide',
   },
   openGraph: {
     title: 'Korea Convenience Store Guide',
@@ -34,12 +40,17 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  themeColor: '#047857',
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${geist.variable} h-full`}>
       <body className="min-h-full bg-gray-50 antialiased">
         <LangProvider>{children}</LangProvider>
         <Analytics />
+        <ServiceWorkerRegister />
         <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} strategy="afterInteractive" />
         <Script id="ga-init" strategy="afterInteractive">
           {`
