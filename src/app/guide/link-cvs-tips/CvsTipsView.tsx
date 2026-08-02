@@ -166,6 +166,7 @@ const LABEL: Record<Lang, {
   en: {
     title: 'CVS Tips',
     tabMicrowave: '🔥 Microwave',
+    tabExpiry: '🧊 Expiration Date',
     tabToilet: '🚻 Toilet',
     tabTrash: '🗑️ Trash',
     tabWifi: '📶 Wi-Fi',
@@ -226,6 +227,16 @@ const LABEL: Record<Lang, {
       ],
       tip: '💡 This varies a lot by location — best to check with staff on the spot.',
     },
+    expiry: {
+      title: '🧊 How to check the expiration date',
+      intro: 'Check the date printed on the package. The format varies by product.',
+      formats: [
+        { label: 'Date only → You can eat it until this date', product: 'Sample: Red Bean Bread', date: 'Best before 2026.07.31' },
+        { label: 'Date + time → Freshness is short-lived. Try to eat it before this time.', product: 'Sample: Cheese', date: '2026.12.24 09:13' },
+        { label: 'Packing date only → This isn\'t an expiration date, just when it was packed. Skip it if the color has changed or it feels soft.', product: 'Cherry tomatoes 180g', date: 'Packed: 2026.07.23' },
+      ],
+      coldNote: '❄️ Anything from a refrigerated shelf needs to stay cold. Leaving it at room temperature for too long can spoil it even within the date, so eat it soon after buying — ideally where you bought it.',
+    },
     common: {
       title: '🏪 What All Convenience Stores Have',
       points: [
@@ -242,6 +253,7 @@ const LABEL: Record<Lang, {
   zh: {
     title: '便利店小贴士',
     tabMicrowave: '🔥 微波炉',
+    tabExpiry: '🧊 保质期',
     tabToilet: '🚻 洗手间',
     tabTrash: '🗑️ 垃圾分类',
     tabWifi: '📶 WiFi',
@@ -302,6 +314,16 @@ const LABEL: Record<Lang, {
       ],
       tip: '💡 这个信息因店而异，建议到店后直接确认。',
     },
+    expiry: {
+      title: '🧊 如何查看保质期',
+      intro: '请确认包装上印的日期。不同产品的标注方式不一样。',
+      formats: [
+        { label: '只有日期 → 在这个日期之前可以食用', product: '示例：红豆面包', date: '保质期至 2026.07.31' },
+        { label: '有日期和时间 → 保鲜时间较短，请尽量在这个时间之前食用', product: '示例：奶酪', date: '2026.12.24 09:13' },
+        { label: '只有包装日期 → 这不是保质期，只是包装的日期。如果颜色变了或变软了，请不要食用', product: '圣女果 180g', date: '包装日期: 2026.07.23' },
+      ],
+      coldNote: '❄️ 从冷藏柜购买的产品需要冷藏保存。长时间放在常温下，即使在保质期内也可能变质，请尽快食用，最好在购买地点就食用。',
+    },
     common: {
       title: '🏪 所有便利店共同特点',
       points: [
@@ -318,6 +340,7 @@ const LABEL: Record<Lang, {
   ja: {
     title: 'コンビニお役立ち情報',
     tabMicrowave: '🔥 電子レンジ',
+    tabExpiry: '🧊 消費期限',
     tabToilet: '🚻 トイレ',
     tabTrash: '🗑️ ゴミ分別',
     tabWifi: '📶 Wi-Fi',
@@ -377,6 +400,16 @@ const LABEL: Record<Lang, {
         '現地SIMやポケットWi-Fiを事前に用意しておけば、コンビニのWi-Fiに頼らずに済みます。',
       ],
       tip: '💡 店舗によって差が大きいので、現地で直接確認することをおすすめします。',
+    },
+    expiry: {
+      title: '🧊 消費期限の確認方法',
+      intro: 'パッケージに印字された日付を確認してください。表記方法は商品によって異なります。',
+      formats: [
+        { label: '日付のみの場合 → この日付まで食べられます', product: '例：あんぱん', date: '2026.07.31まで' },
+        { label: '日付＋時刻の場合 → 鮮度が短い商品です。できるだけこの時刻までに食べてください。', product: '例：チーズ', date: '2026.12.24 09:13' },
+        { label: '包装日のみの場合 → 消費期限ではなく包装した日付です。色が変わっていたり柔らかくなっていたら食べないでください。', product: 'プチトマト 180g', date: '包装: 2026.07.23' },
+      ],
+      coldNote: '❄️ 冷蔵ケースで購入した商品は冷蔵保存が必要です。常温で長く置くと期限内でも傷むことがあるので、購入した場所ですぐに食べるか、早めに食べてください。',
     },
     common: {
       title: '🏪 全コンビニ共通の特徴',
@@ -480,7 +513,7 @@ export default function CvsTipsView() {
               {L.expiry.formats.map((f, i) => (
                 <div key={i} className="space-y-1.5">
                   <div className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 space-y-1">
-                    <p className="text-xs text-gray-400 blur-[3px] select-none">{f.product}</p>
+                    <p className="text-xs text-gray-500">{f.product}</p>
                     <p className="text-sm font-bold text-gray-900">{f.date}</p>
                   </div>
                   <p className="text-xs text-gray-600 leading-relaxed">{f.label}</p>
