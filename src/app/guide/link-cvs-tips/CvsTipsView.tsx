@@ -76,8 +76,8 @@ const LABEL: Record<Lang, {
       timeTableTitle: '⏱️ 시간 참고표',
       timeTableNote: '※ 매장 전자레인지마다 시간이 조금씩 다를 수 있어요. 제품 포장이나 전자레인지에 붙은 안내를 우선 확인하세요.',
       timeTable: [
-        '삼각김밥: 1000W(편의점 전자레인지) 기준 20~30초 · 700W(가정용) 기준 35~40초',
-        '도시락: 뚜껑 제거 후 1분 40초(매장용) · 2분(가정용)',
+        '삼각김밥: 20~30초',
+        '도시락: 뚜껑 제거 후 1분 40초',
         '도시락(국·탕·찌개류): 2분 30초~5분',
         '스파게티: 1분 30초~2분',
         '냉동면/밥: 4~5분',
@@ -418,13 +418,15 @@ export default function CvsTipsView() {
                 </li>
               ))}
             </ol>
-            <div className="bg-orange-50 border border-orange-200 rounded-xl p-3 space-y-1">
-              <p className="text-xs font-bold text-orange-800">{L.microwave.timeTableTitle}</p>
-              {L.microwave.timeTable.map((line, i) => (
-                <p key={i} className="text-xs text-orange-700 leading-relaxed">{line}</p>
-              ))}
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 space-y-2">
+              <p className="text-xs font-bold text-emerald-800">{L.microwave.timeTableTitle}</p>
+              <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+                {L.microwave.timeTable.map((line, i) => (
+                  <p key={i} className="text-xs text-emerald-700 leading-relaxed">{line}</p>
+                ))}
+              </div>
               {L.microwave.timeTableNote && (
-                <p className="text-[11px] text-orange-600 leading-relaxed pt-1">{L.microwave.timeTableNote}</p>
+                <p className="text-[11px] text-emerald-600 leading-relaxed pt-1">{L.microwave.timeTableNote}</p>
               )}
             </div>
 
