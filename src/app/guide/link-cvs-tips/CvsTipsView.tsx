@@ -10,12 +10,13 @@ import type { Lang } from '@/lib/types'
 import NavBar from '@/components/NavBar'
 import PhraseButton from '@/components/PhraseButton'
 
-type Tab = 'microwave' | 'toilet' | 'trash' | 'wifi' | 'common'
-const TABS: Tab[] = ['microwave', 'toilet', 'trash', 'wifi', 'common']
+type Tab = 'microwave' | 'expiry' | 'toilet' | 'trash' | 'wifi' | 'common'
+const TABS: Tab[] = ['microwave', 'expiry', 'toilet', 'trash', 'wifi', 'common']
 
 const LABEL: Record<Lang, {
   title: string
   tabMicrowave: string
+  tabExpiry?: string
   tabToilet: string
   tabTrash: string
   tabWifi: string
@@ -55,12 +56,19 @@ const LABEL: Record<Lang, {
     title: string
     points: string[]
   }
+  expiry?: {
+    title: string
+    intro: string
+    formats: { label: string; product: string; date: string }[]
+    coldNote: string
+  }
   tmoneyLink: string
   expand: string
 }> = {
   ko: {
     title: '편의점 꿀팁',
     tabMicrowave: '🔥 전자레인지',
+    tabExpiry: '🧊 소비기한',
     tabToilet: '🚻 화장실',
     tabTrash: '🗑️ 쓰레기',
     tabWifi: '📶 와이파이',
@@ -131,6 +139,16 @@ const LABEL: Record<Lang, {
         '유심(USIM)이나 포켓 와이파이를 미리 준비하면 편의점 와이파이에 의존하지 않아도 됩니다.',
       ],
       tip: '💡 확실하지 않은 정보라 매장에서 직접 확인하는 걸 권장합니다.',
+    },
+    expiry: {
+      title: '🧊 소비기한 확인 방법',
+      intro: '포장에 적힌 날짜를 확인하세요. 표기 방식이 제품마다 달라요.',
+      formats: [
+        { label: '날짜만 있는 경우 → 이 날짜까지 먹을 수 있어요', product: '예사 단팥빵', date: '2026.07.31까지' },
+        { label: '시간까지 있는 경우 → 신선도 유지 기간이 짧은 제품이에요. 가능한 한 이 시간 전에 드세요.', product: '예사 치즈', date: '2026.12.24 09:13' },
+        { label: '포장 날짜만 있는 경우 → 소비기한이 아니라 포장한 날짜예요. 색이 변했거나 무른 부분이 있으면 먹지 마세요.', product: '방울토마토 180g', date: '포장: 2026.07.23' },
+      ],
+      coldNote: '❄️ 냉장 진열대에서 산 제품은 냉장 보관이 필요한 제품이에요. 상온에 오래 두면 기한 안이라도 상할 수 있으니, 산 곳에서 바로 먹거나 빠르게 드세요.',
     },
     common: {
       title: '🏪 모든 편의점 공통 특징',
@@ -380,11 +398,13 @@ export default function CvsTipsView() {
   const { lang } = useLang()
   const L = LABEL[lang]
   const searchParams = useSearchParams()
-  const initialTab = TABS.includes(searchParams.get('tab') as Tab) ? (searchParams.get('tab') as Tab) : 'microwave'
+  const availableTabs = TABS.filter(t => t !== 'expiry' || L.expiry)
+  const initialTab = availableTabs.includes(searchParams.get('tab') as Tab) ? (searchParams.get('tab') as Tab) : 'microwave'
   const [tab, setTab] = useState<Tab>(initialTab)
 
   const tabLabel = (t: Tab): string => ({
     microwave: L.tabMicrowave,
+    expiry: L.tabExpiry ?? '',
     toilet: L.tabToilet,
     trash: L.tabTrash,
     wifi: L.tabWifi,
@@ -396,7 +416,7 @@ export default function CvsTipsView() {
       <NavBar />
       <div className="bg-white border-b border-gray-100 px-4 py-2">
         <div className="max-w-lg mx-auto grid grid-cols-3 gap-2">
-          {TABS.map(t => (
+          {availableTabs.map(t => (
             <button key={t} onClick={() => setTab(t)}
               className={`px-2 py-1.5 rounded-xl text-sm font-medium transition-colors truncate
                 ${tab === t ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
@@ -448,6 +468,29 @@ export default function CvsTipsView() {
             </div>
             <p className="text-xs text-gray-500 font-medium">{L.microwave.phraseLabel}</p>
             <PhraseButton phrase={L.microwave.phrase} expandLabel={L.expand} />
+          </div>
+        )}
+
+        {tab === 'expiry' && L.expiry && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
+            <p className="text-sm font-bold text-gray-800">{L.expiry.title}</p>
+            <p className="text-xs text-gray-600 leading-relaxed">{L.expiry.intro}</p>
+
+            <div className="space-y-3">
+              {L.expiry.formats.map((f, i) => (
+                <div key={i} className="space-y-1.5">
+                  <div className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 space-y-1">
+                    <p className="text-xs text-gray-400 blur-[3px] select-none">{f.product}</p>
+                    <p className="text-sm font-bold text-gray-900">{f.date}</p>
+                  </div>
+                  <p className="text-xs text-gray-600 leading-relaxed">{f.label}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-sky-50 border border-sky-200 rounded-xl px-3 py-2">
+              <p className="text-xs text-sky-700 leading-relaxed">{L.expiry.coldNote}</p>
+            </div>
           </div>
         )}
 
