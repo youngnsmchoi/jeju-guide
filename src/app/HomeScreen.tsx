@@ -7,6 +7,7 @@ import { useLang } from '@/context/LangContext'
 import type { Lang } from '@/lib/types'
 import LangSelector from '@/components/LangSelector'
 import SearchBox from '@/components/SearchBox'
+import InstallPrompt from '@/components/InstallPrompt'
 
 const FAVORITES_KEY = 'home_favorites'
 const DEFAULT_FAVORITES = [
@@ -539,6 +540,8 @@ export default function HomeScreen() {
           <p className="text-sm font-bold text-emerald-800">{PHRASES_CARD_LABEL[lang].title}</p>
           <p className="text-xs text-emerald-700 mt-0.5">{PHRASES_CARD_LABEL[lang].desc}</p>
         </div>
+
+        <InstallPrompt lang={lang} />
 
         <div className="rounded-2xl border border-blue-200 bg-blue-50 overflow-hidden">
           <button
