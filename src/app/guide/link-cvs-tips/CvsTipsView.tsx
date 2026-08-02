@@ -24,6 +24,7 @@ const LABEL: Record<Lang, {
     title: string
     steps: string[]
     timeTableTitle: string
+    timeTableNote?: string
     timeTable: string[]
     exampleLabel: string
     buttonGuide: string[]
@@ -73,9 +74,20 @@ const LABEL: Record<Lang, {
         '다 되면 조심히 꺼내세요. 용기가 뜨겁습니다.',
       ],
       timeTableTitle: '⏱️ 시간 참고표',
+      timeTableNote: '※ 매장 전자레인지마다 시간이 조금씩 다를 수 있어요. 제품 포장이나 전자레인지에 붙은 안내를 우선 확인하세요.',
       timeTable: [
         '삼각김밥: 1000W(편의점 전자레인지) 기준 20~30초 · 700W(가정용) 기준 35~40초',
         '도시락: 뚜껑 제거 후 1분 40초(매장용) · 2분(가정용)',
+        '도시락(국·탕·찌개류): 2분 30초~5분',
+        '스파게티: 1분 30초~2분',
+        '냉동면/밥: 4~5분',
+        '냉동만두: 2분 30초~5분',
+        '피자류: 1~2분',
+        '밥버거: 20초',
+        '포장주먹밥/컵밥: 30초',
+        '김밥류/롤류: 30초',
+        '샌드위치: 20초',
+        '햄버거: 30초',
       ],
       exampleLabel: '📸 실물 예시: 이 도시락은 "1분 40초"라고 적혀 있어요. 전자레인지에서는 이렇게 시간 버튼을 눌러 맞추고 시작하면 됩니다.',
       buttonGuide: [
@@ -411,6 +423,9 @@ export default function CvsTipsView() {
               {L.microwave.timeTable.map((line, i) => (
                 <p key={i} className="text-xs text-orange-700 leading-relaxed">{line}</p>
               ))}
+              {L.microwave.timeTableNote && (
+                <p className="text-[11px] text-orange-600 leading-relaxed pt-1">{L.microwave.timeTableNote}</p>
+              )}
             </div>
 
             <p className="text-xs font-bold text-gray-700">{L.microwave.exampleLabel}</p>
