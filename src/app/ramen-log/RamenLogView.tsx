@@ -6,24 +6,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useLang } from '@/context/LangContext'
 import type { RamenItem, Lang } from '@/lib/types'
 import { getRamenField } from '@/lib/types'
+import { COUNTRY_NAMES } from '@/lib/countryNames'
 import NavBar from '@/components/NavBar'
-
-const COUNTRIES = [
-  { code: 'china',       flag: '🇨🇳', label: 'China' },
-  { code: 'japan',       flag: '🇯🇵', label: 'Japan' },
-  { code: 'taiwan',      flag: '🇹🇼', label: 'Taiwan' },
-  { code: 'usa',         flag: '🇺🇸', label: 'USA' },
-  { code: 'hongkong',    flag: '🇭🇰', label: 'Hong Kong' },
-  { code: 'vietnam',     flag: '🇻🇳', label: 'Vietnam' },
-  { code: 'thailand',    flag: '🇹🇭', label: 'Thailand' },
-  { code: 'philippines', flag: '🇵🇭', label: 'Philippines' },
-  { code: 'singapore',   flag: '🇸🇬', label: 'Singapore' },
-  { code: 'malaysia',    flag: '🇲🇾', label: 'Malaysia' },
-  { code: 'mongolia',    flag: '🇲🇳', label: 'Mongolia' },
-  { code: 'other',       flag: '🌍', label: 'Other' },
-]
-
-const FLAG: Record<string, string> = Object.fromEntries(COUNTRIES.map(c => [c.code, c.flag]))
 
 const RATINGS = [
   { value: 'good',    emoji: '😊' },
@@ -68,7 +52,7 @@ const MEMO_TAGS: Record<Lang, { key: string; label: string }[]> = {
 
 const LABEL: Record<Lang, {
   title: string; back: string; tabLog: string; tabStats: string;
-  q1: string; q2: string; q3: string; qMemo: string; qNote: string;
+  q1: string; q2: string; q2Placeholder: string; q3: string; qMemo: string; qNote: string;
   notePlaceholder: string;
   submit: string; privacy: string; done: string; doneMsg: string;
   error: string; alreadyLogged: string; loading: string; noData: string; total: string;
@@ -76,7 +60,7 @@ const LABEL: Record<Lang, {
 }> = {
   ko: {
     title: 'My Ramen Log', back: '← 홈', tabLog: '기록하기', tabStats: '발자취',
-    q1: '어떤 라면 드셨어요?', q2: '어느 나라에서 오셨어요?', q3: '맛이 어땠어요?',
+    q1: '어떤 라면 드셨어요?', q2: '어느 나라에서 오셨어요?', q2Placeholder: '국가 이름을 입력하세요 (예: Vietnam)', q3: '맛이 어땠어요?',
     qMemo: '이 라면 어떻게 드셨어요? (선택)',
     qNote: '하고 싶은 말 (선택)',
     notePlaceholder: '아쉬운 점, 이렇게 먹으면 맛있어요, 한마디...',
@@ -89,7 +73,7 @@ const LABEL: Record<Lang, {
   },
   en: {
     title: 'My Ramen Log', back: '← Home', tabLog: 'Log', tabStats: 'Footprints',
-    q1: 'Which ramen did you have?', q2: 'Where are you from?', q3: 'How was it?',
+    q1: 'Which ramen did you have?', q2: 'Where are you from?', q2Placeholder: 'Type your country (e.g. Vietnam)', q3: 'How was it?',
     qMemo: 'How did you eat it? (optional)',
     qNote: 'Anything to add? (optional)',
     notePlaceholder: 'Tips, complaints, how to make it better...',
@@ -102,7 +86,7 @@ const LABEL: Record<Lang, {
   },
   zh: {
     title: 'My Ramen Log', back: '← 主页', tabLog: '记录', tabStats: '足迹',
-    q1: '您吃了哪种拉面？', q2: '您来自哪个国家？', q3: '味道怎么样？',
+    q1: '您吃了哪种拉面？', q2: '您来自哪个国家？', q2Placeholder: '请输入国家名称（例如：Vietnam）', q3: '味道怎么样？',
     qMemo: '您是怎么吃的？（可选）',
     qNote: '还有什么想说的？（可选）',
     notePlaceholder: '不足之处、这样吃更好吃、一句话...',
@@ -115,7 +99,7 @@ const LABEL: Record<Lang, {
   },
   ja: {
     title: 'My Ramen Log', back: '← ホーム', tabLog: '記録する', tabStats: '足跡',
-    q1: 'どのラーメンを食べましたか？', q2: 'どちらの国からお越しですか？', q3: '味はいかがでしたか？',
+    q1: 'どのラーメンを食べましたか？', q2: 'どちらの国からお越しですか？', q2Placeholder: '国名を入力してください（例：Vietnam）', q3: '味はいかがでしたか？',
     qMemo: 'どのように食べましたか？（任意）',
     qNote: '一言メモ（任意）',
     notePlaceholder: '残念だった点、こうすると美味しい、ひとこと...',
@@ -225,9 +209,9 @@ function StatsTab({ lang }: { lang: Lang }) {
                   <span className="text-xs text-emerald-600 font-semibold">{row.total} {L.total}</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
-                  {topCountries.map(([code, count]) => (
-                    <span key={code} className="flex items-center gap-1 text-xs bg-gray-50 border border-gray-100 rounded-full px-2.5 py-1">
-                      {FLAG[code] ?? '🌍'} <span className="text-gray-500">{count}</span>
+                  {topCountries.map(([name, count]) => (
+                    <span key={name} className="flex items-center gap-1 text-xs bg-gray-50 border border-gray-100 rounded-full px-2.5 py-1">
+                      <span className="text-gray-700">{name}</span> <span className="text-gray-500">{count}</span>
                     </span>
                   ))}
                 </div>
@@ -252,7 +236,7 @@ function StatsTab({ lang }: { lang: Lang }) {
               <div key={entry.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 space-y-1.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">{FLAG[entry.country] ?? '🌍'}</span>
+                    <span className="text-xs text-gray-500">{entry.country}</span>
                     <span className="text-sm font-semibold text-gray-800">{name}</span>
                     <span className="text-base">{ratingEmoji}</span>
                   </div>
@@ -396,16 +380,12 @@ export default function RamenLogView({ items }: { items: RamenItem[] }) {
             {/* Q2: 국가 선택 */}
             <div>
               <p className="text-sm font-semibold text-gray-700 mb-2">{L.q2}</p>
-              <div className="grid grid-cols-4 gap-2">
-                {COUNTRIES.map(c => (
-                  <button key={c.code} onClick={() => setCountry(c.code)}
-                    className={`flex flex-col items-center py-2.5 rounded-xl border text-xs font-medium transition-all
-                      ${country === c.code ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-gray-200 bg-white text-gray-600 hover:border-emerald-300'}`}>
-                    <span className="text-2xl mb-0.5">{c.flag}</span>
-                    {c.label}
-                  </button>
-                ))}
-              </div>
+              <input value={country} onChange={e => setCountry(e.target.value)}
+                placeholder={L.q2Placeholder} list="ramen-log-country-options"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-500 bg-white" />
+              <datalist id="ramen-log-country-options">
+                {COUNTRY_NAMES.map(name => <option key={name} value={name} />)}
+              </datalist>
             </div>
 
             {/* Q3: 만족도 */}
