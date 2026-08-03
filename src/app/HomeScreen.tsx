@@ -167,14 +167,14 @@ type Section = {
   title: Record<Lang, string>
   desc: Record<Lang, string>
   href: string | null
-  badge?: 'official' | 'editorial'
+  badge?: 'official' | 'editorial' | 'new'
 }
 
-const BADGE_LABEL: Record<Lang, { official: string; editorial: string }> = {
-  ko: { official: '공식 자료', editorial: '편집자 참고' },
-  en: { official: 'Official', editorial: 'Editor\'s Pick' },
-  zh: { official: '官方资料', editorial: '编辑参考' },
-  ja: { official: '公式資料', editorial: '編集者参考' },
+const BADGE_LABEL: Record<Lang, { official: string; editorial: string; new: string }> = {
+  ko: { official: '공식 자료', editorial: '편집자 참고', new: '🔥 NEW' },
+  en: { official: 'Official', editorial: 'Editor\'s Pick', new: '🔥 NEW' },
+  zh: { official: '官方资料', editorial: '编辑参考', new: '🔥 NEW' },
+  ja: { official: '公式資料', editorial: '編集者参考', new: '🔥 NEW' },
 }
 
 type Group = {
@@ -355,12 +355,13 @@ const GROUPS: Group[] = [
         emoji: '📝',
         title: { ko: 'My Ramen Log', en: 'My Ramen Log', zh: 'My Ramen Log', ja: 'My Ramen Log' },
         desc: {
-          ko: '먹어본 라면 · 한 줄 남기기',
-          en: 'Rate the ramen you tried',
-          zh: '记录你吃过的拉面',
-          ja: '食べたラーメンを記録',
+          ko: '우리나라 사람들은 어떤 라면을 좋아할까?',
+          en: 'What ramen do people from your country love?',
+          zh: '你们国家的人喜欢哪款拉面？',
+          ja: '自国の人はどのラーメンが好き？',
         },
         href: '/ramen-log',
+        badge: 'new',
       },
     ],
   },
@@ -684,14 +685,19 @@ function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, 
   const isList = variant === 'list'
 
   if (isList) {
+    const highlighted = section.badge === 'new'
     return (
       <div
         onClick={onNavigate}
         role="button"
         tabIndex={0}
         onKeyDown={e => { if (e.key === 'Enter') onNavigate() }}
-        className="rounded-xl border border-emerald-200 bg-white hover:bg-emerald-50 pl-3 py-2.5 flex items-center gap-2 text-left transition-all cursor-pointer">
+        className={`rounded-xl border pl-3 py-2.5 flex items-center gap-2 text-left transition-all cursor-pointer
+          ${highlighted ? 'border-orange-300 bg-orange-50 hover:bg-orange-100' : 'border-emerald-200 bg-white hover:bg-emerald-50'}`}>
         <p className="flex-1 text-xs text-gray-900 leading-snug min-w-0 truncate">
+          {highlighted && (
+            <span className="text-[10px] font-bold text-orange-700 mr-1">{BADGE_LABEL[lang].new}</span>
+          )}
           <span className="font-bold">{section.title[lang]}</span>
           <span className="text-gray-400"> · {section.desc[lang]}</span>
         </p>
@@ -724,7 +730,9 @@ function SectionCard({ section, lang, isFavorite, onNavigate, onToggleFavorite, 
       )}
       {section.badge && (
         <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-          section.badge === 'official' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+          section.badge === 'official' ? 'bg-emerald-100 text-emerald-700'
+          : section.badge === 'new' ? 'bg-orange-100 text-orange-700'
+          : 'bg-amber-100 text-amber-700'
         }`}>
           {BADGE_LABEL[lang][section.badge]}
         </span>
