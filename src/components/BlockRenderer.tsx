@@ -111,18 +111,19 @@ export default function BlockRenderer({ blocks, lang }: Props) {
         if (block.type === 'image') {
           const size = block.size || 'full'
           const align = block.align || 'left'
+          const caption = getBlockCaption(block, lang)
           return (
             <div key={i} className="space-y-1">
               <Image
                 src={block.url}
-                alt=""
+                alt={caption || 'Korea Convenience Store Guide'}
                 width={800}
                 height={600}
                 sizes="(max-width: 640px) 100vw, 512px"
                 className={`${imageSizeClass[size]} ${imageAlignClass[align]} block rounded-xl object-cover h-auto`}
               />
-              {getBlockCaption(block, lang) && (
-                <p className="text-xs text-gray-400 text-center">{getBlockCaption(block, lang)}</p>
+              {caption && (
+                <p className="text-xs text-gray-400 text-center">{caption}</p>
               )}
             </div>
           )
@@ -136,7 +137,7 @@ export default function BlockRenderer({ blocks, lang }: Props) {
           const img = (
             <Image
               src={block.url}
-              alt=""
+              alt={text.slice(0, 100) || 'Korea Convenience Store Guide'}
               width={800}
               height={600}
               sizes="(max-width: 640px) 50vw, 340px"

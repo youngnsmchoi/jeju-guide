@@ -409,7 +409,7 @@ export default function RamenList({ items, lang, initialQuery }: { items: RamenI
         <div key={item.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
           {item.image_url && (
             <div className="relative w-full h-48 overflow-hidden bg-gray-50">
-              <Image src={item.image_url} alt="" fill sizes="(max-width: 640px) 100vw, 500px" className="object-contain" />
+              <Image src={item.image_url} alt={getRamenField(item, 'name', lang)} fill sizes="(max-width: 640px) 100vw, 500px" className="object-contain" />
               {item.noodle_type && (
                 <span className={`absolute top-2 left-2 text-xs font-semibold px-2 py-0.5 rounded-md
                   ${item.noodle_type === 'cup' ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'}`}>
