@@ -57,6 +57,10 @@ const LABEL: Record<Lang, {
   submit: string; privacy: string; done: string; doneMsg: string;
   error: string; alreadyLogged: string; loading: string; noData: string; total: string;
   logAnother: string; viewFootprints: string;
+  statsCountryLabel: string; statsCountryPlaceholder: string; statsAllOption: string;
+  rankingTitle: (country: string) => string;
+  peopleUnit: string;
+  notEnoughData: string; logFirst: string;
 }> = {
   ko: {
     title: 'My Ramen Log', back: '← 홈', tabLog: '기록하기', tabStats: '발자취',
@@ -70,6 +74,13 @@ const LABEL: Record<Lang, {
     alreadyLogged: '이 라면은 이미 기록하셨습니다.',
     loading: '불러오는 중...', noData: '아직 등록된 발자취가 없습니다.', total: '명',
     logAnother: '다른 라면 기록하기', viewFootprints: '발자취 보러 가기 →',
+    statsCountryLabel: '어느 나라 여행자들이 궁금하세요?',
+    statsCountryPlaceholder: '국가 이름을 입력하세요 (예: Vietnam)',
+    statsAllOption: '전체 보기',
+    rankingTitle: (country) => `${country} 여행자들이 남긴 K-라면 기록`,
+    peopleUnit: '명',
+    notEnoughData: '아직 이 나라 기록이 많지 않아요.',
+    logFirst: '첫 기록을 남겨보시겠어요? →',
   },
   en: {
     title: 'My Ramen Log', back: '← Home', tabLog: 'Log', tabStats: 'Footprints',
@@ -83,6 +94,13 @@ const LABEL: Record<Lang, {
     alreadyLogged: 'You already logged this ramen.',
     loading: 'Loading...', noData: 'No footprints yet.', total: 'people',
     logAnother: 'Log another ramen', viewFootprints: 'See footprints →',
+    statsCountryLabel: 'Curious about travelers from which country?',
+    statsCountryPlaceholder: 'Type a country (e.g. Vietnam)',
+    statsAllOption: 'Show all',
+    rankingTitle: (country) => `K-Ramen loved by travelers from ${country}`,
+    peopleUnit: 'people',
+    notEnoughData: "There isn't much data for this country yet.",
+    logFirst: 'Want to be the first to log one? →',
   },
   zh: {
     title: 'My Ramen Log', back: '← 主页', tabLog: '记录', tabStats: '足迹',
@@ -96,6 +114,13 @@ const LABEL: Record<Lang, {
     alreadyLogged: '您已经记录过这款拉面了。',
     loading: '加载中...', noData: '还没有足迹。', total: '人',
     logAnother: '记录其他拉面', viewFootprints: '查看足迹 →',
+    statsCountryLabel: '想看看哪个国家的旅行者？',
+    statsCountryPlaceholder: '请输入国家名称（例如：Vietnam）',
+    statsAllOption: '查看全部',
+    rankingTitle: (country) => `${country}旅行者喜爱的K-拉面`,
+    peopleUnit: '人',
+    notEnoughData: '这个国家的记录还不多。',
+    logFirst: '要不要留下第一条记录？→',
   },
   ja: {
     title: 'My Ramen Log', back: '← ホーム', tabLog: '記録する', tabStats: '足跡',
@@ -109,6 +134,13 @@ const LABEL: Record<Lang, {
     alreadyLogged: 'このラーメンはすでに記録済みです。',
     loading: '読み込み中...', noData: 'まだ足跡がありません。', total: '人',
     logAnother: '別のラーメンを記録する', viewFootprints: '足跡を見に行く →',
+    statsCountryLabel: 'どちらの国の旅行者が気になりますか？',
+    statsCountryPlaceholder: '国名を入力してください（例：Vietnam）',
+    statsAllOption: 'すべて見る',
+    rankingTitle: (country) => `${country}の旅行者に人気のK-ラーメン`,
+    peopleUnit: '人',
+    notEnoughData: 'まだこの国の記録が多くありません。',
+    logFirst: '最初の記録を残してみませんか？→',
   },
 }
 
@@ -126,14 +158,6 @@ function addLogged(id: number) {
   const set = getLogged()
   set.add(id)
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...set]))
-}
-
-interface StatRow {
-  ramen_id: number
-  name_ko: string
-  name_en: string
-  total: number
-  countries: Record<string, number>
 }
 
 interface FeedEntry {
@@ -178,15 +202,46 @@ function tagLabel(key: string, lang: Lang): string {
   return MEMO_TAGS[lang].find(t => t.key === key)?.label ?? key
 }
 
+const MIN_RANKING_SAMPLE = 3
+
+interface RankingRow {
+  ramen_id: number
+  name: string
+  good: number
+  neutral: number
+  bad: number
+  total: number
+  tagCounts: Record<string, number>
+}
+
+function buildRanking(feed: FeedEntry[], country: string | null, lang: Lang): RankingRow[] {
+  const scoped = country ? feed.filter(e => e.country === country) : feed
+  const map: Record<number, RankingRow> = {}
+  for (const entry of scoped) {
+    const id = entry.ramen_id
+    const name = lang === 'ko'
+      ? entry.ramen_items?.name_ko ?? ''
+      : (entry.ramen_items as { name_ko: string; name_en?: string } | null)?.name_en || entry.ramen_items?.name_ko || ''
+    if (!map[id]) map[id] = { ramen_id: id, name, good: 0, neutral: 0, bad: 0, total: 0, tagCounts: {} }
+    map[id][entry.rating] += 1
+    map[id].total += 1
+    for (const tag of entry.memo_tags ?? []) {
+      map[id].tagCounts[tag] = (map[id].tagCounts[tag] ?? 0) + 1
+    }
+  }
+  return Object.values(map).sort((a, b) => b.total - a.total)
+}
+
+const RANK_MEDAL = ['🥇', '🥈', '🥉']
+
 function StatsTab({ lang }: { lang: Lang }) {
   const L = LABEL[lang]
-  const [stats, setStats] = useState<StatRow[]>([])
   const [feed, setFeed] = useState<FeedEntry[]>([])
   const [loading, setLoading] = useState(true)
+  const [country, setCountry] = useState('')
 
   useEffect(() => {
-    fetch('/api/ramen-log').then(r => r.json()).then(({ stats, feed }) => {
-      setStats(Array.isArray(stats) ? stats : [])
+    fetch('/api/ramen-log').then(r => r.json()).then(({ feed }) => {
       setFeed(Array.isArray(feed) ? feed : [])
       setLoading(false)
     }).catch(() => setLoading(false))
@@ -194,30 +249,60 @@ function StatsTab({ lang }: { lang: Lang }) {
 
   if (loading) return <p className="text-center text-gray-400 py-12 text-sm">{L.loading}</p>
 
+  const selectedCountry = country.trim() || null
+  const ranking = buildRanking(feed, selectedCountry, lang)
+  const sampleTotal = ranking.reduce((sum, r) => sum + r.total, 0)
+
   return (
     <div className="space-y-4">
-      {/* 인기 라면 집계 */}
-      {stats.length > 0 && (
+      {/* 국가 선택 */}
+      <div>
+        <p className="text-sm font-semibold text-gray-700 mb-2">{L.statsCountryLabel}</p>
+        <input value={country} onChange={e => setCountry(e.target.value)}
+          placeholder={L.statsCountryPlaceholder} list="ramen-log-stats-country-options"
+          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-500 bg-white" />
+        <datalist id="ramen-log-stats-country-options">
+          {COUNTRY_NAMES.map(name => <option key={name} value={name} />)}
+        </datalist>
+      </div>
+
+      {/* 랭킹 타이틀 */}
+      <p className="text-sm font-bold text-gray-800">
+        {selectedCountry ? L.rankingTitle(selectedCountry) : L.statsAllOption}
+      </p>
+
+      {ranking.length === 0 || sampleTotal < MIN_RANKING_SAMPLE ? (
+        <div className="text-center py-8 space-y-1">
+          <p className="text-sm text-gray-400">{L.notEnoughData}</p>
+          <p className="text-sm text-emerald-600 font-medium">{L.logFirst}</p>
+        </div>
+      ) : (
         <div className="space-y-2">
-          {stats.map(row => {
-            const name = lang === 'ko' ? row.name_ko : row.name_en || row.name_ko
-            const topCountries = Object.entries(row.countries).sort((a, b) => b[1] - a[1]).slice(0, 4)
-            return (
-              <div key={row.ramen_id} className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3">
-                <div className="flex items-center justify-between mb-1.5">
-                  <p className="text-sm font-bold text-gray-900">{name}</p>
-                  <span className="text-xs text-emerald-600 font-semibold">{row.total} {L.total}</span>
+          {ranking.slice(0, 10).map((row, i) => (
+            <div key={row.ramen_id} className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 space-y-1.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">{RANK_MEDAL[i] ?? `${i + 1}.`}</span>
+                  <span className="text-sm font-bold text-gray-900">{row.name}</span>
                 </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {topCountries.map(([name, count]) => (
-                    <span key={name} className="flex items-center gap-1 text-xs bg-gray-50 border border-gray-100 rounded-full px-2.5 py-1">
-                      <span className="text-gray-700">{name}</span> <span className="text-gray-500">{count}</span>
+                <span className="text-xs text-gray-400">{row.total} {L.peopleUnit}</span>
+              </div>
+              <div className="flex items-center gap-3 text-xs text-gray-500">
+                <span>😊 {row.good}</span>
+                <span>😐 {row.neutral}</span>
+                <span>😞 {row.bad}</span>
+              </div>
+              {Object.keys(row.tagCounts).length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {Object.entries(row.tagCounts).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([key]) => (
+                    <span key={key} className="text-xs bg-emerald-50 text-emerald-700 rounded-full px-2.5 py-0.5">
+                      {tagLabel(key, lang)}
                     </span>
                   ))}
                 </div>
-              </div>
-            )
-          })}
+              )}
+            </div>
+          ))}
         </div>
       )}
 
