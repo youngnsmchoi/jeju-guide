@@ -55,7 +55,7 @@ const LABEL: Record<Lang, {
   q1: string; q2: string; q2Placeholder: string; q3: string; qMemo: string; qNote: string;
   notePlaceholder: string;
   submit: string; privacy: string; done: string; doneMsg: string;
-  error: string; alreadyLogged: string; loading: string; noData: string; total: string;
+  error: string; alreadyLogged: string; loading: string; total: string;
   logAnother: string; viewFootprints: string;
   statsCountryLabel: string; statsCountryPlaceholder: string; statsAllOption: string;
   rankingTitle: (country: string) => string;
@@ -72,7 +72,7 @@ const LABEL: Record<Lang, {
     done: '감사합니다!', doneMsg: '소중한 의견이 Korea Convenience Store Guide 개선에 활용됩니다.',
     error: '제출에 실패했습니다. 다시 시도해 주세요.',
     alreadyLogged: '이 라면은 이미 기록하셨습니다.',
-    loading: '불러오는 중...', noData: '아직 등록된 발자취가 없습니다.', total: '명',
+    loading: '불러오는 중...', total: '명',
     logAnother: '다른 라면 기록하기', viewFootprints: '발자취 보러 가기 →',
     statsCountryLabel: '어느 나라 여행자들이 궁금하세요?',
     statsCountryPlaceholder: '국가 이름을 입력하세요 (예: Vietnam)',
@@ -92,7 +92,7 @@ const LABEL: Record<Lang, {
     done: 'Thank you!', doneMsg: 'Your feedback helps improve Korea Convenience Store Guide.',
     error: 'Submission failed. Please try again.',
     alreadyLogged: 'You already logged this ramen.',
-    loading: 'Loading...', noData: 'No footprints yet.', total: 'people',
+    loading: 'Loading...', total: 'people',
     logAnother: 'Log another ramen', viewFootprints: 'See footprints →',
     statsCountryLabel: 'Curious about travelers from which country?',
     statsCountryPlaceholder: 'Type a country (e.g. Vietnam)',
@@ -112,7 +112,7 @@ const LABEL: Record<Lang, {
     done: '谢谢！', doneMsg: '您的反馈将用于改进Korea Convenience Store Guide。',
     error: '提交失败，请重试。',
     alreadyLogged: '您已经记录过这款拉面了。',
-    loading: '加载中...', noData: '还没有足迹。', total: '人',
+    loading: '加载中...', total: '人',
     logAnother: '记录其他拉面', viewFootprints: '查看足迹 →',
     statsCountryLabel: '想看看哪个国家的旅行者？',
     statsCountryPlaceholder: '请输入国家名称（例如：Vietnam）',
@@ -132,7 +132,7 @@ const LABEL: Record<Lang, {
     done: 'ありがとうございます！', doneMsg: 'ご意見はKorea Convenience Store Guideの改善に活用されます。',
     error: '送信に失敗しました。もう一度お試しください。',
     alreadyLogged: 'このラーメンはすでに記録済みです。',
-    loading: '読み込み中...', noData: 'まだ足跡がありません。', total: '人',
+    loading: '読み込み中...', total: '人',
     logAnother: '別のラーメンを記録する', viewFootprints: '足跡を見に行く →',
     statsCountryLabel: 'どちらの国の旅行者が気になりますか？',
     statsCountryPlaceholder: '国名を入力してください（例：Vietnam）',
@@ -169,32 +169,6 @@ interface FeedEntry {
   note: string | null
   created_at: string
   ramen_items: { name_ko: string; name_en: string } | null
-}
-
-function timeAgo(dateStr: string, lang: Lang): string {
-  const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000)
-  if (lang === 'ko') {
-    if (diff < 60) return '방금'
-    if (diff < 3600) return `${Math.floor(diff / 60)}분 전`
-    if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`
-    return `${Math.floor(diff / 86400)}일 전`
-  }
-  if (lang === 'zh') {
-    if (diff < 60) return '刚刚'
-    if (diff < 3600) return `${Math.floor(diff / 60)}分钟前`
-    if (diff < 86400) return `${Math.floor(diff / 3600)}小时前`
-    return `${Math.floor(diff / 86400)}天前`
-  }
-  if (lang === 'ja') {
-    if (diff < 60) return 'たった今'
-    if (diff < 3600) return `${Math.floor(diff / 60)}分前`
-    if (diff < 86400) return `${Math.floor(diff / 3600)}時間前`
-    return `${Math.floor(diff / 86400)}日前`
-  }
-  if (diff < 60) return 'just now'
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
-  return `${Math.floor(diff / 86400)}d ago`
 }
 
 // 태그 key → 현재 언어 라벨 변환
@@ -306,44 +280,6 @@ function StatsTab({ lang }: { lang: Lang }) {
         </div>
       )}
 
-      {/* 발자취 피드 */}
-      <p className="text-xs font-bold text-gray-400 pt-2">— {L.tabStats}</p>
-      {feed.length === 0 ? (
-        <p className="text-center text-gray-400 py-8 text-sm">{L.noData}</p>
-      ) : (
-        <div className="space-y-2">
-          {feed.map(entry => {
-            const name = lang === 'ko'
-              ? entry.ramen_items?.name_ko
-              : (entry.ramen_items as { name_ko: string; name_en?: string } | null)?.name_en || entry.ramen_items?.name_ko
-            const ratingEmoji = entry.rating === 'good' ? '😊' : entry.rating === 'neutral' ? '😐' : '😞'
-            return (
-              <div key={entry.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500">{entry.country}</span>
-                    <span className="text-sm font-semibold text-gray-800">{name}</span>
-                    <span className="text-base">{ratingEmoji}</span>
-                  </div>
-                  <span className="text-xs text-gray-400">{timeAgo(entry.created_at, lang)}</span>
-                </div>
-                {entry.memo_tags && entry.memo_tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1">
-                    {entry.memo_tags.map(key => (
-                      <span key={key} className="text-xs bg-emerald-50 text-emerald-700 rounded-full px-2.5 py-0.5">
-                        {tagLabel(key, lang)}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                {entry.note && (
-                  <p className="text-xs text-gray-500 leading-relaxed">"{entry.note}"</p>
-                )}
-              </div>
-            )
-          })}
-        </div>
-      )}
     </div>
   )
 }
