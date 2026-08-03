@@ -15,7 +15,7 @@ const DEFAULT_FAVORITES = [
   '/guide/link-money',
   '/guide/link-cvs-tips',
   '/guide/link-cooking',
-  '/guide/link-country-picks',
+  '/ramen-log',
 ]
 
 const MY_MENU_LABEL: Record<Lang, string> = {
