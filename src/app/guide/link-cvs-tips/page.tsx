@@ -45,6 +45,14 @@ const FAQ_JSON_LD = {
         text: "Policy varies by store, so free Wi-Fi isn't guaranteed everywhere. Some stores only carry carrier Wi-Fi, not a store-run network.",
       },
     },
+    {
+      '@type': 'Question',
+      name: 'How do I check the expiration date at a Korean convenience store?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: "Check the date printed on the package. Some products show a date only (best before that date), others show a date and time (short shelf life, eat soon), and some show only a packing date rather than an expiration date. Refrigerated items can spoil at room temperature even within the printed date, so eat them soon after buying.",
+      },
+    },
   ],
 }
 

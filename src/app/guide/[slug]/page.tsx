@@ -1,10 +1,30 @@
 // 상세 페이지 (서버에서 데이터 조회 후 렌더링)
 
+import type { Metadata } from 'next'
 import { supabase } from '@/lib/supabase'
 import type { Item, Category, RamenItem } from '@/lib/types'
+import { getTitle, getContent } from '@/lib/types'
 import GuideView from './GuideView'
 
 export const revalidate = 60
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const { data: item } = await supabase.from('jeju_items').select('*').eq('slug', slug).single()
+  if (!item) return {}
+
+  const title = getTitle(item as Item, 'en')
+  const rawContent = getContent(item as Item, 'en')
+  const description = rawContent.replace(/\s+/g, ' ').trim().slice(0, 150)
+
+  return {
+    title: `${title} | Korea Convenience Store Guide`,
+    description: description || undefined,
+    alternates: {
+      canonical: `https://www.koreacvsguide.com/guide/${slug}`,
+    },
+  }
+}
 
 export default async function GuidePage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ q?: string }> }) {
   const { slug } = await params
